@@ -1,4 +1,4 @@
-YUI.add('accordion', function(Y) {
+YUI.add('gallery-accordion', function(Y) {
 
 /**
  * Provides the Accordion class

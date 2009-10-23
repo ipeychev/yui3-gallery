@@ -10,10 +10,10 @@ parser_in="js"
 
 # The location to output the parser data.  This output is a file containing a 
 # json string, and copies of the parsed files.
-parser_out=../../build/accordion/apidocs/parser_out
+parser_out=../../build/gallery-accordion/apidocs/parser_out
 
 # The directory to put the html file outputted by the generator
-generator_out=../../build/accordion/apidocs/
+generator_out=../../build/gallery-accordion/apidocs/
 
 # The location of the template files.  Any subdirectories here will be copied
 # verbatim to the destination directory.

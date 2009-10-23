@@ -4,7 +4,7 @@
 
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css">
     <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssfonts/fonts-min.css">
-    <link rel="stylesheet" type="text/css" href="../../../build/accordion/assets/skins/sam/accordion.css">
+    <link rel="stylesheet" type="text/css" href="../../../build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
 				
     <style type="text/css">
         html, body {
@@ -12,19 +12,20 @@
         }
         
         #item1 .customiconclass {
-            background-image: url("../../../build/accordion/assets/skins/sam/accordion_sprite.png");
+            background-image: url("../../../build/gallery-accordion/assets/skins/sam/accordion_sprite.png");
             background-repeat: no-repeat;
             background-position: center -83px;
         }
      </style>
 
      <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
+     <script type="text/javascript" src="../../../build/gallery-accordion/gallery-accordion.js"></script>
      <script type="text/javascript" src="testaccordion.js"></script>
 
   </head>
   <body class="yui-skin-sam">
       <div style="position: absolute; width:350px; height: 550px;">
-          <div id="bb1" class="yui-accordion" style="position: absolute;">
+          <div id="bb1" class="yui-accordion" style="position: absolute; overflow: hidden;">
               <div id="acc1" class="yui-accordion-content">
                 <div id="item1" class="yui-accordion-item yui-accordion-item-closable" yuiConfig='{"alwaysVisible":true, "contentHeight":{"method":"fixed", "height":150}}'>
                     <div class="yui-widget-hd">
