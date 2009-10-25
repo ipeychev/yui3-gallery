@@ -3,7 +3,7 @@ YUI.add('gallery-accordion', function(Y) {
 /**
  * Provides the Accordion class
  *
- * @module accordion
+ * @module gallery-accordion
  */
 
 (function(){
@@ -1714,7 +1714,7 @@ Y.Accordion = Accordion;
 /**
  * Provides the Accordion class
  *
- * @module accordion
+ * @module gallery-accordion
  */
 
 (function(){

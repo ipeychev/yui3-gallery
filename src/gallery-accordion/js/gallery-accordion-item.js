@@ -1,7 +1,7 @@
 /**
  * Provides the Accordion class
  *
- * @module accordion
+ * @module gallery-accordion
  */
 
 (function(){
