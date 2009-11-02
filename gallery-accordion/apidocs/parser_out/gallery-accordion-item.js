@@ -1,5 +1,5 @@
 /**
- * Provides the Accordion class
+ * Provides AccordionItem class
  *
  * @module gallery-accordion
  */
@@ -193,7 +193,7 @@ AccordionItem.ATTRS = {
     },
 
     /**
-     * @description Get/Set the expanded status of the item
+     * @description Get/Set expanded status of the item
      *
      * @attribute expanded
      * @default false
@@ -239,7 +239,7 @@ AccordionItem.ATTRS = {
     },
 
     /**
-     * @description Get/Set the expanded status of the item
+     * @description Get/Set always visible status of the item
      *
      * @attribute alwaysVisible
      * @default false
@@ -650,7 +650,7 @@ Y.extend( AccordionItem, Y.Widget, {
         
         if( this.get( RENDERED ) ){
             label = this.get( NODE_LABEL );
-            label.set( INNER_HTML, ["<a href='#'>", params.newVal, "</a>" ].join('') );
+            label.set( INNER_HTML, params.newVal );
         }
     },
 

@@ -16,7 +16,7 @@
 <div id="doc3" class="yui-t2">
 	<div id="hd">
         <h1><a href="http://developer.yahoo.com/yui/" title="Yahoo! UI Library">Yahoo! UI Library</a></h1>
-        <h3>gallery-accordion&nbsp; <span class="subtitle">1.04</span></h3>
+        <h3>gallery-accordion&nbsp; <span class="subtitle">1.05</span></h3>
         <a href="./index.html" title="Yahoo! UI Library">Yahoo! UI Library</a> 
             &gt; <a href="./module_gallery-accordion.html" title="gallery-accordion">gallery-accordion</a>
                 
@@ -48,12 +48,12 @@
                             #doc3 .classopts { display:none; }
                         </style>
                         <div class="highlight"><pre><span class="c">/**</span>
-<span class="c"> * Provides the Accordion class</span>
+<span class="c"> * Provides Accordion widget</span>
 <span class="c"> *</span>
 <span class="c"> * @module gallery-accordion</span>
 <span class="c"> */</span>
 
-<span class="p">(</span><span class="k">function</span><span class="p">(){</span>
+<span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
 
 <span class="c">/**</span>
 <span class="c"> * Accordion creates an widget, consists of one or more items, which can be collapsed, expanded,</span>
@@ -66,12 +66,12 @@
 <span class="c"> * @extends Widget</span>
 <span class="c"> */</span>
 
-<span class="k">function</span> <span class="nx">Accordion</span><span class="p">(</span> <span class="nx">config</span> <span class="p">){</span>
+<span class="kd">function</span> <span class="nx">Accordion</span><span class="p">(</span> <span class="nx">config</span> <span class="p">){</span>
     <span class="nx">Accordion</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span> <span class="k">this</span><span class="o">,</span> <span class="nx">arguments</span> <span class="p">);</span>
 <span class="p">}</span>
 
 <span class="c">// Local constants</span>
-<span class="k">var</span> <span class="nx">Lang</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="o">,</span>
+<span class="kd">var</span> <span class="nx">Lang</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="o">,</span>
     <span class="nx">Node</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Node</span><span class="o">,</span>
     <span class="nx">Anim</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Anim</span><span class="o">,</span>
     <span class="nx">Easing</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Easing</span><span class="o">,</span>
@@ -192,7 +192,7 @@
 
     <span class="nx">resizeEvent</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">value</span><span class="o">:</span> <span class="nx">DEFAULT</span><span class="o">,</span>
-        <span class="nx">validator</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
             <span class="k">return</span> <span class="p">(</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="o">||</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">value</span><span class="p">));</span>
         <span class="p">}</span>
     <span class="p">}</span><span class="o">,</span>
@@ -227,7 +227,7 @@
             <span class="nx">duration</span><span class="o">:</span> <span class="mi">1</span><span class="o">,</span>
             <span class="nx">easing</span><span class="o">:</span> <span class="nx">Easing</span><span class="p">.</span><span class="nx">easeOutStrong</span>
         <span class="p">}</span><span class="o">,</span>
-        <span class="nx">validator</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
             <span class="k">return</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span> <span class="nx">value</span><span class="p">.</span><span class="nx">duration</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
                 <span class="nx">Lang</span><span class="p">.</span><span class="nx">isFunction</span><span class="p">(</span> <span class="nx">value</span><span class="p">.</span><span class="nx">easing</span> <span class="p">);</span>
         <span class="p">}</span>
@@ -271,7 +271,7 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @param  config {Object} Configuration object literal for the Accordion</span>
 <span class="c">     */</span>
-    <span class="nx">initializer</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">config</span> <span class="p">)</span> <span class="p">{</span>
+    <span class="nx">initializer</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">config</span> <span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_initEvents</span><span class="p">();</span>
 
         <span class="k">this</span><span class="p">.</span><span class="nx">after</span><span class="p">(</span> <span class="s2">&quot;render&quot;</span><span class="o">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_afterRender</span><span class="o">,</span> <span class="k">this</span> <span class="p">)</span> <span class="p">);</span>
@@ -289,8 +289,8 @@
 <span class="c">     * @method destructor</span>
 <span class="c">     * @protected</span>
 <span class="c">     */</span>
-    <span class="nx">destructor</span><span class="o">:</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">var</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">i</span><span class="o">,</span> <span class="nx">length</span><span class="o">;</span>
+    <span class="nx">destructor</span><span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">i</span><span class="o">,</span> <span class="nx">length</span><span class="o">;</span>
         
         <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">);</span>
         <span class="nx">length</span> <span class="o">=</span> <span class="nx">items</span><span class="p">.</span><span class="nx">length</span><span class="o">;</span>
@@ -313,7 +313,7 @@
 <span class="c">     * @method _initEvents</span>
 <span class="c">     * @protected</span>
 <span class="c">     */</span>
-    <span class="nx">_initEvents</span><span class="o">:</span> <span class="k">function</span><span class="p">(){</span>
+    <span class="nx">_initEvents</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
         
         <span class="c">/**</span>
 <span class="c">         * Signals the beginning of adding an item to the Accordion.</span>
@@ -492,8 +492,8 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @param {Y.AccordionItem} item The item, which handles to remove</span>
 <span class="c">     */</span>
-    <span class="nx">_removeItemHandles</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">itemHandles</span><span class="o">,</span> <span class="nx">itemHandle</span><span class="o">;</span>
+    <span class="nx">_removeItemHandles</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">itemHandles</span><span class="o">,</span> <span class="nx">itemHandle</span><span class="o">;</span>
         
         <span class="nx">itemHandles</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_itemsHandles</span><span class="p">[</span> <span class="nx">item</span> <span class="p">];</span>
 
@@ -515,8 +515,8 @@
 <span class="c">     * @param {Node|HTMLElement} node The node to gather the height from</span>
 <span class="c">     * @return {Number} The calculated height or zero in case of failure</span>
 <span class="c">     */</span>
-    <span class="nx">_getNodeOffsetHeight</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">node</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">preciseRegion</span><span class="o">;</span>
+    <span class="nx">_getNodeOffsetHeight</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">node</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">preciseRegion</span><span class="o">;</span>
 
         <span class="k">if</span><span class="p">(</span> <span class="nx">node</span> <span class="k">instanceof</span> <span class="nx">Node</span> <span class="p">){</span>
             <span class="k">if</span><span class="p">(</span> <span class="nx">node</span><span class="p">.</span><span class="nx">hasMethod</span><span class="p">(</span> <span class="s2">&quot;getBoundingClientRect&quot;</span> <span class="p">)</span> <span class="p">){</span>
@@ -550,8 +550,8 @@
 <span class="c">     * @param {boolean} expanding The new value of &quot;expanded&quot; property</span>
 <span class="c">     * @param {boolean} alwaysVisible The new value of &quot;alwaysVisible&quot; property</span>
 <span class="c">     */</span>
-    <span class="nx">_setItemProperties</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">expanding</span><span class="o">,</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">curAlwaysVisible</span><span class="o">,</span> <span class="nx">curExpanded</span><span class="o">;</span>
+    <span class="nx">_setItemProperties</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">expanding</span><span class="o">,</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">curAlwaysVisible</span><span class="o">,</span> <span class="nx">curExpanded</span><span class="o">;</span>
 
         <span class="nx">curAlwaysVisible</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ALWAYSVISIBLE</span> <span class="p">);</span>
         <span class="nx">curExpanded</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">EXPANDED</span> <span class="p">);</span>
@@ -581,7 +581,7 @@
 <span class="c">     * @param {boolean} alwaysVisible If true, the item will be marked as always visible.</span>
 <span class="c">     * If false, the always visible mark will be removed</span>
 <span class="c">     */</span>
-    <span class="nx">_setItemUI</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">expanding</span><span class="o">,</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
+    <span class="nx">_setItemUI</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">expanding</span><span class="o">,</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
         <span class="nx">item</span><span class="p">.</span><span class="nx">markAsExpanded</span><span class="p">(</span> <span class="nx">expanding</span> <span class="p">);</span>
         <span class="nx">item</span><span class="p">.</span><span class="nx">markAsAlwaysVisible</span><span class="p">(</span> <span class="nx">alwaysVisible</span> <span class="p">);</span>
     <span class="p">}</span><span class="o">,</span>
@@ -594,8 +594,8 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @param e {Event} after render custom event</span>
 <span class="c">     */</span>
-    <span class="nx">_afterRender</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">e</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">resizeEvent</span><span class="o">;</span>
+    <span class="nx">_afterRender</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">e</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">resizeEvent</span><span class="o">;</span>
 
         <span class="nx">resizeEvent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;resizeEvent&quot;</span> <span class="p">);</span>
 
@@ -612,7 +612,7 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @param params {Event} after resizeEventChange custom event</span>
 <span class="c">     */</span>
-    <span class="nx">_afterResizeEventChange</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
+    <span class="nx">_afterResizeEventChange</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_setUpResizing</span><span class="p">(</span> <span class="nx">params</span><span class="p">.</span><span class="nx">newValue</span> <span class="p">);</span>
     <span class="p">}</span><span class="o">,</span>
 
@@ -630,8 +630,8 @@
 <span class="c">     * @param srcIconAlwaysVisible {Boolean} True if the user has clicked on always visible icon</span>
 <span class="c">     * @param srcIconClose {Boolean} True if the user has clicked on close icon</span>
 <span class="c">     */</span>
-    <span class="nx">_onItemChosen</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">srcIconAlwaysVisible</span><span class="o">,</span> <span class="nx">srcIconClose</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">toBeExcluded</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">collapseOthersOnExpand</span><span class="o">;</span>
+    <span class="nx">_onItemChosen</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">srcIconAlwaysVisible</span><span class="o">,</span> <span class="nx">srcIconClose</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">toBeExcluded</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">collapseOthersOnExpand</span><span class="o">;</span>
 
         <span class="nx">toBeExcluded</span> <span class="o">=</span> <span class="p">{};</span>        
         <span class="nx">collapseOthersOnExpand</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">COLLAPSEOTHERSONEXPAND</span> <span class="p">);</span>
@@ -700,13 +700,13 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @return {Number} The calculated height per strech item</span>
 <span class="c">     */</span>
-    <span class="nx">_adjustStretchItems</span><span class="o">:</span> <span class="k">function</span><span class="p">(){</span>
-        <span class="k">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">)</span><span class="o">,</span> <span class="nx">heightPerStretchItem</span><span class="o">;</span>
+    <span class="nx">_adjustStretchItems</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">)</span><span class="o">,</span> <span class="nx">heightPerStretchItem</span><span class="o">;</span>
 
         <span class="nx">heightPerStretchItem</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getHeightPerStretchItem</span><span class="p">();</span>
         
-        <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
-            <span class="k">var</span> <span class="nx">body</span><span class="o">,</span> <span class="nx">bodyHeight</span><span class="o">,</span> <span class="nx">anim</span><span class="o">,</span> <span class="nx">heightSettings</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">;</span>
+        <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">body</span><span class="o">,</span> <span class="nx">bodyHeight</span><span class="o">,</span> <span class="nx">anim</span><span class="o">,</span> <span class="nx">heightSettings</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">;</span>
 
             <span class="nx">heightSettings</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CONTENT_HEIGHT</span> <span class="p">);</span>
             <span class="nx">expanded</span>      <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">EXPANDED</span> <span class="p">);</span>
@@ -740,14 +740,14 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @return {Number} The calculated height per strech item</span>
 <span class="c">     */</span>
-    <span class="nx">_getHeightPerStretchItem</span><span class="o">:</span> <span class="k">function</span><span class="p">(){</span>
-        <span class="k">var</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">stretchCounter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+    <span class="nx">_getHeightPerStretchItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">stretchCounter</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
 
         <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">);</span>
         <span class="nx">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">BOUNDING_BOX</span> <span class="p">).</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;clientHeight&quot;</span> <span class="p">);</span>
 
-        <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
-            <span class="k">var</span> <span class="nx">collapsed</span><span class="o">,</span> <span class="nx">itemContentHeight</span><span class="o">,</span> <span class="nx">header</span><span class="o">,</span> <span class="nx">heightSettings</span><span class="o">,</span> <span class="nx">headerHeight</span><span class="o">;</span>
+        <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">collapsed</span><span class="o">,</span> <span class="nx">itemContentHeight</span><span class="o">,</span> <span class="nx">header</span><span class="o">,</span> <span class="nx">heightSettings</span><span class="o">,</span> <span class="nx">headerHeight</span><span class="o">;</span>
 
             <span class="nx">header</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">getStdModNode</span><span class="p">(</span> <span class="nx">WidgetStdMod</span><span class="p">.</span><span class="nx">HEADER</span> <span class="p">);</span>
             <span class="nx">heightSettings</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CONTENT_HEIGHT</span> <span class="p">);</span>
@@ -790,8 +790,8 @@
 <span class="c">     * @param item {Y.AccordionItem} The item, which height should be calculated</span>
 <span class="c">     * @return {Number} The calculated item&#39;s height</span>
 <span class="c">     */</span>
-    <span class="nx">_getItemContentHeight</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">heightSettings</span><span class="o">,</span> <span class="nx">height</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">body</span><span class="o">,</span> <span class="nx">bodyContent</span><span class="o">;</span>
+    <span class="nx">_getItemContentHeight</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">heightSettings</span><span class="o">,</span> <span class="nx">height</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">body</span><span class="o">,</span> <span class="nx">bodyContent</span><span class="o">;</span>
 
         <span class="nx">heightSettings</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CONTENT_HEIGHT</span> <span class="p">);</span>
 
@@ -818,14 +818,14 @@
 <span class="c">     * @param {Object} itemsToBeExcluded (optional) Contains one or more &lt;code&gt;Y.AccordionItem&lt;/code&gt; instances,</span>
 <span class="c">     * which should be not included in the list</span>
 <span class="c">     */</span>
-    <span class="nx">_storeItemsForCollapsing</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">itemsToBeExcluded</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">items</span><span class="o">;</span>
+    <span class="nx">_storeItemsForCollapsing</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">itemsToBeExcluded</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">items</span><span class="o">;</span>
 
         <span class="nx">itemsToBeExcluded</span> <span class="o">=</span> <span class="nx">itemsToBeExcluded</span> <span class="o">||</span> <span class="p">{};</span>
         <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">);</span>
 
-        <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
-            <span class="k">var</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">;</span>
+        <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">;</span>
 
             <span class="nx">expanded</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">EXPANDED</span> <span class="p">);</span>
             <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ALWAYSVISIBLE</span> <span class="p">);</span>
@@ -847,8 +847,8 @@
 <span class="c">     * @param {Y.AccordionItem} item The item, which should be expanded</span>
 <span class="c">     * @param {Number} height The height to which we should expand the item</span>
 <span class="c">     */</span>
-    <span class="nx">_expandItem</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ALWAYSVISIBLE</span> <span class="p">);</span>
+    <span class="nx">_expandItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ALWAYSVISIBLE</span> <span class="p">);</span>
 
         <span class="k">this</span><span class="p">.</span><span class="nx">_processExpanding</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span> <span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_setItemUI</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="nx">alwaysVisible</span> <span class="p">);</span>
@@ -867,8 +867,8 @@
 <span class="c">     * without taking in consideration Accordion&#39;s &lt;code&gt;useAnimation&lt;/code&gt; setting</span>
 <span class="c">     * @param {Number} height The height to which item should be expanded</span>
 <span class="c">     */</span>
-    <span class="nx">_processExpanding</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">forceSkipAnimation</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">anim</span><span class="o">,</span> <span class="nx">curAnim</span><span class="o">,</span> <span class="nx">animSettings</span><span class="o">,</span> <span class="nx">notifyOthers</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span>
+    <span class="nx">_processExpanding</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">forceSkipAnimation</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">anim</span><span class="o">,</span> <span class="nx">curAnim</span><span class="o">,</span> <span class="nx">animSettings</span><span class="o">,</span> <span class="nx">notifyOthers</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span>
             <span class="nx">accAnimationSettings</span><span class="o">,</span> <span class="nx">body</span><span class="o">;</span>
         
         <span class="nx">body</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">getStdModNode</span><span class="p">(</span> <span class="nx">WidgetStdMod</span><span class="p">.</span><span class="nx">BODY</span> <span class="p">);</span>
@@ -936,7 +936,7 @@
 <span class="c">     * @param {Y.AccordionItem} item An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance which has been expanded</span>
 <span class="c">     * @param {Boolean} notifyOthers If true, itemExpanded event will be fired</span>
 <span class="c">     */</span>
-    <span class="nx">_onExpandComplete</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">notifyOthers</span> <span class="p">){</span>
+    <span class="nx">_onExpandComplete</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">notifyOthers</span> <span class="p">){</span>
         <span class="nx">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">_animations</span><span class="p">[</span> <span class="nx">item</span> <span class="p">];</span>
 
         <span class="nx">item</span><span class="p">.</span><span class="nx">markAsExpanding</span><span class="p">(</span> <span class="kc">false</span> <span class="p">);</span>
@@ -960,7 +960,7 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @param {Y.AccordionItem} item The item, which should be collapsed</span>
 <span class="c">     */</span>
-    <span class="nx">_collapseItem</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
+    <span class="nx">_collapseItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_processCollapsing</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">COLLAPSE_HEIGHT</span> <span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_setItemUI</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="kc">false</span><span class="o">,</span> <span class="kc">false</span> <span class="p">);</span>
     <span class="p">}</span><span class="o">,</span>
@@ -978,8 +978,8 @@
 <span class="c">     * @param {Boolean} forceSkipAnimation If true, the animation will be skipped, </span>
 <span class="c">     * without taking in consideration Accordion&#39;s &lt;code&gt;useAnimation&lt;/code&gt; setting</span>
 <span class="c">     */</span>
-    <span class="nx">_processCollapsing</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">forceSkipAnimation</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">anim</span><span class="o">,</span> <span class="nx">curAnim</span><span class="o">,</span> <span class="nx">animSettings</span><span class="o">,</span> <span class="nx">accAnimationSettings</span><span class="o">,</span> <span class="nx">body</span><span class="o">,</span> 
+    <span class="nx">_processCollapsing</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">forceSkipAnimation</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">anim</span><span class="o">,</span> <span class="nx">curAnim</span><span class="o">,</span> <span class="nx">animSettings</span><span class="o">,</span> <span class="nx">accAnimationSettings</span><span class="o">,</span> <span class="nx">body</span><span class="o">,</span> 
             <span class="nx">notifyOthers</span> <span class="o">=</span> <span class="p">(</span><span class="nx">height</span> <span class="o">===</span> <span class="nx">COLLAPSE_HEIGHT</span><span class="p">);</span>
             
         <span class="nx">body</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">getStdModNode</span><span class="p">(</span> <span class="nx">WidgetStdMod</span><span class="p">.</span><span class="nx">BODY</span> <span class="p">);</span>
@@ -1047,7 +1047,7 @@
 <span class="c">     * @param {Y.AccordionItem} item An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance which has been collapsed</span>
 <span class="c">     * @param {Boolean} notifyOthers If true, itemCollapsed event will be fired</span>
 <span class="c">     */</span>
-    <span class="nx">_onCollapseComplete</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">notifyOthers</span> <span class="p">){</span>
+    <span class="nx">_onCollapseComplete</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">notifyOthers</span> <span class="p">){</span>
         <span class="nx">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">_animations</span><span class="p">[</span> <span class="nx">item</span> <span class="p">];</span>
 
         <span class="nx">item</span><span class="p">.</span><span class="nx">markAsCollapsing</span><span class="p">(</span> <span class="kc">false</span> <span class="p">);</span>
@@ -1071,8 +1071,8 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @param {Y.AccordionItem} item An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance to be set as draggable</span>
 <span class="c">     */</span>
-    <span class="nx">_initItemDragDrop</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">itemHeader</span><span class="o">,</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">bb</span><span class="o">,</span> <span class="nx">itemBB</span><span class="o">,</span> <span class="nx">ddrop</span><span class="o">;</span>
+    <span class="nx">_initItemDragDrop</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">itemHeader</span><span class="o">,</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">bb</span><span class="o">,</span> <span class="nx">itemBB</span><span class="o">,</span> <span class="nx">ddrop</span><span class="o">;</span>
 
         <span class="nx">itemHeader</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">getStdModNode</span><span class="p">(</span> <span class="nx">WidgetStdMod</span><span class="p">.</span><span class="nx">HEADER</span> <span class="p">);</span>
 
@@ -1113,8 +1113,8 @@
 <span class="c">     * @param {Y.DD.Drag} The drag instance of the item</span>
 <span class="c">     * @param e {Event} the DD instance&#39;s drag:start custom event</span>
 <span class="c">     */</span>
-    <span class="nx">_onDragStart</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">dragNode</span><span class="o">,</span> <span class="nx">item</span><span class="o">;</span>
+    <span class="nx">_onDragStart</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">dragNode</span><span class="o">,</span> <span class="nx">item</span><span class="o">;</span>
 
         <span class="nx">item</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span> <span class="nx">dd</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">NODE</span> <span class="p">).</span><span class="nx">get</span><span class="p">(</span> <span class="nx">PARENT_NODE</span> <span class="p">)</span> <span class="p">);</span>
         <span class="nx">dragNode</span> <span class="o">=</span> <span class="nx">dd</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;dragNode&quot;</span> <span class="p">);</span>
@@ -1135,8 +1135,8 @@
 <span class="c">     * @param {Y.DD.Drag} The drag instance of the item</span>
 <span class="c">     * @param e {Event} the DD instance&#39;s drag:end custom event</span>
 <span class="c">     */</span>
-    <span class="nx">_onDragEnd</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">dragNode</span><span class="o">,</span> <span class="nx">item</span><span class="o">;</span>
+    <span class="nx">_onDragEnd</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">dragNode</span><span class="o">,</span> <span class="nx">item</span><span class="o">;</span>
 
         <span class="nx">dragNode</span> <span class="o">=</span> <span class="nx">dd</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;dragNode&quot;</span> <span class="p">);</span>
 
@@ -1156,8 +1156,8 @@
 <span class="c">     * @param {Y.DD.Drag} The drag instance of the item</span>
 <span class="c">     * @param e {Event} the DD instance&#39;s drag:end custom event</span>
 <span class="c">     */</span>
-    <span class="nx">_afterDragEnd</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">data</span><span class="o">;</span>
+    <span class="nx">_afterDragEnd</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">data</span><span class="o">;</span>
 
         <span class="nx">data</span> <span class="o">=</span> <span class="nx">dd</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">DATA</span> <span class="p">);</span>
 
@@ -1183,8 +1183,8 @@
 <span class="c">     * @param {Y.DD.Drag} The drag instance of the item</span>
 <span class="c">     * @param e {Event} the DD instance&#39;s drag:drophit custom event</span>
 <span class="c">     */</span>
-    <span class="nx">_onDropHit</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">var</span> <span class="nx">mineIndex</span><span class="o">,</span> <span class="nx">targetItemIndex</span><span class="o">,</span> <span class="nx">targetItemBB</span><span class="o">,</span> <span class="nx">itemBB</span><span class="o">,</span> <span class="nx">cb</span><span class="o">,</span>
+    <span class="nx">_onDropHit</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">mineIndex</span><span class="o">,</span> <span class="nx">targetItemIndex</span><span class="o">,</span> <span class="nx">targetItemBB</span><span class="o">,</span> <span class="nx">itemBB</span><span class="o">,</span> <span class="nx">cb</span><span class="o">,</span>
             <span class="nx">goingUp</span><span class="o">,</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">targetItem</span><span class="o">,</span> <span class="nx">item</span><span class="o">;</span>
 
         <span class="nx">item</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span> <span class="nx">dd</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">NODE</span> <span class="p">).</span><span class="nx">get</span><span class="p">(</span> <span class="nx">PARENT_NODE</span> <span class="p">)</span> <span class="p">);</span>
@@ -1237,8 +1237,8 @@
 <span class="c">     * @method _processItems</span>
 <span class="c">     * @protected</span>
 <span class="c">     */</span>
-    <span class="nx">_processItems</span><span class="o">:</span> <span class="k">function</span><span class="p">(){</span>
-        <span class="k">var</span> <span class="nx">forCollapsing</span><span class="o">,</span> <span class="nx">forExpanding</span><span class="o">,</span> <span class="nx">itemCont</span><span class="o">,</span> <span class="nx">heightPerStretchItem</span><span class="o">,</span> 
+    <span class="nx">_processItems</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">forCollapsing</span><span class="o">,</span> <span class="nx">forExpanding</span><span class="o">,</span> <span class="nx">itemCont</span><span class="o">,</span> <span class="nx">heightPerStretchItem</span><span class="o">,</span> 
             <span class="nx">height</span><span class="o">,</span> <span class="nx">heightSettings</span><span class="o">,</span> <span class="nx">item</span><span class="o">;</span>
 
         <span class="nx">forCollapsing</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_forCollapsing</span><span class="o">;</span>
@@ -1282,8 +1282,8 @@
 <span class="c">     * @method _setItemsProperties</span>
 <span class="c">     * @protected</span>
 <span class="c">     */</span>
-    <span class="nx">_setItemsProperties</span><span class="o">:</span> <span class="k">function</span> <span class="p">(){</span>
-        <span class="k">var</span> <span class="nx">forCollapsing</span><span class="o">,</span> <span class="nx">forExpanding</span><span class="o">,</span> <span class="nx">itemData</span><span class="o">;</span>
+    <span class="nx">_setItemsProperties</span><span class="o">:</span> <span class="kd">function</span> <span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">forCollapsing</span><span class="o">,</span> <span class="nx">forExpanding</span><span class="o">,</span> <span class="nx">itemData</span><span class="o">;</span>
 
         <span class="nx">forCollapsing</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_forCollapsing</span><span class="o">;</span>
         <span class="nx">forExpanding</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_forExpanding</span><span class="o">;</span>
@@ -1311,8 +1311,8 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @param {EventFacade} params The event facade for the attribute change</span>
 <span class="c">     */</span>
-    <span class="nx">_afterItemExpand</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">collapseOthersOnExpand</span><span class="o">;</span>
+    <span class="nx">_afterItemExpand</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">collapseOthersOnExpand</span><span class="o">;</span>
 
         <span class="k">if</span><span class="p">(</span> <span class="nx">params</span><span class="p">.</span><span class="nx">internalCall</span> <span class="p">){</span>
             <span class="k">return</span><span class="o">;</span>
@@ -1348,8 +1348,8 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @param {EventFacade} params The event facade for the attribute change</span>
 <span class="c">     */</span>
-    <span class="nx">_afterItemAlwaysVisible</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">;</span>
+    <span class="nx">_afterItemAlwaysVisible</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">;</span>
         
         <span class="k">if</span><span class="p">(</span> <span class="nx">params</span><span class="p">.</span><span class="nx">internalCall</span> <span class="p">){</span>
             <span class="k">return</span><span class="o">;</span>
@@ -1392,8 +1392,8 @@
 <span class="c">     * @protected</span>
 <span class="c">     * @param {EventFacade} params The event facade for the attribute change</span>
 <span class="c">     */</span>
-    <span class="nx">_afterContentHeight</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">itemContentHeight</span><span class="o">,</span> <span class="nx">body</span><span class="o">,</span> <span class="nx">bodyHeight</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">;</span>
+    <span class="nx">_afterContentHeight</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">itemContentHeight</span><span class="o">,</span> <span class="nx">body</span><span class="o">,</span> <span class="nx">bodyHeight</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">;</span>
         
         <span class="nx">item</span> <span class="o">=</span> <span class="nx">params</span><span class="p">.</span><span class="nx">currentTarget</span><span class="o">;</span>
         
@@ -1431,7 +1431,7 @@
 <span class="c">     *          &lt;dd&gt;The name of its resize event&lt;/dd&gt;</span>
 <span class="c">     *  &lt;/dl&gt;</span>
 <span class="c">     */</span>
-    <span class="nx">_setUpResizing</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+    <span class="nx">_setUpResizing</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
         <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_resizeEventHandle</span> <span class="p">){</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">_resizeEventHandle</span><span class="p">.</span><span class="nx">detach</span><span class="p">();</span>
         <span class="p">}</span>
@@ -1450,14 +1450,14 @@
 <span class="c">     * @method renderUI</span>
 <span class="c">     * @protected</span>
 <span class="c">     */</span>
-    <span class="nx">renderUI</span><span class="o">:</span> <span class="k">function</span><span class="p">(){</span>
-        <span class="k">var</span> <span class="nx">cb</span><span class="o">,</span> <span class="nx">itemsDom</span><span class="o">;</span>
+    <span class="nx">renderUI</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">cb</span><span class="o">,</span> <span class="nx">itemsDom</span><span class="o">;</span>
 
         <span class="nx">cb</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CONTENT_BOX</span> <span class="p">);</span>
         <span class="nx">itemsDom</span> <span class="o">=</span> <span class="nx">cb</span><span class="p">.</span><span class="nx">queryAll</span><span class="p">(</span> <span class="s2">&quot;&gt; div.&quot;</span> <span class="o">+</span> <span class="nx">C_ITEM</span> <span class="p">);</span>
 
-        <span class="nx">itemsDom</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="k">function</span><span class="p">(</span> <span class="nx">itemNode</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">itemsDom</span> <span class="p">){</span>
-            <span class="k">var</span> <span class="nx">newItem</span><span class="o">;</span>
+        <span class="nx">itemsDom</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">itemNode</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">itemsDom</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">newItem</span><span class="o">;</span>
 
             <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">getItem</span><span class="p">(</span> <span class="nx">itemNode</span> <span class="p">)</span> <span class="p">){</span>
                 <span class="nx">newItem</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">AccordionItem</span><span class="p">({</span>
@@ -1476,8 +1476,8 @@
 <span class="c">     * @method bindUI</span>
 <span class="c">     * @protected</span>
 <span class="c">     */</span>
-    <span class="nx">bindUI</span><span class="o">:</span> <span class="k">function</span><span class="p">(){</span>
-        <span class="k">var</span> <span class="nx">contentBox</span><span class="o">,</span> <span class="nx">itemChosenEvent</span><span class="o">;</span>
+    <span class="nx">bindUI</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">contentBox</span><span class="o">,</span> <span class="nx">itemChosenEvent</span><span class="o">;</span>
 
         <span class="nx">contentBox</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CONTENT_BOX</span> <span class="p">);</span>
         <span class="nx">itemChosenEvent</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s1">&#39;itemChosen&#39;</span> <span class="p">);</span>
@@ -1495,8 +1495,8 @@
 <span class="c">     * </span>
 <span class="c">     * @param e {Event} The itemChosen event</span>
 <span class="c">     */</span>
-    <span class="nx">_onItemChosenEvent</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
-        <span class="k">var</span> <span class="nx">header</span><span class="o">,</span> <span class="nx">itemNode</span><span class="o">,</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">iconAlwaysVisible</span><span class="o">,</span>
+    <span class="nx">_onItemChosenEvent</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">e</span><span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">header</span><span class="o">,</span> <span class="nx">itemNode</span><span class="o">,</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">iconAlwaysVisible</span><span class="o">,</span>
             <span class="nx">iconClose</span><span class="o">,</span> <span class="nx">srcIconAlwaysVisible</span><span class="o">,</span> <span class="nx">srcIconClose</span><span class="o">;</span>
 
         <span class="nx">header</span> <span class="o">=</span> <span class="nx">e</span><span class="p">.</span><span class="nx">currentTarget</span><span class="o">;</span>
@@ -1528,8 +1528,8 @@
 <span class="c">     * </span>
 <span class="c">     * @return Boolean True in case of successfully added item, false otherwise</span>
 <span class="c">     */</span>
-    <span class="nx">addItem</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">parentItem</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">bodyContent</span><span class="o">,</span> <span class="nx">itemIndex</span><span class="o">,</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">contentBox</span><span class="o">,</span>
+    <span class="nx">addItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">parentItem</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">bodyContent</span><span class="o">,</span> <span class="nx">itemIndex</span><span class="o">,</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">contentBox</span><span class="o">,</span>
             <span class="nx">itemHandles</span><span class="o">,</span> <span class="nx">itemContentBox</span><span class="o">,</span> <span class="nx">res</span><span class="o">,</span> <span class="nx">cb</span><span class="o">,</span> <span class="nx">children</span><span class="o">,</span> <span class="nx">itemBoundingBox</span><span class="o">;</span>
 
         <span class="nx">res</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFOREITEMADD</span><span class="o">,</span> <span class="p">{</span>
@@ -1574,7 +1574,7 @@
             <span class="nx">cb</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CONTENT_BOX</span> <span class="p">);</span>
             <span class="nx">children</span> <span class="o">=</span> <span class="nx">cb</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CHILDREN</span> <span class="p">);</span>
 
-            <span class="nx">res</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span> <span class="k">function</span><span class="p">(</span> <span class="nx">node</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">nodeList</span> <span class="p">){</span>
+            <span class="nx">res</span> <span class="o">=</span> <span class="nx">children</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">node</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">nodeList</span> <span class="p">){</span>
                 <span class="k">if</span><span class="p">(</span> <span class="nx">node</span> <span class="o">===</span> <span class="nx">itemContentBox</span> <span class="p">){</span>
                     <span class="nx">items</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span> <span class="nx">index</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">item</span> <span class="p">);</span>
                     <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
@@ -1649,8 +1649,8 @@
 <span class="c">     * @param {Y.AccordionItem|Number} p_item The item to be removed, or its index</span>
 <span class="c">     * @return Y.AccordionItem The removed item or null if not found</span>
 <span class="c">     */</span>
-    <span class="nx">removeItem</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">p_item</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">bb</span><span class="o">,</span> <span class="nx">item</span> <span class="o">=</span> <span class="kc">null</span><span class="o">,</span> <span class="nx">itemIndex</span><span class="o">;</span>
+    <span class="nx">removeItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">p_item</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">bb</span><span class="o">,</span> <span class="nx">item</span> <span class="o">=</span> <span class="kc">null</span><span class="o">,</span> <span class="nx">itemIndex</span><span class="o">;</span>
         
         <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">);</span>
         
@@ -1695,8 +1695,8 @@
 <span class="c">     * </span>
 <span class="c">     * @return Y.AccordionItem The found item or null</span>
 <span class="c">     */</span>
-    <span class="nx">getItem</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">param</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">)</span><span class="o">,</span> <span class="nx">item</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="nx">getItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">param</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">)</span><span class="o">,</span> <span class="nx">item</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
 
         <span class="k">if</span><span class="p">(</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span> <span class="nx">param</span> <span class="p">)</span> <span class="p">){</span>
             <span class="nx">item</span> <span class="o">=</span> <span class="nx">items</span><span class="p">[</span> <span class="nx">param</span> <span class="p">];</span>
@@ -1704,8 +1704,8 @@
             <span class="k">return</span> <span class="p">(</span><span class="nx">item</span> <span class="k">instanceof</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">AccordionItem</span><span class="p">)</span> <span class="o">?</span> <span class="nx">item</span> <span class="o">:</span> <span class="kc">null</span><span class="o">;</span>
         <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">param</span> <span class="k">instanceof</span> <span class="nx">Node</span> <span class="p">){</span>
 
-            <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="k">function</span><span class="p">(</span> <span class="nx">tmpItem</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
-                <span class="k">var</span> <span class="nx">contentBox</span><span class="o">,</span> <span class="nx">boundingBox</span><span class="o">;</span>
+            <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">tmpItem</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
+                <span class="kd">var</span> <span class="nx">contentBox</span><span class="o">,</span> <span class="nx">boundingBox</span><span class="o">;</span>
                 
                 <span class="nx">contentBox</span> <span class="o">=</span> <span class="nx">tmpItem</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CONTENT_BOX</span> <span class="p">);</span>
                 <span class="nx">boundingBox</span> <span class="o">=</span> <span class="nx">tmpItem</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">BOUNDING_BOX</span> <span class="p">);</span>
@@ -1733,13 +1733,13 @@
 <span class="c">     * @param {Y.AccordionItem} item The item which index should be returned</span>
 <span class="c">     * @return Number Item index or &lt;code&gt;-1&lt;/code&gt; if item has been not found</span>
 <span class="c">     */</span>
-    <span class="nx">getItemIndex</span><span class="o">:</span> <span class="k">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
-        <span class="k">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="nx">items</span><span class="o">;</span>
+    <span class="nx">getItemIndex</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="nx">items</span><span class="o">;</span>
 
         <span class="k">if</span><span class="p">(</span> <span class="nx">item</span> <span class="k">instanceof</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">AccordionItem</span> <span class="p">){</span>
             <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">);</span>
 
-            <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="k">function</span><span class="p">(</span> <span class="nx">tmpItem</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
+            <span class="nx">Y</span><span class="p">.</span><span class="nb">Array</span><span class="p">.</span><span class="nx">some</span><span class="p">(</span> <span class="nx">items</span><span class="o">,</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">tmpItem</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">items</span> <span class="p">){</span>
                 <span class="k">if</span><span class="p">(</span> <span class="nx">tmpItem</span> <span class="o">===</span> <span class="nx">item</span> <span class="p">){</span>
                     <span class="nx">res</span> <span class="o">=</span> <span class="nx">index</span><span class="o">;</span>
                     <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
