@@ -72,7 +72,12 @@
     <span class="nx">HREF</span> <span class="o">=</span> <span class="s2">&quot;href&quot;</span><span class="o">,</span>
     <span class="nx">HREF_VALUE</span> <span class="o">=</span> <span class="s2">&quot;#&quot;</span><span class="o">,</span>
     <span class="nx">YUICONFIG</span> <span class="o">=</span> <span class="s2">&quot;yuiConfig&quot;</span><span class="o">,</span>
-    <span class="nx">HEADER_CONTENT</span> <span class="o">=</span> <span class="s2">&quot;headerContent&quot;</span><span class="o">;</span>
+    <span class="nx">HEADER_CONTENT</span> <span class="o">=</span> <span class="s2">&quot;headerContent&quot;</span><span class="o">,</span>
+
+    <span class="nx">REGEX_TRUE</span> <span class="o">=</span> <span class="sr">/^(?:true|yes|1)$/</span><span class="o">,</span>
+    <span class="nx">REGEX_AUTO</span> <span class="o">=</span> <span class="sr">/^auto\s*/</span><span class="o">,</span>
+    <span class="nx">REGEX_STRETCH</span> <span class="o">=</span> <span class="sr">/^stretch\s*/</span><span class="o">,</span>
+    <span class="nx">REGEX_FIXED</span> <span class="o">=</span> <span class="sr">/^fixed-\d+/</span><span class="o">;</span>
 
 <span class="c">/**</span>
 <span class="c"> *  Static property provides a string to identify the class.</span>
@@ -319,12 +324,18 @@
     <span class="p">}</span><span class="o">,</span>
 
     <span class="kd">label</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">){</span>
-        <span class="kd">var</span> <span class="nx">node</span><span class="o">,</span> <span class="nx">labelSelector</span><span class="o">,</span> <span class="nx">yuiConfig</span><span class="o">;</span>
+        <span class="kd">var</span> <span class="nx">node</span><span class="o">,</span> <span class="nx">labelSelector</span><span class="o">,</span> <span class="nx">yuiConfig</span><span class="o">,</span> <span class="kd">label</span><span class="o">;</span>
         
         <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getConfigDOMAttribute</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">);</span>
         
         <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isValue</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="kd">label</span> <span class="p">)</span> <span class="p">){</span>
             <span class="k">return</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="kd">label</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="kd">label</span> <span class="o">=</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-label&quot;</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="kd">label</span> <span class="p">){</span>
+            <span class="k">return</span> <span class="kd">label</span><span class="o">;</span>
         <span class="p">}</span>
 
         <span class="nx">labelSelector</span> <span class="o">=</span> <span class="nx">HEADER_SELECTOR_SUB</span> <span class="o">+</span> <span class="nx">C_LABEL</span><span class="o">;</span>
@@ -379,53 +390,96 @@
     <span class="p">}</span><span class="o">,</span>
 
     <span class="nx">expanded</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">){</span>
-        <span class="kd">var</span> <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getConfigDOMAttribute</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">yuiConfig</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">;</span>
 
-        <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isValue</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">expanded</span> <span class="p">)</span> <span class="p">){</span>
+        <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getConfigDOMAttribute</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">expanded</span> <span class="p">)</span> <span class="p">){</span>
             <span class="k">return</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">expanded</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="nx">expanded</span> <span class="o">=</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-expanded&quot;</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">expanded</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">REGEX_TRUE</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">expanded</span> <span class="p">);</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_EXPANDED</span> <span class="p">);</span>
     <span class="p">}</span><span class="o">,</span>
 
     <span class="nx">alwaysVisible</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">){</span>
-        <span class="kd">var</span> <span class="nx">value</span><span class="o">,</span> <span class="nx">yuiConfig</span><span class="o">;</span>
+        <span class="kd">var</span> <span class="nx">yuiConfig</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">;</span>
 
         <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getConfigDOMAttribute</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">);</span>
 
-        <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isValue</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">alwaysVisible</span> <span class="p">)</span> <span class="p">){</span>
-            <span class="nx">value</span> <span class="o">=</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">alwaysVisible</span><span class="o">;</span>
+        <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">alwaysVisible</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">alwaysVisible</span><span class="o">;</span>
         <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="nx">value</span> <span class="o">=</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ALWAYSVISIBLE</span> <span class="p">);</span>
+            <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-alwaysvisible&quot;</span> <span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">alwaysVisible</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">REGEX_TRUE</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">alwaysVisible</span> <span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ALWAYSVISIBLE</span> <span class="p">);</span>
+            <span class="p">}</span>
         <span class="p">}</span>
 
-        <span class="k">if</span><span class="p">(</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="s2">&quot;expanded&quot;</span><span class="o">,</span> <span class="kc">true</span><span class="o">,</span> <span class="p">{</span>
                 <span class="nx">internalCall</span><span class="o">:</span> <span class="kc">true</span>
             <span class="p">}</span> <span class="p">);</span>
         <span class="p">}</span>
 
-        <span class="k">return</span> <span class="nx">value</span><span class="o">;</span>
+        <span class="k">return</span> <span class="nx">alwaysVisible</span><span class="o">;</span>
     <span class="p">}</span><span class="o">,</span>
 
     <span class="nx">closable</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">){</span>
-        <span class="kd">var</span> <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getConfigDOMAttribute</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">);</span>
+        <span class="kd">var</span> <span class="nx">yuiConfig</span><span class="o">,</span> <span class="nx">closable</span><span class="o">;</span>
 
-        <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isValue</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">closable</span> <span class="p">)</span> <span class="p">){</span>
+        <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getConfigDOMAttribute</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">closable</span> <span class="p">)</span> <span class="p">){</span>
             <span class="k">return</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">closable</span><span class="o">;</span>
+        <span class="p">}</span>
+
+        <span class="nx">closable</span> <span class="o">=</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-closable&quot;</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">closable</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">REGEX_TRUE</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">closable</span> <span class="p">);</span>
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_CLOSABLE</span> <span class="p">);</span>
     <span class="p">}</span><span class="o">,</span>
 
     <span class="nx">contentHeight</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">){</span>
-        <span class="kd">var</span> <span class="nx">contentHeightClass</span><span class="o">,</span> <span class="nx">classValue</span><span class="o">,</span> <span class="nx">height</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">i</span><span class="o">,</span> <span class="nx">length</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">chr</span><span class="o">,</span> <span class="nx">yuiConfig</span><span class="o">;</span>
+        <span class="kd">var</span> <span class="nx">contentHeightClass</span><span class="o">,</span> <span class="nx">classValue</span><span class="o">,</span> <span class="nx">height</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="nx">index</span><span class="o">,</span> <span class="nx">yuiConfig</span><span class="o">,</span>
+            <span class="nx">contentHeight</span><span class="o">;</span>
 
         <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_getConfigDOMAttribute</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">);</span>
 
         <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">contentHeight</span> <span class="p">){</span>
             <span class="k">return</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">contentHeight</span><span class="o">;</span>
         <span class="p">}</span>
+
+        <span class="nx">contentHeight</span> <span class="o">=</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-contentheight&quot;</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_AUTO</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">contentHeight</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="nx">AUTO</span>
+            <span class="p">};</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_STRETCH</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">contentHeight</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="nx">STRETCH</span>
+            <span class="p">};</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_FIXED</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">contentHeight</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="nx">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFixedMethodValue</span><span class="p">(</span> <span class="nx">contentHeight</span> <span class="p">);</span>
+
+            <span class="k">return</span> <span class="p">{</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="nx">FIXED</span><span class="o">,</span>
+                <span class="nx">height</span><span class="o">:</span> <span class="nx">height</span>
+            <span class="p">};</span>
+        <span class="p">}</span>
+
 
         <span class="nx">classValue</span> <span class="o">=</span> <span class="nx">contentBox</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CLASS_NAME</span> <span class="p">);</span>
 
@@ -434,31 +488,21 @@
         <span class="nx">index</span> <span class="o">=</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span> <span class="nx">contentHeightClass</span><span class="o">,</span> <span class="mi">0</span><span class="p">);</span>
 
         <span class="k">if</span><span class="p">(</span> <span class="nx">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">){</span>
-            <span class="nx">length</span> <span class="o">=</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">length</span><span class="o">;</span>
             <span class="nx">index</span> <span class="o">+=</span> <span class="nx">contentHeightClass</span><span class="p">.</span><span class="nx">length</span><span class="o">;</span>
 
             <span class="nx">classValue</span> <span class="o">=</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span> <span class="nx">index</span> <span class="p">);</span>
 
-            <span class="k">if</span><span class="p">(</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span> <span class="sr">/^auto\s*/g</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_AUTO</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">classValue</span> <span class="p">)</span> <span class="p">){</span>
                 <span class="k">return</span> <span class="p">{</span>
                     <span class="nx">method</span><span class="o">:</span> <span class="nx">AUTO</span>
                 <span class="p">};</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span> <span class="sr">/^stretch\s*/g</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_STRETCH</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">classValue</span> <span class="p">)</span> <span class="p">){</span>
                 <span class="k">return</span> <span class="p">{</span>
                     <span class="nx">method</span><span class="o">:</span> <span class="nx">STRETCH</span>
                 <span class="p">};</span>
-            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">match</span><span class="p">(</span> <span class="sr">/^fixed-\d+/g</span> <span class="p">)</span>  <span class="p">){</span>
-                <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">6</span><span class="o">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">length</span><span class="o">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="o">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">){</span> <span class="c">// 6 = &quot;fixed-&quot;.length</span>
-                    <span class="nx">chr</span> <span class="o">=</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
-                    <span class="nx">chr</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span> <span class="nx">chr</span><span class="o">,</span> <span class="mi">10</span> <span class="p">);</span>
-
-                    <span class="k">if</span><span class="p">(</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span> <span class="nx">chr</span> <span class="p">)</span> <span class="p">){</span>
-                        <span class="nx">height</span> <span class="o">=</span> <span class="p">(</span><span class="nx">height</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="nx">chr</span><span class="o">;</span>
-                    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-                        <span class="k">break</span><span class="o">;</span>
-                    <span class="p">}</span>
-                <span class="p">}</span>
-
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_FIXED</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">classValue</span> <span class="p">)</span>  <span class="p">){</span>
+                <span class="nx">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFixedMethodValue</span><span class="p">(</span> <span class="nx">classValue</span> <span class="p">);</span>
+                
                 <span class="k">return</span> <span class="p">{</span>
                     <span class="nx">method</span><span class="o">:</span> <span class="nx">FIXED</span><span class="o">,</span>
                     <span class="nx">height</span><span class="o">:</span> <span class="nx">height</span>
@@ -865,9 +909,9 @@
 <span class="c">     * This function will be replaced with more clever solution when YUI 3.1 becomes available</span>
 <span class="c">     *</span>
 <span class="c">     * @method _getConfigDOMAttribute</span>
-<span class="c">     * @private</span>
 <span class="c">     * @param {Node} contentBox Widget&#39;s contentBox</span>
 <span class="c">     * @return {Object} The parsed yuiConfig value</span>
+<span class="c">     * @private</span>
 <span class="c">     */</span>
     <span class="nx">_getConfigDOMAttribute</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">contentBox</span> <span class="p">)</span> <span class="p">{</span>
         <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_parsedCfg</span> <span class="p">){</span>
@@ -879,6 +923,33 @@
         <span class="p">}</span>
 
         <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parsedCfg</span><span class="o">;</span>
+    <span class="p">}</span><span class="o">,</span>
+
+
+    <span class="c">/**</span>
+<span class="c">     * Parses and returns the value of contentHeight property, if set method &quot;fixed&quot;.</span>
+<span class="c">     * The value must be in this format: fixed-X, where X is integer</span>
+<span class="c">     *</span>
+<span class="c">     * @method _extractFixedMethodValue</span>
+<span class="c">     * @param {String} value The value to be parsed</span>
+<span class="c">     * @return {Number} The parsed value or null</span>
+<span class="c">     * @protected</span>
+<span class="c">     */</span>
+    <span class="nx">_extractFixedMethodValue</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">i</span><span class="o">,</span> <span class="nx">length</span><span class="o">,</span> <span class="nx">chr</span><span class="o">,</span> <span class="nx">height</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+
+        <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">6</span><span class="o">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">value</span><span class="p">.</span><span class="nx">length</span><span class="o">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="o">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">){</span> <span class="c">// 6 = &quot;fixed-&quot;.length</span>
+            <span class="nx">chr</span> <span class="o">=</span> <span class="nx">value</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+            <span class="nx">chr</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span> <span class="nx">chr</span><span class="o">,</span> <span class="mi">10</span> <span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span> <span class="nx">chr</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">height</span> <span class="o">=</span> <span class="p">(</span><span class="nx">height</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="nx">chr</span><span class="o">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">break</span><span class="o">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nx">height</span><span class="o">;</span>
     <span class="p">}</span>
     
 <span class="p">});</span>

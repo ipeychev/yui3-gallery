@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css">
 <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssfonts/fonts-min.css">
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2009.11.02-20/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2009.11.09-19/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
 
 <style type="text/css">
 	html, body {
@@ -15,7 +15,7 @@
 </style>
 
 <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2009.11.02-20/build/gallery-accordion/gallery-accordion-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2009.11.09-19/build/gallery-accordion/gallery-accordion-min.js"></script>
 
 <script type="text/javascript">	
 
@@ -39,7 +39,7 @@ YUI().use( 'gallery-accordion', function(Y) {
     <div style="position: absolute; left: 50px; top: 50px; width: 350px; height: 420px;">
         <div id="boundingBox1" class="yui-accordion">
             <div id="contentBox1" style="position: relative; height: 420px; overflow:hidden;">
-                <div id="item1" class="yui-accordion-item yui-accordion-item-alwaysvisible" yuiConfig='{"contentHeight": {"method":"fixed", "height":150}, "closable": true}'>
+                <div id="item1" class="yui-accordion-item yui-accordion-item-alwaysvisible" data-contentheight="fixed-150" yuiConfig='{"closable": true}'>
                     <div class="yui-widget-hd">
                         <a class="yui-accordion-item-icon"></a>
                         <a class="yui-accordion-item-label">Label 1</a>
@@ -56,7 +56,7 @@ YUI().use( 'gallery-accordion', function(Y) {
                     </div>
                 </div>
 
-                <div id="item2" class="yui-accordion-item yui-accordion-item-contentheight-stretch" yuiConfig='{"expanded": true}'>
+                <div id="item2" class="yui-accordion-item" data-contentheight="stretch" yuiConfig='{"expanded": true}'>
                     <div class="yui-widget-hd">
                         <a class="yui-accordion-item-icon"></a>
                         <a class="yui-accordion-item-label">Label 2</a>
