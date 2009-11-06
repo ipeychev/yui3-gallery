@@ -1,1 +1,15 @@
-Add README
+Accordion widget for YUI 3
+
+I. Changelog
+var. 1.06
+  - Accordion supports config attributes via HTML5 "data-"
+ver. 1.05
+  - Setting item label bugfix
+ver. 1.04
+  - progressive enhancement improvements in AccordionItem
+  - header HTML structure changed - table no more used, links will be used instead
+
+ver. 1.03
+  - string literals turned into local constants
+  - EVENT_TYPES variable removed
+  - event listeners unbundled
