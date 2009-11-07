@@ -492,16 +492,16 @@ AccordionItem.HTML_PARSER = {
 
             classValue = classValue.substring( index );
 
-            if( classValue.match( REGEX_AUTO ) ){
+            if( REGEX_AUTO.test( classValue ) ){
                 return {
                     method: AUTO
                 };
-            } else if( classValue.match( REGEX_STRETCH ) ){
+            } else if( REGEX_STRETCH.test( classValue ) ){
                 return {
                     method: STRETCH
                 };
-            } else if( classValue.match( REGEX_FIXED )  ){
-                height = this._extractFixedMethodValue();
+            } else if( REGEX_FIXED.test( classValue )  ){
+                height = this._extractFixedMethodValue( classValue );
                 
                 return {
                     method: FIXED,
