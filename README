@@ -1,8 +1,18 @@
 Accordion widget for YUI 3
 
 I. Changelog
-var. 1.06
-  - Accordion supports config attributes via HTML5 "data-"
+ver. 1.06
+  - Accordion supports setting config attributes via HTML5 "data-". These are:
+    + data-label - string
+    + data-expanded - "true", "yes" or "1"
+    + data-alwaysvisible - "true", "yes" or "1"
+    + data-closable - "true", "yes" or "1"
+    + data-contentheight - "auto", "stretch" or "fixed-X", where X is a number
+    
+    Examples:
+      data-label="Label1"
+      data-expanded="true"
+      data-contentheight="fixed-150" - content height will be 150 px
 ver. 1.05
   - Setting item label bugfix
 ver. 1.04
