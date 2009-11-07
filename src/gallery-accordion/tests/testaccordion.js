@@ -100,6 +100,30 @@ YUI({
             Y.Assert.areSame( true, av4 , "Item 4 must be always visible");
         },
         
+        testItemsContentHeight: function(){
+            var items, ch1, ch2, ch3, ch4,
+                item1, item2, item3, item4;
+
+            items = that.accordion1.get( "items" );
+
+            item1 = items[0];
+            item2 = items[1];
+            item3 = items[2];
+            item4 = items[3];
+
+            ch1 = item1.get( "contentHeight" );
+            ch2 = item2.get( "contentHeight" );
+            ch3 = item3.get( "contentHeight" );
+            ch4 = item4.get( "contentHeight" );
+
+
+            Y.Assert.areSame( "fixed", ch1.method, "Item 1 content height must be fixed");
+            Y.Assert.areSame( 150, ch1.height, "Item 1 content height must be fixed, 150px");
+            Y.Assert.areSame( "stretch", ch2.method, "Item 2 content height must be stretched");
+            Y.Assert.areSame( "auto", ch3.method, "Item 3 content height must be auto");
+            Y.Assert.areSame( "stretch", ch4.method, "Item 4 content height must be stretched");
+        },
+
         testManuallySwitchingAttrs: function(){
             var items, item1, item3;
                 
