@@ -1,6 +1,11 @@
 Accordion widget for YUI 3
 
 I. Changelog
+ver. 1.07
+ - Parsing data from markup improved for icon, nodeLabel, iconsContainer, iconAlwaysVisible, iconExpanded and iconClose configuration properties.
+   Valid input is not only Node, but raw HTMLElement and a selector string also.
+
+- Item reordering is false by default, instead true. As result, drag modules are now optional, not required.
 ver. 1.06
   - Accordion supports setting config attributes via HTML5 "data-". These are:
     + data-label - string
