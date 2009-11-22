@@ -138,23 +138,30 @@
 <span class="c">     * For example, if we are using LayoutManager&#39;s instance as sourceObject, we will have to use its &quot;resize&quot; event as resizeEvent</span>
 <span class="c">     *  </span>
 <span class="c">     * @default &quot;default&quot;</span>
-<span class="c">     * @type String or Object, see the description above</span>
+<span class="c">     * @type String or Object</span>
 <span class="c">     */</span>
 
     <span class="nx">resizeEvent</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">value</span><span class="o">:</span> <span class="nx">DEFAULT</span><span class="o">,</span>
         <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
-            <span class="k">return</span> <span class="p">(</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isString</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="o">||</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">value</span><span class="p">));</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nx">value</span> <span class="o">===</span> <span class="nx">DEFAULT</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="p">){</span>
+                <span class="k">if</span><span class="p">(</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isValue</span><span class="p">(</span> <span class="nx">value</span><span class="p">.</span><span class="nx">sourceObject</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isValue</span><span class="p">(</span> <span class="nx">value</span><span class="p">.</span><span class="nx">resizeEvent</span> <span class="p">)</span> <span class="p">){</span>
+                    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
         <span class="p">}</span>
     <span class="p">}</span><span class="o">,</span>
 
     <span class="c">/**</span>
 <span class="c">     * @attribute useAnimation</span>
-<span class="c">     * @description Whether or not Accordion should use animation when expand or collapse some item</span>
-<span class="c">     * The animation in Accordion is slow in IE6</span>
+<span class="c">     * @description Boolean indicating that Accordion should use animation when expanding or collapsing items.</span>
 <span class="c">     * </span>
-<span class="c">     * @default: true</span>
-<span class="c">     * @type boolean</span>
+<span class="c">     * @default true</span>
+<span class="c">     * @type Boolean</span>
 <span class="c">     */</span>
     <span class="nx">useAnimation</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">value</span><span class="o">:</span> <span class="kc">true</span><span class="o">,</span>
@@ -186,14 +193,19 @@
 
     <span class="c">/**</span>
 <span class="c">     * @attribute reorderItems</span>
-<span class="c">     * @description Whether or not the items in Accordion can be reordered by using drag&amp;drop</span>
-<span class="c">     * </span>
-<span class="c">     * @default true</span>
-<span class="c">     * @type boolean</span>
+<span class="c">     * @description Boolean indicating that items can be reordered via drag and drop.&lt;br&gt;</span>
+<span class="c">     *</span>
+<span class="c">     * Enabling items reordering requires also including the optional drag and drop modules in YUI instance:&lt;br&gt;</span>
+<span class="c">     * &#39;dd-constrain&#39;, &#39;dd-proxy&#39;, &#39;dd-drop&#39;, or just &#39;dd&#39;</span>
+<span class="c">     *</span>
+<span class="c">     * @default false</span>
+<span class="c">     * @type Boolean</span>
 <span class="c">     */</span>
     <span class="nx">reorderItems</span><span class="o">:</span> <span class="p">{</span>
-        <span class="nx">value</span><span class="o">:</span> <span class="kc">true</span><span class="o">,</span>
-        <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span>
+        <span class="nx">value</span><span class="o">:</span> <span class="kc">false</span><span class="o">,</span>
+        <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">value</span><span class="p">){</span>
+            <span class="k">return</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span><span class="nx">value</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="nx">Lang</span><span class="p">.</span><span class="nx">isUndefined</span><span class="p">(</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">DD</span> <span class="p">);</span>
+        <span class="p">}</span>
     <span class="p">}</span><span class="o">,</span>
 
     <span class="c">/**</span>
@@ -220,7 +232,7 @@
 <span class="c">     *</span>
 <span class="c">     * @method initializer</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param  config {Object} Configuration object literal for the Accordion</span>
+<span class="c">     * @param config {Object} Configuration object literal for the Accordion</span>
 <span class="c">     */</span>
     <span class="nx">initializer</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">config</span> <span class="p">)</span> <span class="p">{</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_initEvents</span><span class="p">();</span>
@@ -441,7 +453,7 @@
 <span class="c">     *</span>
 <span class="c">     * @method _removeItemHandles</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item The item, which handles to remove</span>
+<span class="c">     * @param item {Y.AccordionItem} The item, which handles to remove</span>
 <span class="c">     */</span>
     <span class="nx">_removeItemHandles</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">itemHandles</span><span class="o">,</span> <span class="nx">itemHandle</span><span class="o">;</span>
@@ -463,7 +475,7 @@
 <span class="c">     *</span>
 <span class="c">     * @method _getNodeOffsetHeight</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Node|HTMLElement} node The node to gather the height from</span>
+<span class="c">     * @param node {Node|HTMLElement} The node to gather the height from</span>
 <span class="c">     * @return {Number} The calculated height or zero in case of failure</span>
 <span class="c">     */</span>
     <span class="nx">_getNodeOffsetHeight</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">node</span> <span class="p">){</span>
@@ -497,9 +509,9 @@
 <span class="c">     *</span>
 <span class="c">     * @method _setItemProperties</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item The item, which properties should be updated</span>
-<span class="c">     * @param {boolean} expanding The new value of &quot;expanded&quot; property</span>
-<span class="c">     * @param {boolean} alwaysVisible The new value of &quot;alwaysVisible&quot; property</span>
+<span class="c">     * @param item {Y.AccordionItem} The item, which properties should be updated</span>
+<span class="c">     * @param expanding {Boolean} The new value of &quot;expanded&quot; property</span>
+<span class="c">     * @param alwaysVisible {Boolean} The new value of &quot;alwaysVisible&quot; property</span>
 <span class="c">     */</span>
     <span class="nx">_setItemProperties</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">expanding</span><span class="o">,</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">curAlwaysVisible</span><span class="o">,</span> <span class="nx">curExpanded</span><span class="o">;</span>
@@ -526,10 +538,10 @@
 <span class="c">     *</span>
 <span class="c">     * @method _setItemUI</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item The item, which user interface should be updated</span>
-<span class="c">     * @param {boolean} expanding If true, the item will be marked as expanded.</span>
+<span class="c">     * @param item {Y.AccordionItem} The item, which user interface should be updated</span>
+<span class="c">     * @param expanding {Boolean} If true, the item will be marked as expanded.</span>
 <span class="c">     * If false, the item will be marked as collapsed</span>
-<span class="c">     * @param {boolean} alwaysVisible If true, the item will be marked as always visible.</span>
+<span class="c">     * @param alwaysVisible {Boolean} If true, the item will be marked as always visible.</span>
 <span class="c">     * If false, the always visible mark will be removed</span>
 <span class="c">     */</span>
     <span class="nx">_setItemUI</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">expanding</span><span class="o">,</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
@@ -564,7 +576,7 @@
 <span class="c">     * @param params {Event} after resizeEventChange custom event</span>
 <span class="c">     */</span>
     <span class="nx">_afterResizeEventChange</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
-        <span class="k">this</span><span class="p">.</span><span class="nx">_setUpResizing</span><span class="p">(</span> <span class="nx">params</span><span class="p">.</span><span class="nx">newValue</span> <span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_setUpResizing</span><span class="p">(</span> <span class="nx">params</span><span class="p">.</span><span class="nx">newVal</span> <span class="p">);</span>
     <span class="p">}</span><span class="o">,</span>
 
     
@@ -766,7 +778,7 @@
 <span class="c">     * </span>
 <span class="c">     * @method _storeItemsForCollapsing</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Object} itemsToBeExcluded (optional) Contains one or more &lt;code&gt;Y.AccordionItem&lt;/code&gt; instances,</span>
+<span class="c">     * @param itemsToBeExcluded {Object} (optional) Contains one or more &lt;code&gt;Y.AccordionItem&lt;/code&gt; instances,</span>
 <span class="c">     * which should be not included in the list</span>
 <span class="c">     */</span>
     <span class="nx">_storeItemsForCollapsing</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">itemsToBeExcluded</span> <span class="p">){</span>
@@ -795,8 +807,8 @@
 <span class="c">     * </span>
 <span class="c">     * @method _expandItem</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item The item, which should be expanded</span>
-<span class="c">     * @param {Number} height The height to which we should expand the item</span>
+<span class="c">     * @param item {Y.AccordionItem} The item, which should be expanded.</span>
+<span class="c">     * @param height {Number} The height to which we should expand the item</span>
 <span class="c">     */</span>
     <span class="nx">_expandItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">item</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ALWAYSVISIBLE</span> <span class="p">);</span>
@@ -813,10 +825,10 @@
 <span class="c">     * </span>
 <span class="c">     * @method _processExpanding</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance to be expanded</span>
-<span class="c">     * @param {Boolean} forceSkipAnimation If true, the animation will be skipped, </span>
+<span class="c">     * @param item {Y.AccordionItem} An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance to be expanded</span>
+<span class="c">     * @param forceSkipAnimation {Boolean} If true, the animation will be skipped,</span>
 <span class="c">     * without taking in consideration Accordion&#39;s &lt;code&gt;useAnimation&lt;/code&gt; setting</span>
-<span class="c">     * @param {Number} height The height to which item should be expanded</span>
+<span class="c">     * @param height {Number} The height to which item should be expanded</span>
 <span class="c">     */</span>
     <span class="nx">_processExpanding</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">forceSkipAnimation</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">anim</span><span class="o">,</span> <span class="nx">curAnim</span><span class="o">,</span> <span class="nx">animSettings</span><span class="o">,</span> <span class="nx">notifyOthers</span> <span class="o">=</span> <span class="kc">false</span><span class="o">,</span>
@@ -884,8 +896,8 @@
 <span class="c">     *</span>
 <span class="c">     * @method _onExpandComplete</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance which has been expanded</span>
-<span class="c">     * @param {Boolean} notifyOthers If true, itemExpanded event will be fired</span>
+<span class="c">     * @param item {Y.AccordionItem} An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance which has been expanded</span>
+<span class="c">     * @param notifyOthers {Boolean} If true, itemExpanded event will be fired</span>
 <span class="c">     */</span>
     <span class="nx">_onExpandComplete</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">notifyOthers</span> <span class="p">){</span>
         <span class="nx">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">_animations</span><span class="p">[</span> <span class="nx">item</span> <span class="p">];</span>
@@ -909,7 +921,7 @@
 <span class="c">     * </span>
 <span class="c">     * @method _collapseItem</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item The item, which should be collapsed</span>
+<span class="c">     * @param item {Y.AccordionItem} The item, which should be collapsed</span>
 <span class="c">     */</span>
     <span class="nx">_collapseItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">_processCollapsing</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">COLLAPSE_HEIGHT</span> <span class="p">);</span>
@@ -924,9 +936,9 @@
 <span class="c">     * </span>
 <span class="c">     * @method _processCollapsing</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance to be collapsed</span>
-<span class="c">     * @param {Number} height The height to which item should be collapsed</span>
-<span class="c">     * @param {Boolean} forceSkipAnimation If true, the animation will be skipped, </span>
+<span class="c">     * @param item {Y.AccordionItem} An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance to be collapsed</span>
+<span class="c">     * @param height {Number} The height to which item should be collapsed</span>
+<span class="c">     * @param forceSkipAnimation {Boolean} If true, the animation will be skipped,</span>
 <span class="c">     * without taking in consideration Accordion&#39;s &lt;code&gt;useAnimation&lt;/code&gt; setting</span>
 <span class="c">     */</span>
     <span class="nx">_processCollapsing</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">height</span><span class="o">,</span> <span class="nx">forceSkipAnimation</span> <span class="p">){</span>
@@ -995,8 +1007,8 @@
 <span class="c">     *</span>
 <span class="c">     * @method _onCollapseComplete</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance which has been collapsed</span>
-<span class="c">     * @param {Boolean} notifyOthers If true, itemCollapsed event will be fired</span>
+<span class="c">     * @param item {Y.AccordionItem} An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance which has been collapsed</span>
+<span class="c">     * @param notifyOthers {Boolean} If true, itemCollapsed event will be fired</span>
 <span class="c">     */</span>
     <span class="nx">_onCollapseComplete</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">notifyOthers</span> <span class="p">){</span>
         <span class="nx">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">_animations</span><span class="p">[</span> <span class="nx">item</span> <span class="p">];</span>
@@ -1020,7 +1032,7 @@
 <span class="c">     * </span>
 <span class="c">     * @method _initItemDragDrop</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.AccordionItem} item An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance to be set as draggable</span>
+<span class="c">     * @param item {Y.AccordionItem} An &lt;code&gt;Y.AccordionItem&lt;/code&gt; instance to be set as draggable</span>
 <span class="c">     */</span>
     <span class="nx">_initItemDragDrop</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">itemHeader</span><span class="o">,</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">bb</span><span class="o">,</span> <span class="nx">itemBB</span><span class="o">,</span> <span class="nx">ddrop</span><span class="o">;</span>
@@ -1061,7 +1073,7 @@
 <span class="c">     *</span>
 <span class="c">     * @method _onDragStart</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.DD.Drag} The drag instance of the item</span>
+<span class="c">     * @param dd {Y.DD.Drag} The drag instance of the item</span>
 <span class="c">     * @param e {Event} the DD instance&#39;s drag:start custom event</span>
 <span class="c">     */</span>
     <span class="nx">_onDragStart</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span> <span class="p">){</span>
@@ -1083,7 +1095,7 @@
 <span class="c">     *</span>
 <span class="c">     * @method _onDragEnd</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.DD.Drag} The drag instance of the item</span>
+<span class="c">     * @param dd {Y.DD.Drag} The drag instance of the item</span>
 <span class="c">     * @param e {Event} the DD instance&#39;s drag:end custom event</span>
 <span class="c">     */</span>
     <span class="nx">_onDragEnd</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span> <span class="p">){</span>
@@ -1104,7 +1116,7 @@
 <span class="c">     *</span>
 <span class="c">     * @method _afterDragEnd</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.DD.Drag} The drag instance of the item</span>
+<span class="c">     * @param dd {Y.DD.Drag} The drag instance of the item</span>
 <span class="c">     * @param e {Event} the DD instance&#39;s drag:end custom event</span>
 <span class="c">     */</span>
     <span class="nx">_afterDragEnd</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span> <span class="p">){</span>
@@ -1131,7 +1143,7 @@
 <span class="c">     *</span>
 <span class="c">     * @method _onDropHit</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {Y.DD.Drag} The drag instance of the item</span>
+<span class="c">     * @param dd {Y.DD.Drag} The drag instance of the item</span>
 <span class="c">     * @param e {Event} the DD instance&#39;s drag:drophit custom event</span>
 <span class="c">     */</span>
     <span class="nx">_onDropHit</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">dd</span><span class="o">,</span> <span class="nx">e</span><span class="p">)</span> <span class="p">{</span>
@@ -1260,7 +1272,7 @@
 <span class="c">     * </span>
 <span class="c">     * @method _afterItemExpand</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {EventFacade} params The event facade for the attribute change</span>
+<span class="c">     * @param params {EventFacade} The event facade for the attribute change</span>
 <span class="c">     */</span>
     <span class="nx">_afterItemExpand</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">collapseOthersOnExpand</span><span class="o">;</span>
@@ -1297,7 +1309,7 @@
 <span class="c">     * </span>
 <span class="c">     * @method _afterItemAlwaysVisible</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {EventFacade} params The event facade for the attribute change</span>
+<span class="c">     * @param params {EventFacade} The event facade for the attribute change</span>
 <span class="c">     */</span>
     <span class="nx">_afterItemAlwaysVisible</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">;</span>
@@ -1341,7 +1353,7 @@
 <span class="c">     * </span>
 <span class="c">     * @method _afterContentHeight</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {EventFacade} params The event facade for the attribute change</span>
+<span class="c">     * @param params {EventFacade} The event facade for the attribute change</span>
 <span class="c">     */</span>
     <span class="nx">_afterContentHeight</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">itemContentHeight</span><span class="o">,</span> <span class="nx">body</span><span class="o">,</span> <span class="nx">bodyHeight</span><span class="o">,</span> <span class="nx">expanded</span><span class="o">;</span>
@@ -1374,7 +1386,7 @@
 <span class="c">     * </span>
 <span class="c">     * @method _setUpResizing</span>
 <span class="c">     * @protected</span>
-<span class="c">     * @param {String|Object} String &quot;default&quot; or object with the following properties:</span>
+<span class="c">     * @param value {String|Object} String &quot;default&quot; or object with the following properties:</span>
 <span class="c">     *  &lt;dl&gt;</span>
 <span class="c">     *      &lt;dt&gt;sourceObject&lt;/dt&gt;</span>
 <span class="c">     *          &lt;dd&gt;An abbitrary object&lt;/dd&gt;</span>
@@ -1474,10 +1486,10 @@
 <span class="c">     * registered in Accordion, the item will be added as child of the &lt;code&gt;parentItem&lt;/code&gt;</span>
 <span class="c">     * </span>
 <span class="c">     * @method addItem</span>
-<span class="c">     * @param {Y.AccordionItem} item The item to be added in Accordion</span>
-<span class="c">     * @param {Y.AccordionItem} parentItem (optional) This item will be the parent of the item being added</span>
+<span class="c">     * @param item {Y.AccordionItem} The item to be added in Accordion</span>
+<span class="c">     * @param parentItem {Y.AccordionItem} (optional) This item will be the parent of the item being added</span>
 <span class="c">     * </span>
-<span class="c">     * @return Boolean True in case of successfully added item, false otherwise</span>
+<span class="c">     * @return {Boolean} True in case of successfully added item, false otherwise</span>
 <span class="c">     */</span>
     <span class="nx">addItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span><span class="o">,</span> <span class="nx">parentItem</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">expanded</span><span class="o">,</span> <span class="nx">alwaysVisible</span><span class="o">,</span> <span class="nx">bodyContent</span><span class="o">,</span> <span class="nx">itemIndex</span><span class="o">,</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">contentBox</span><span class="o">,</span>
@@ -1597,8 +1609,8 @@
 <span class="c">     * Removes an previously registered item in Accordion</span>
 <span class="c">     * </span>
 <span class="c">     * @method removeItem</span>
-<span class="c">     * @param {Y.AccordionItem|Number} p_item The item to be removed, or its index</span>
-<span class="c">     * @return Y.AccordionItem The removed item or null if not found</span>
+<span class="c">     * @param p_item {Y.AccordionItem|Number} The item to be removed, or its index</span>
+<span class="c">     * @return {Y.AccordionItem} The removed item or null if not found</span>
 <span class="c">     */</span>
     <span class="nx">removeItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">p_item</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">items</span><span class="o">,</span> <span class="nx">bb</span><span class="o">,</span> <span class="nx">item</span> <span class="o">=</span> <span class="kc">null</span><span class="o">,</span> <span class="nx">itemIndex</span><span class="o">;</span>
@@ -1641,10 +1653,10 @@
 <span class="c">     * Searching for item, previously registered in Accordion</span>
 <span class="c">     * </span>
 <span class="c">     * @method getItem</span>
-<span class="c">     * @param {Number|Y.Node} param If number, this must be item&#39;s index.</span>
+<span class="c">     * @param param {Number|Y.Node} If number, this must be item&#39;s index.</span>
 <span class="c">     * If Node, it should be the value of item&#39;s &lt;code&gt;contentBox&lt;/code&gt; or &lt;code&gt;boundingBox&lt;/code&gt; properties</span>
 <span class="c">     * </span>
-<span class="c">     * @return Y.AccordionItem The found item or null</span>
+<span class="c">     * @return {Y.AccordionItem} The found item or null</span>
 <span class="c">     */</span>
     <span class="nx">getItem</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">param</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">items</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ITEMS</span> <span class="p">)</span><span class="o">,</span> <span class="nx">item</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
@@ -1681,8 +1693,8 @@
 <span class="c">     * Looking for the index of previously registered item</span>
 <span class="c">     * </span>
 <span class="c">     * @method getItemIndex</span>
-<span class="c">     * @param {Y.AccordionItem} item The item which index should be returned</span>
-<span class="c">     * @return Number Item index or &lt;code&gt;-1&lt;/code&gt; if item has been not found</span>
+<span class="c">     * @param item {Y.AccordionItem} The item which index should be returned</span>
+<span class="c">     * @return {Number} Item index or &lt;code&gt;-1&lt;/code&gt; if item has been not found</span>
 <span class="c">     */</span>
     <span class="nx">getItemIndex</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">item</span> <span class="p">){</span>
         <span class="kd">var</span> <span class="nx">res</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="nx">items</span><span class="o">;</span>

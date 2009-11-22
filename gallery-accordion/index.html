@@ -6,7 +6,7 @@
 
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css">
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssfonts/fonts-min.css">
-        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2009.11.09-19/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2009.12.08-22/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
 
         <style type="text/css">
             html, body {
@@ -71,17 +71,18 @@
         </style>
         
         <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
-        <script type="text/javascript" src="http://yui.yahooapis.com/gallery-2009.11.09-19/build/gallery-accordion/gallery-accordion-min.js"></script>
+        <script type="text/javascript" src="http://yui.yahooapis.com/gallery-2009.12.08-22/build/gallery-accordion/gallery-accordion-min.js"></script>
         
         <script type="text/javascript"> 
 
-        YUI().use( 'gallery-accordion', function(Y) {
+        YUI().use( 'dd-constrain', 'dd-proxy', 'dd-drop', 'gallery-accordion', function(Y) {
             var accordion;
             
             accordion = new Y.Accordion( {
                 boundingBox: "#bb1",
                 contentBox: "#acc1",
                 useAnimation: true,
+                reorderItems: true,
                 collapseOthersOnExpand: false
             });
 
@@ -106,7 +107,7 @@
                             </div>
                             <div class="yui-widget-bd">
                                 <div id="pm1" style="position: relative;">
-                                    <h1>Accordion widget, ver. 1.06</h1>
+                                    <h1>Accordion widget, ver. 1.07</h1>
                                     <p>
                                         Accordion is a visual widget that allows the expansion/collapse of grouped items containing arbitrary data. Accordion items can be added or removed dynamically, reordered via drag-and-drop, closed and set as always visible.<br/>
                                         The height of the content inside each item can be set in three different ways:<br/>
@@ -202,6 +203,12 @@
                             </div>
                             <div id="bodyid3" class="yui-widget-bd">
                                 <div id="pm3" style="position:relative; overflow:auto; height:100%;">
+                                    <p>
+                                        22.11.2009 - ver. 1.07<br/>
+                                         - Parsing data from markup improved for icon, nodeLabel, iconsContainer, iconAlwaysVisible, iconExpanded and iconClose configuration properties.<br/>
+                                           Valid input is not only Node, but raw HTMLElement and a selector string also.<br/>
+                                        - Item reordering is false by default, instead true. As result, drag modules are now optional, not required.
+                                    </p>
                                     <p>
                                         06.11.2009 - ver. 1.06<br/>
                                         Accordion supports setting config attributes via HTML5 "data-". These are:

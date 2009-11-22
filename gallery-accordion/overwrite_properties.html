@@ -93,13 +93,13 @@
             </p>
 
 <pre class="brush: html;">
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2009.11.09-19/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2009.12.08-22/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
 
 <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2009.11.09-19/build/gallery-accordion/gallery-accordion-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2009.12.08-22/build/gallery-accordion/gallery-accordion-min.js"></script>
 
 <script type="text/javascript">
-    YUI().use( 'gallery-accordion', function(Y) {
+    YUI().use( 'gallery-accordion', 'dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
         // Your code here
     });
 </script>
@@ -147,7 +147,7 @@ accordion.render();
                 <span style="font-weight:bold;">collapseOthersOnExpand</span> - if true, when Accordion expands some item, it will collapse all the others, which have <span style="font-style:italic;">alwaysVisible</span> property set to false. True by default.
             </li>
             <li>
-                <span style="font-weight:bold;">reorderItems</span> - if true, the user will be able to reorder the items by using drag and drop.
+                <span style="font-weight:bold;">reorderItems</span> - if true, the user will be able to reorder the items by using drag and drop. In this case, you must include drag and drop modules to your YUI instance. You may include the whole <code>'dd'</code> module, or just these, required by Accordion: <code>'dd-constrain', 'dd-proxy', 'dd-drop'</code>.
             </li>
             <li>
                 <span style="font-weight:bold;">resizeEvent</span> - its value must be one of these: string <span style="font-style:italic;">"default"</span> or object with two properties - <span style="font-style:italic;">sourceObject</span> and <span style="font-style:italic;">resizeEvent</span>. This is useful, when you have an object, already listening to resize event from browser. Such object is LayoutManager in 2.8 - you can provide an instance of LayoutManager as <span style="font-style:italic;">sourceObject</span> and "resize" for <span style="font-style:italic;">resizeEvent</span>.
