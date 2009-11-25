@@ -144,7 +144,15 @@ Accordion.ATTRS = {
     resizeEvent: {
         value: DEFAULT,
         validator: function( value ){
-            return (Lang.isString(value) || Lang.isObject(value));
+            if( value === DEFAULT ){
+                return true;
+            } else if( Lang.isObject(value) ){
+                if( Lang.isValue( value.sourceObject ) && Lang.isValue( value.resizeEvent ) ){
+                    return true;
+                }
+            }
+            
+            return false;
         }
     },
 
@@ -568,7 +576,7 @@ Y.extend( Accordion, Y.Widget, {
      * @param params {Event} after resizeEventChange custom event
      */
     _afterResizeEventChange: function( params ){
-        this._setUpResizing( params.newValue );
+        this._setUpResizing( params.newVal );
     },
 
     

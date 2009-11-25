@@ -146,7 +146,15 @@ Accordion.ATTRS = {
     resizeEvent: {
         value: DEFAULT,
         validator: function( value ){
-            return (Lang.isString(value) || Lang.isObject(value));
+            if( value === DEFAULT ){
+                return true;
+            } else if( Lang.isObject(value) ){
+                if( Lang.isValue( value.sourceObject ) && Lang.isValue( value.resizeEvent ) ){
+                    return true;
+                }
+            }
+            
+            return false;
         }
     },
 
@@ -570,7 +578,7 @@ Y.extend( Accordion, Y.Widget, {
      * @param params {Event} after resizeEventChange custom event
      */
     _afterResizeEventChange: function( params ){
-        this._setUpResizing( params.newValue );
+        this._setUpResizing( params.newVal );
     },
 
     
@@ -2816,4 +2824,4 @@ Y.AccordionItem = AccordionItem;
 
 
 
-}, '@VERSION@' ,{optional:['dd-constrain', 'dd-proxy', 'dd-drop'], requires:['event', 'anim-easing', 'widget', 'widget-stdmod', 'json-parse']});
+}, '@VERSION@' ,{requires:['event', 'anim-easing', 'widget', 'widget-stdmod', 'json-parse'], optional:['dd-constrain', 'dd-proxy', 'dd-drop']});
