@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+    <title>YUI Undo Framework Test page</title>
+    <style type="text/css">
+        html, body {
+            background-color: #F2FBFF;
+            height: 100%;
+        }
+
+        .images-dest {
+            position: absolute;
+            width: 580px;
+            height: 488px;
+            z-index: 1;
+            background: url( 'car_background.png' );
+        }
+
+        .dest-img-cont {
+            width: 143px;
+            height: 120px;
+            position : relative;
+            float : left;
+            border : 1px dotted #DEB887;
+        }
+
+        .img-slice {
+            position : absolute;
+            width: 145px;
+            height: 122px;
+            cursor: move;
+        }
+
+        .button-start, .button-undo, .button-redo {
+            width: 120px;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+
+        .button-undo {
+            margin-left: 50px;
+        }
+    </style>
+
+    <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui.js"></script>
+    <script type="text/javascript" src="../../../../build/gallery-undo/gallery-undo.js"></script>
+    <script type="text/javascript" src="puzzle.js"></script>
+
+</head>
+
+<body>
+
+    <h4>
+        Drag and drop the images and create YUI car! You can always undo/redo you work!<br>
+        When you are ready, press "Start" button!<br>
+    </h4>
+
+    <div>
+        <input id="btn-start" class="button-start" type="button" value="Start">
+        <input id="btn-undo" class="button-undo" type="button" value="Undo">
+        <input id="btn-redo" class="button-redo" type="button" value="Redo">
+    </div>
+
+     <div id="images-dest" class="images-dest">
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+         <div class="dest-img-cont"></div>
+
+
+        <img id="img_0_0" alt="slice-0_0" src="0_0.png" class="img-slice" style="left: 0px; top: 0px;">
+        <img id="img_0_1" alt="slice-0_1" src="0_1.png" class="img-slice" style="left: 145px; top: 0px;">
+        <img id="img_0_2" alt="slice-0_2" src="0_2.png" class="img-slice" style="left: 290px; top: 0px;">
+        <img id="img_0_3" alt="slice-0_3" src="0_3.png" class="img-slice" style="left: 435px; top: 0px;">
+
+        <img id="img_1_0" alt="slice-1_0" src="1_0.png" class="img-slice" style="left: 0; top: 122px;">
+        <img id="img_1_1" alt="slice-1_1" src="1_1.png" class="img-slice" style="left: 145px; top: 122px;">
+        <img id="img_1_2" alt="slice-1_2" src="1_2.png" class="img-slice" style="left: 290px; top: 122px;">
+        <img id="img_1_3" alt="slice-1_3" src="1_3.png" class="img-slice" style="left: 435px; top: 122px;">
+
+        <img id="img_2_0" alt="slice-2_0" src="2_0.png" class="img-slice" style="left: 0px; top: 244px;">
+        <img id="img_2_1" alt="slice-2_1" src="2_1.png" class="img-slice" style="left: 145px; top: 244px;">
+        <img id="img_2_2" alt="slice-2_2" src="2_2.png" class="img-slice" style="left: 290px; top: 244px;">
+        <img id="img_2_3" alt="slice-2_3" src="2_3.png" class="img-slice" style="left: 435px; top: 244px;">
+
+        <img id="img_3_0" alt="slice-3_0" src="3_0.png" class="img-slice" style="left: 0px; top: 366px;">
+        <img id="img_3_1" alt="slice-3_1" src="3_1.png" class="img-slice" style="left: 145px; top: 366px;">
+        <img id="img_3_2" alt="slice-3_2" src="3_2.png" class="img-slice" style="left: 290px; top: 366px;">
+        <img id="img_3_3" alt="slice-3_3" src="3_3.png" class="img-slice" style="left: 435px; top: 366px;">
+</div>
+
+    <div class="car-small">
+        <img alt="slice-0_3" src="car_small.png" style="width: 250px;  height: 210px; border-width: 0px;">
+    </div>
+</body>
+    </html>
