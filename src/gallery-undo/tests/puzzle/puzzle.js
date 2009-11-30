@@ -1,5 +1,5 @@
 
-var Y = new YUI().use( 'dd-drag', function(Y) {
+var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
     this._images = Y.Node.all('.img-slice');
 
     this._destNode = Y.get( "#images-dest" );
@@ -23,35 +23,71 @@ var Y = new YUI().use( 'dd-drag', function(Y) {
         ddSource.after( "drag:end", Y.bind( afterDragEnd, this, ddSource ) );
     }, this );
 
-    Y.one( "#btn-start" ).on( "click", Y.bind( startPuzzle, this ) );
+    Y.one( "#btn-shuffle" ).on( "click", Y.bind( shufflePuzzle, this ) );
+    
+    this._undoManager = new Y.UndoManager();
 
+    this._btnUndo = Y.one( "#btn-undo" );
+    this._btnRedo = Y.one( "#btn-redo" );
 
-    function startPuzzle(e){
-        var row, cell, imgWidth, imgHeight, offsetX, map = [], i, j;
+    updateUI.call( this );
 
-        imgWidth = this._imgWidth;
-        imgHeight = this._imgHeight;
+    this._btnUndo.on( "click", Y.bind( onUndo, this ) );
+    this._btnRedo.on( "click", Y.bind( onRedo, this ) );
 
-        offsetX = this._destX + this._destNodeWidth + 10;
-
-        for( i = 0; i < this._cells; i++ ){
-            map[i] = [];
-            for( j = 0; j < this._rows; j++ ){
-                map[i][j] = false;
-            }
-        }
+    function shufflePuzzle(e){
+        var shuffleAction, curPos = {};
 
         this._images.each( function(image, k) {
-            do {
-                cell = Math.floor(Math.random() * this._cells);
-                row = Math.floor(Math.random() * this._rows);
-            } while( map[row][cell] );
-
-            map[row][cell] = true;
-
-            image.setStyle( "left", cell * imgWidth + offsetX + "px" );
-            image.setStyle( "top",  row * imgHeight + "px" );
+             curPos[ image ] = [ 
+                 image.getStyle( "left" ),
+                 image.getStyle( "top" )
+             ];
         }, this );
+
+        shuffleAction = new Y.UndoableAction();
+
+        shuffleAction.undo = Y.bind( function(){
+            this._images.each( function(image, k) {
+                var imagePos = curPos[image];
+
+                image.setStyle( "left", imagePos[0] );
+                image.setStyle( "top",  imagePos[1] );
+            }, this );
+        }, this );
+
+        shuffleAction.redo = Y.bind( function(){
+            var row, cell, imgWidth, imgHeight, offsetX, map = [], i, j;
+
+            imgWidth = this._imgWidth;
+            imgHeight = this._imgHeight;
+
+            offsetX = this._destX + this._destNodeWidth + 10;
+
+            for( i = 0; i < this._cells; i++ ){
+                map[i] = [];
+                for( j = 0; j < this._rows; j++ ){
+                    map[i][j] = false;
+                }
+            }
+
+            this._images.each( function(image, k) {
+                do {
+                    cell = Math.floor(Math.random() * this._cells);
+                    row = Math.floor(Math.random() * this._rows);
+                } while( map[row][cell] );
+
+                map[row][cell] = true;
+
+                image.setStyle( "left", cell * imgWidth + offsetX + "px" );
+                image.setStyle( "top",  row * imgHeight + "px" );
+            }, this );
+        }, this );
+
+        shuffleAction.redo.call( this );
+
+        this._undoManager.add( shuffleAction );
+        updateUI.call( this );
     }
 
     function afterDragEnd( dd, e ){
@@ -91,5 +127,26 @@ var Y = new YUI().use( 'dd-drag', function(Y) {
                 node.setStyle( "top",  row * imgHeight + "px" );
             }
         }
+    }
+
+
+    function onUndo(e){
+        this._undoManager.undo();
+        updateUI.call( this );
+    }
+
+    function onRedo(e){
+        this._undoManager.redo();
+        updateUI.call( this );
+    }
+
+    function updateUI(){
+        this._undoManager.canUndo() ? 
+            this._btnUndo.removeAttribute( "disabled" ) :
+            this._btnUndo.setAttribute( "disabled", true );
+
+        this._undoManager.canRedo() ?
+            this._btnRedo.removeAttribute( "disabled" ) :
+            this._btnRedo.setAttribute( "disabled", true );
     }
 });
