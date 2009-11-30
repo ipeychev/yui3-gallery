@@ -36,63 +36,58 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
     this._btnRedo.on( "click", Y.bind( onRedo, this ) );
 
     function shufflePuzzle(e){
-        var shuffleAction, curPos = {};
+        var shuffleAction, oldPos = {}, newPos = {},
+            row, cell, imgWidth, imgHeight, offsetX, map = [],
+            i, j, newX, newY;
 
         this._images.each( function(image, k) {
-             curPos[ image ] = [ 
+             oldPos[ image ] = [
                  image.getStyle( "left" ),
                  image.getStyle( "top" )
              ];
         }, this );
 
-        shuffleAction = new Y.UndoableAction();
+        imgWidth = this._imgWidth;
+        imgHeight = this._imgHeight;
 
-        shuffleAction.undo = Y.bind( function(){
-            this._images.each( function(image, k) {
-                var imagePos = curPos[image];
+        offsetX = this._destX + this._destNodeWidth + 10;
 
-                image.setStyle( "left", imagePos[0] );
-                image.setStyle( "top",  imagePos[1] );
-            }, this );
-        }, this );
-
-        shuffleAction.redo = Y.bind( function(){
-            var row, cell, imgWidth, imgHeight, offsetX, map = [], i, j;
-
-            imgWidth = this._imgWidth;
-            imgHeight = this._imgHeight;
-
-            offsetX = this._destX + this._destNodeWidth + 10;
-
-            for( i = 0; i < this._cells; i++ ){
-                map[i] = [];
-                for( j = 0; j < this._rows; j++ ){
-                    map[i][j] = false;
-                }
+        for( i = 0; i < this._cells; i++ ){
+            map[i] = [];
+            for( j = 0; j < this._rows; j++ ){
+                map[i][j] = false;
             }
+        }
 
-            this._images.each( function(image, k) {
-                do {
-                    cell = Math.floor(Math.random() * this._cells);
-                    row = Math.floor(Math.random() * this._rows);
-                } while( map[row][cell] );
+        this._images.each( function(image, k) {
+            do {
+                cell = Math.floor(Math.random() * this._cells);
+                row = Math.floor(Math.random() * this._rows);
+            } while( map[row][cell] );
 
-                map[row][cell] = true;
+            map[row][cell] = true;
 
-                image.setStyle( "left", cell * imgWidth + offsetX + "px" );
-                image.setStyle( "top",  row * imgHeight + "px" );
-            }, this );
+            newX = cell * imgWidth + offsetX + "px";
+            newY = row * imgHeight + "px";
+
+            image.setStyle( "left", newX );
+            image.setStyle( "top" , newY );
+
+            newPos[image] = [ newX, newY ];
         }, this );
 
-        shuffleAction.redo.call( this );
+        shuffleAction = new Y.UndoableAction();
+        shuffleAction.undo = Y.bind( updateImagesPos, this, oldPos );
+        shuffleAction.redo = Y.bind( updateImagesPos, this, newPos );
 
         this._undoManager.add( shuffleAction );
         updateUI.call( this );
     }
 
     function afterDragEnd( dd, e ){
-        var mouseXY, node, row = -1, cell = -1, mouseXPos, mouseYPos,
-            i = 0, j = 0, imgWidth, imgHeight, destX, destY;
+        var mouseXY, image, row = -1, cell = -1, mouseXPos, mouseYPos,
+            i = 0, j = 0, imgWidth, imgHeight, destX, destY,
+            oldX, oldY, newX, newY, moveAction;
 
         mouseXY = dd.mouseXY;
         mouseXPos = mouseXY[0];
@@ -106,7 +101,7 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
 
             imgWidth = this._imgWidth;
             imgHeight = this._imgHeight;
-            node = dd.get( "node" );
+            image = dd.get( "node" );
 
             for( i = 0; i < this._cells; i++ ){
                 if( mouseXPos <= (i*imgWidth) + imgWidth + destX ){
@@ -123,8 +118,21 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
             }
 
             if( cell >= 0 && row >= 0 ){
-                node.setStyle( "left", cell * imgWidth + "px" );
-                node.setStyle( "top",  row * imgHeight + "px" );
+                oldX = dd.startXY[0] + "px";
+                oldY = dd.startXY[1] + "px";
+
+                newX = cell * imgWidth + "px";
+                newY = row * imgHeight + "px";
+
+                image.setStyle( "left", newX );
+                image.setStyle( "top",  newY );
+
+                moveAction = new Y.UndoableAction();
+                moveAction.undo = Y.bind( updateImagePos, this, image, [oldX, oldY] );
+                moveAction.redo = Y.bind( updateImagePos, this, image, [newX, newY] );
+
+                this._undoManager.add( moveAction );
+                updateUI.call( this );
             }
         }
     }
@@ -148,5 +156,19 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
         this._undoManager.canRedo() ?
             this._btnRedo.removeAttribute( "disabled" ) :
             this._btnRedo.setAttribute( "disabled", true );
+    }
+
+    function updateImagesPos( positions ){
+        this._images.each( function(image, k) {
+            var imagePos = positions[image];
+
+            updateImagePos.call( this, image, imagePos );
+        }, this );
+    }
+
+
+    function updateImagePos( image, pos ){
+        image.setStyle( "left", pos[0] );
+        image.setStyle( "top",  pos[1] );
     }
 });
