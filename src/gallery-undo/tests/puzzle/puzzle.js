@@ -37,20 +37,18 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
 
     function shufflePuzzle(e){
         var shuffleAction, oldPos = {}, newPos = {},
-            row, cell, imgWidth, imgHeight, offsetX, map = [],
-            i, j, newX, newY;
+            row, cell, imgWidth, imgHeight, offsetX, offsetY, map = [],
+            i, j, newX, newY, pos;
 
         this._images.each( function(image, k) {
-             oldPos[ image ] = [
-                 image.getStyle( "left" ),
-                 image.getStyle( "top" )
-             ];
+             oldPos[ image ] = image.getXY();
         }, this );
 
         imgWidth = this._imgWidth;
         imgHeight = this._imgHeight;
 
         offsetX = this._destX + this._destNodeWidth + 10;
+        offsetY = this._destY;
 
         for( i = 0; i < this._cells; i++ ){
             map[i] = [];
@@ -67,13 +65,15 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
 
             map[row][cell] = true;
 
-            newX = cell * imgWidth + offsetX + "px";
-            newY = row * imgHeight + "px";
+            
+            newX = cell * imgWidth + offsetX;
+            newY = row * imgHeight + offsetY;
+            
+            pos = [newX, newY];
 
-            image.setStyle( "left", newX );
-            image.setStyle( "top" , newY );
+            image.setXY( pos );
 
-            newPos[image] = [ newX, newY ];
+            newPos[image] = pos;
         }, this );
 
         shuffleAction = new Y.UndoableAction();
@@ -87,7 +87,7 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
     function afterDragEnd( dd, e ){
         var mouseXY, image, row = -1, cell = -1, mouseXPos, mouseYPos,
             i = 0, j = 0, imgWidth, imgHeight, destX, destY,
-            oldX, oldY, newX, newY, moveAction;
+            pos, newX, newY, moveAction;
 
         mouseXY = dd.mouseXY;
         mouseXPos = mouseXY[0];
@@ -96,12 +96,13 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
         destX = this._destX;
         destY = this._destY;
 
+        image = dd.get( "node" );
+        
         if( mouseXPos >= destX && mouseXPos <= destX + this._destNodeWidth &&
             mouseYPos >= destY && mouseYPos <= destY + this._destNodeHeight ){
 
             imgWidth = this._imgWidth;
             imgHeight = this._imgHeight;
-            image = dd.get( "node" );
 
             for( i = 0; i < this._cells; i++ ){
                 if( mouseXPos <= (i*imgWidth) + imgWidth + destX ){
@@ -118,23 +119,22 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
             }
 
             if( cell >= 0 && row >= 0 ){
-                oldX = dd.startXY[0] + "px";
-                oldY = dd.startXY[1] + "px";
-
-                newX = cell * imgWidth + "px";
-                newY = row * imgHeight + "px";
-
-                image.setStyle( "left", newX );
-                image.setStyle( "top",  newY );
-
-                moveAction = new Y.UndoableAction();
-                moveAction.undo = Y.bind( updateImagePos, this, image, [oldX, oldY] );
-                moveAction.redo = Y.bind( updateImagePos, this, image, [newX, newY] );
-
-                this._undoManager.add( moveAction );
-                updateUI.call( this );
+                newX = cell * imgWidth + destX;
+                newY = row * imgHeight + destY;
+                
+                pos = [newX, newY];
+                image.setXY( pos );
             }
+        } else {
+            pos = dd.realXY;
         }
+        
+        moveAction = new Y.UndoableAction();
+        moveAction.undo = Y.bind( updateImagePos, this, image, dd.nodeXY );
+        moveAction.redo = Y.bind( updateImagePos, this, image, pos );
+
+        this._undoManager.add( moveAction );
+        updateUI.call( this );
     }
 
 
@@ -168,7 +168,6 @@ var Y = new YUI().use( 'dd-drag', 'gallery-undo', function(Y) {
 
 
     function updateImagePos( image, pos ){
-        image.setStyle( "left", pos[0] );
-        image.setStyle( "top",  pos[1] );
+        image.setXY( pos );
     }
 });
