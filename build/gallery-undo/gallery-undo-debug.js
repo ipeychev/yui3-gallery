@@ -14,13 +14,14 @@ YUI.add('gallery-undo', function(Y) {
     UNDOPERFORMED = "undoPerformed",
     BEFOREREDO = "beforeRedo",
     REDOPERFORMED = "redoPerformed",
-    ASYNCPROCESSING = "asyncProcessing";
+    ASYNCPROCESSING = "asyncProcessing",
+    UNLIMITED = 0;
 
     UndoManager.NAME = UMName;
 
     UndoManager.ATTRS = {
         limit: {
-            value: 0,
+            value: UNLIMITED,
             validator: function( value ){
                 return Lang.isNumber( value ) && value >= 0;
             }
@@ -62,7 +63,7 @@ YUI.add('gallery-undo', function(Y) {
     
     
         add : function( action ){
-            var curAction = null, actions, undoIndex, tmp, i;
+            var curAction = null, actions, undoIndex, tmp;
         
             if( this._processing ){
                 return false;
@@ -75,8 +76,8 @@ YUI.add('gallery-undo', function(Y) {
                 curAction = actions[ undoIndex - 1 ];
             }
         
-            for( i = actions.length - 1; i > undoIndex; i-- ){
-                tmp = actions.splice( i, 1 )[0];
+            while( undoIndex < actions.length ){
+                tmp = actions.splice( -1, 1 )[0];
             
                 tmp.cancel();
                 this.fire( ACTIONCANCELED, {
@@ -108,6 +109,10 @@ YUI.add('gallery-undo', function(Y) {
 
             if( !limit ){
                 limit = this.get( "limit" );
+            }
+
+            if( limit === UNLIMITED ){
+                return;
             }
         
             actions = this._actions;
@@ -407,6 +412,11 @@ Y.extend( UndoableAction, Y.Base, {
     
     merge : function( action ){
         return false;
+    },
+
+
+    cancel : function(){
+        
     },
     
     

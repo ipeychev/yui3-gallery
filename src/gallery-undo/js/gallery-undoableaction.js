@@ -80,6 +80,11 @@ Y.extend( UndoableAction, Y.Base, {
     merge : function( action ){
         return false;
     },
+
+
+    cancel : function(){
+        
+    },
     
     
     toString : function(){
