@@ -9,11 +9,15 @@ YUI.add('gallery-undo', function(Y) {
     var Lang = Y.Lang,
     UMName = "UndoManager",
     ACTIONADDED = "actionAdded",
-    ACTIONCANCELED = "undoCanceled",
+    BEFORECANCELING = "beforeCanceling",
+    ACTIONCANCELED = "actionCanceled",
+    CANCELINGFINISHED = "cancelingFinished",
     BEFOREUNDO = "beforeUndo",
-    UNDOPERFORMED = "undoPerformed",
+    ACTIONUNDONE = "actionUndone",
+    UNDOFINISHED = "undoFinished",
     BEFOREREDO = "beforeRedo",
-    REDOPERFORMED = "redoPerformed",
+    REDOFINISHED = "redoFinished",
+    ACTIONREDONE = "actionRedone",
     ASYNCPROCESSING = "asyncProcessing",
     UNLIMITED = 0;
 
@@ -24,6 +28,13 @@ YUI.add('gallery-undo', function(Y) {
             value: UNLIMITED,
             validator: function( value ){
                 return Lang.isNumber( value ) && value >= 0;
+            }
+        },
+
+        undoIndex : {
+            readOnly: true,
+            getter: function(){
+                return this._undoIndex;
             }
         }
     };
@@ -56,9 +67,11 @@ YUI.add('gallery-undo', function(Y) {
             this.publish( ACTIONADDED );
             this.publish( ACTIONCANCELED );
             this.publish( BEFOREUNDO );
-            this.publish( UNDOPERFORMED );
+            this.publish( ACTIONUNDONE );
+            this.publish( UNDOFINISHED );
             this.publish( BEFOREREDO );
-            this.publish( REDOPERFORMED );
+            this.publish( ACTIONREDONE );
+            this.publish( REDOFINISHED );
         },
     
     
@@ -75,14 +88,21 @@ YUI.add('gallery-undo', function(Y) {
             if( undoIndex > 0 ){
                 curAction = actions[ undoIndex - 1 ];
             }
-        
-            while( undoIndex < actions.length ){
-                tmp = actions.splice( -1, 1 )[0];
-            
-                tmp.cancel();
-                this.fire( ACTIONCANCELED, {
-                    'action': tmp
-                });
+
+            if( undoIndex < actions.length ){
+                this.fire( BEFORECANCELING );
+
+                while( undoIndex < actions.length ){
+                    tmp = actions.splice( -1, 1 )[0];
+
+                    tmp.cancel();
+                    this.fire( ACTIONCANCELED, {
+                        'action': tmp,
+                        index : actions.length - 1
+                    });
+                }
+
+                this.fire( CANCELINGFINISHED );
             }
         
             if( curAction ){
@@ -121,7 +141,7 @@ YUI.add('gallery-undo', function(Y) {
                 return;
             }
         
-            index   = this._undoIndex;
+            index = this._undoIndex;
 
             halfLimit = parseInt( limit / 2, 10 );
 
@@ -137,22 +157,36 @@ YUI.add('gallery-undo', function(Y) {
                 deleteLeft += deleteRight;
             }
 
-            for( i = 0; i < deleteLeft; i++ ){
-                this._undoIndex--;
-            
-                action = actions.splice( 0, 1 )[0];
-                action.cancel();
-                this.fire( ACTIONCANCELED, {
-                    'action': action
-                });
+            if( deleteLeft > 0 ){
+                this.fire( BEFORECANCELING );
+
+                for( i = 0; i < deleteLeft; i++ ){
+                    this._undoIndex--;
+
+                    action = actions.splice( 0, 1 )[0];
+                    action.cancel();
+                    this.fire( ACTIONCANCELED, {
+                        'action': action,
+                        index : 0
+                    });
+                }
+
+                this.fire( CANCELINGFINISHED );
             }
 
-            for( i = actions.length - 1, j = 0; j < deleteRight; i--, j++ ){
-                action = actions.splice( i, 1 )[0];
-                action.cancel();
-                this.fire( ACTIONCANCELED, {
-                    'action': action
-                });
+            if( deleteRight > 0 ){
+                this.fire( BEFORECANCELING );
+
+                for( i = actions.length - 1, j = 0; j < deleteRight; i--, j++ ){
+                    action = actions.splice( i, 1 )[0];
+                    action.cancel();
+                    this.fire( ACTIONCANCELED, {
+                        'action': action,
+                        index : i
+                    });
+                }
+
+                this.fire( CANCELINGFINISHED );
             }
         },
     
@@ -217,7 +251,8 @@ YUI.add('gallery-undo', function(Y) {
 
                 action.cancel();
                 this.fire( ACTIONCANCELED, {
-                    'action': action
+                    'action': action,
+                    index : i
                 });
             }
         
@@ -227,7 +262,8 @@ YUI.add('gallery-undo', function(Y) {
 
 
         processTo : function( undoIndex ){
-            if( Lang.isNumber( undoIndex ) && this.canUndo() && this.canRedo() ){
+            if( Lang.isNumber(undoIndex) && !this._processing &&
+                undoIndex >= 0 && undoIndex <= this._actions.length ){
                 if( this._undoIndex < undoIndex ){
                     this._redoTo( undoIndex );
                 } else if( this._undoIndex > undoIndex ){
@@ -241,24 +277,28 @@ YUI.add('gallery-undo', function(Y) {
             var action = this._actions[ this._undoIndex ];
                     
             if( !action.get( ASYNCPROCESSING ) ){
-                this._processing = true;
-
-                this.fire( BEFOREREDO, action );
+                if( !this._processing ){
+                    this.fire( BEFOREREDO );
+                    this._processing = true;
+                }
+                
                 this._undoIndex++;
-                
                 action.redo();
+                this.fire( ACTIONREDONE, {
+                    'action' : action,
+                    index : this._undoIndex - 1
+                } );
 
-                this.fire( REDOPERFORMED, action );
-                
                 if( this._undoIndex < undoIndex ){
                     this._redoTo( undoIndex );
                 } else {
                     this._processing = false;
+                    this.fire( REDOFINISHED );
                 }
             } else {
                 this._processing = true;
-                this._actionHandle = action.on( REDOPERFORMED, 
-                      Y.bind( this._onAsyncRedoPerformed, this, action, undoIndex ) );
+                this._actionHandle = action.on( REDOFINISHED,
+                      Y.bind( this._onAsyncRedoFinished, this, action, undoIndex ) );
 
                 this.fire( BEFOREREDO, action );
                 this._undoIndex++;
@@ -272,26 +312,30 @@ YUI.add('gallery-undo', function(Y) {
             var action = this._actions[ this._undoIndex - 1 ];
 
             if( !action.get( ASYNCPROCESSING ) ){
-                this._processing = true;
+                if( !this._processing ){
+                    this.fire( BEFOREUNDO );
+                    this._processing = true;
+                }
 
-                this.fire( BEFOREUNDO, action );
                 this._undoIndex--;
-
                 action.undo();
-
-                this.fire( UNDOPERFORMED, action );
+                this.fire( ACTIONUNDONE, {
+                    'action': action,
+                    index : this._undoIndex
+                });
 
                 if( this._undoIndex > undoIndex ){
                     this._undoTo( undoIndex );
                 } else {
                     this._processing = false;
+                    this.fire( UNDOFINISHED );
                 }
             } else {
                 this._processing = true;
 
                 action = this._actions[ this._undoIndex - 1 ];
-                this._actionHandle = action.on( UNDOPERFORMED, 
-                    Y.bind( this._onAsyncUndoPerformed, this, action, undoIndex ) );
+                this._actionHandle = action.on( UNDOFINISHED,
+                    Y.bind( this._onAsyncUndoFinished, this, action, undoIndex ) );
 
                 this.fire( BEFOREUNDO, action );
                 this._undoIndex--;
@@ -300,11 +344,11 @@ YUI.add('gallery-undo', function(Y) {
             }
         },
         
-        _onAsyncUndoPerformed : function( action, undoIndex ){
+        _onAsyncUndoFinished : function( action, undoIndex ){
             this._actionHandle.detach();
             this._actionHandle = null;
             
-            this.fire( UNDOPERFORMED, action );
+            this.fire( UNDOFINISHED, action );
 
             if( this._undoIndex > undoIndex ){
                 this._undoTo( undoIndex );
@@ -314,11 +358,11 @@ YUI.add('gallery-undo', function(Y) {
         },
 
 
-        _onAsyncRedoPerformed : function( action, undoIndex ){
+        _onAsyncRedoFinished : function( action, undoIndex ){
             this._actionHandle.detach();
             this._actionHandle = null;
             
-            this.fire( REDOPERFORMED, action );
+            this.fire( REDOFINISHED, action );
 
             if( this._undoIndex < undoIndex ){
                 this._redoTo( undoIndex );

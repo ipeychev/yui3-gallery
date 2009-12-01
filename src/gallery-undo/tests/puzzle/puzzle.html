@@ -10,7 +10,7 @@
         }
 
         .images-dest {
-            position: absolute;
+            position: relative;
             width: 580px;
             height: 488px;
             z-index: 1;
@@ -41,11 +41,23 @@
         .button-undo {
             margin-left: 50px;
         }
+
+        .command-view-container {
+            position: relative;
+            width: 400px;
+        }
     </style>
 
     <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui.js"></script>
     <script type="text/javascript" src="../../../../build/gallery-undo/gallery-undo.js"></script>
     <script type="text/javascript" src="puzzle.js"></script>
+
+    <script type="text/javascript">
+        YUI().use( 'puzzle', function(Y){
+            var puzzle = new Y.Puzzle();
+        } );
+
+    </script>
 
 </head>
 
@@ -58,8 +70,8 @@
 
     <div>
         <input id="btn-shuffle" class="button-start" type="button" value="Start">
-        <input id="btn-undo" class="button-undo" type="button" value="Undo" disabled>
-        <input id="btn-redo" class="button-redo" type="button" value="Redo" disabled>
+        <input id="btn-undo" class="button-undo" type="button" value="Undo">
+        <input id="btn-redo" class="button-redo" type="button" value="Redo">
     </div>
 
      <div id="images-dest" class="images-dest">
@@ -105,8 +117,11 @@
         <img id="img_3_3" alt="slice-3_3" src="3_3.png" class="img-slice" style="left: 435px; top: 366px;">
 </div>
 
-    <div class="car-small">
-        <img alt="slice-0_3" src="car_small.png" style="width: 250px;  height: 210px; border-width: 0px;">
+    <h4>Pick undo/redo command from the list below:</h4>
+    <div class="command-view-container">
+        <select id="command-view" size="8" style="width: 100%;">
+            <option value="0">&#60;initial state&#62;</option>
+        </select>
     </div>
 </body>
     </html>
