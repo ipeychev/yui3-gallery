@@ -98,7 +98,7 @@ YUI.add('gallery-undo', function(Y) {
                     tmp.cancel();
                     this.fire( ACTIONCANCELED, {
                         'action': tmp,
-                        index : actions.length - 1
+                        index : actions.length
                     });
                 }
 
@@ -157,7 +157,7 @@ YUI.add('gallery-undo', function(Y) {
                 deleteLeft += deleteRight;
             }
 
-            if( deleteLeft > 0 ){
+            if( deleteLeft > 0 || deleteRight > 0 ){
                 this.fire( BEFORECANCELING );
 
                 for( i = 0; i < deleteLeft; i++ ){
@@ -170,12 +170,6 @@ YUI.add('gallery-undo', function(Y) {
                         index : 0
                     });
                 }
-
-                this.fire( CANCELINGFINISHED );
-            }
-
-            if( deleteRight > 0 ){
-                this.fire( BEFORECANCELING );
 
                 for( i = actions.length - 1, j = 0; j < deleteRight; i--, j++ ){
                     action = actions.splice( i, 1 )[0];
