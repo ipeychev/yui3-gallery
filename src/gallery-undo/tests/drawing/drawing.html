@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>YUI Undo Framework Async test page</title>
+    <style type="text/css">
+        html, body {
+            background-color: #F2FBFF;
+            height: 100%;
+        }
+    </style>
+
+    <link href="assets/drawing.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&language=en"></script>
+    <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui.js"></script>
+    <script type="text/javascript" src="../../../../build/gallery-undo/gallery-undo.js"></script>
+    <script type="text/javascript" src="drawing.js"></script>
+
+</head>
+
+<body>
+
+    <h4>
+        Draw a polyline by clicking on map:<br>
+        Tip: Try to create a big polyline.
+    </h4>
+
+    <div>
+        <input id="btn-undo" class="button-undo" type="button" value="Undo">
+        <input id="btn-redo" class="button-redo" type="button" value="Redo">
+    </div>
+    <div id="map" class="map"></div>
+
+    <div id="info-container" class="info-container">
+    </div>
+
+    <h4>Pick action from the list below:</h4>
+    <div class="action-view-container">
+        <select id="action-view" size="8" style="width: 100%;">
+            <option value="0">&#60;initial state&#62;</option>
+        </select>
+    </div>
+
+    <div>
+        <input id="txt-setlimit" class="text-setlimit" size="3" value="0" type="text">
+        <input id="btn-setlimit" class="button-setlimit" type="button" value="Limit undo">
+    </div>
+</body>
+    </html>
