@@ -76,7 +76,7 @@ YUI.add('gallery-undo', function(Y) {
     
     
         add : function( action ){
-            var curAction = null, actions, undoIndex, tmp;
+            var curAction = null, actions, undoIndex, tmp, merged  = false;
         
             if( this._processing ){
                 return false;
@@ -106,7 +106,9 @@ YUI.add('gallery-undo', function(Y) {
             }
         
             if( curAction ){
-                if( !curAction.merge( action ) ){
+                merged = curAction.merge( action );
+
+                if( !merged ){
                     actions.push( action );
                 }
             } else {
@@ -114,9 +116,11 @@ YUI.add('gallery-undo', function(Y) {
             }
         
             this._limitActions();
-            this._undoIndex++;
-        
-            this.fire( ACTIONADDED, action );
+            
+            if( !merged ){
+                this._undoIndex++;        
+                this.fire( ACTIONADDED, action );
+            }
             
             return true;
         },
@@ -238,9 +242,14 @@ YUI.add('gallery-undo', function(Y) {
     
     
         purgeAll : function(){
+            this.purgeTo( 0 );
+        },
+
+
+        purgeTo : function( index ){
             var action, i;
 
-            for( i = this._actions.length - 1; i >= 0; i-- ) {
+            for( i = this._actions.length - 1; i >= index; i-- ) {
                 action = this._actions.splice( i, 1 )[0];
 
                 action.cancel();
@@ -249,11 +258,13 @@ YUI.add('gallery-undo', function(Y) {
                     index : i
                 });
             }
-        
-            this._undoIndex = 0;
+
+            if( this._undoIndex > index ){
+                this._undoIndex = index;
+            }
+
             this._processing = false;
         },
-
 
         processTo : function( undoIndex ){
             if( Lang.isNumber(undoIndex) && !this._processing &&
@@ -268,15 +279,14 @@ YUI.add('gallery-undo', function(Y) {
         
         
         _redoTo : function( undoIndex ){
-            var action = this._actions[ this._undoIndex ];
-                    
+            var action = this._actions[ this._undoIndex++ ];
+
+            if( !this._processing ){
+                this.fire( BEFOREREDO );
+                this._processing = true;
+            }
+
             if( !action.get( ASYNCPROCESSING ) ){
-                if( !this._processing ){
-                    this.fire( BEFOREREDO );
-                    this._processing = true;
-                }
-                
-                this._undoIndex++;
                 action.redo();
                 this.fire( ACTIONREDONE, {
                     'action' : action,
@@ -290,12 +300,8 @@ YUI.add('gallery-undo', function(Y) {
                     this.fire( REDOFINISHED );
                 }
             } else {
-                this._processing = true;
                 this._actionHandle = action.on( REDOFINISHED,
                       Y.bind( this._onAsyncRedoFinished, this, action, undoIndex ) );
-
-                this.fire( BEFOREREDO, action );
-                this._undoIndex++;
 
                 action.redo();
             }
@@ -303,15 +309,14 @@ YUI.add('gallery-undo', function(Y) {
         
         
         _undoTo : function( undoIndex ){
-            var action = this._actions[ this._undoIndex - 1 ];
+            var action = this._actions[ --this._undoIndex ];
+
+            if( !this._processing ){
+                this.fire( BEFOREUNDO );
+                this._processing = true;
+            }
 
             if( !action.get( ASYNCPROCESSING ) ){
-                if( !this._processing ){
-                    this.fire( BEFOREUNDO );
-                    this._processing = true;
-                }
-
-                this._undoIndex--;
                 action.undo();
                 this.fire( ACTIONUNDONE, {
                     'action': action,
@@ -325,14 +330,8 @@ YUI.add('gallery-undo', function(Y) {
                     this.fire( UNDOFINISHED );
                 }
             } else {
-                this._processing = true;
-
-                action = this._actions[ this._undoIndex - 1 ];
                 this._actionHandle = action.on( UNDOFINISHED,
                     Y.bind( this._onAsyncUndoFinished, this, action, undoIndex ) );
-
-                this.fire( BEFOREUNDO, action );
-                this._undoIndex--;
 
                 action.undo();
             }
@@ -341,13 +340,17 @@ YUI.add('gallery-undo', function(Y) {
         _onAsyncUndoFinished : function( action, undoIndex ){
             this._actionHandle.detach();
             this._actionHandle = null;
-            
-            this.fire( UNDOFINISHED, action );
 
+            this.fire( ACTIONUNDONE, {
+                'action': action,
+                index : this._undoIndex
+            });
+            
             if( this._undoIndex > undoIndex ){
                 this._undoTo( undoIndex );
             } else {
                 this._processing = false;
+                this.fire( UNDOFINISHED, action );
             }
         },
 
@@ -356,12 +359,16 @@ YUI.add('gallery-undo', function(Y) {
             this._actionHandle.detach();
             this._actionHandle = null;
             
-            this.fire( REDOFINISHED, action );
+            this.fire( ACTIONREDONE, {
+                'action': action,
+                index : this._undoIndex - 1
+            });
 
             if( this._undoIndex < undoIndex ){
                 this._redoTo( undoIndex );
             } else {
                 this._processing = false;
+                this.fire( REDOFINISHED, action );
             }
         }
     });
