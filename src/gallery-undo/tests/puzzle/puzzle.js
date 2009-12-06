@@ -1,5 +1,12 @@
 
-YUI().add( 'puzzle', function( Y ){
+YUI( {
+    combine: false,
+    filter: "RAW"
+} ).use( 'dd-drag', 'gallery-undo', function( Y ){
+    
+    /*
+     * Puzzle implementation
+     */
     function Puzzle( config ){
         Puzzle.superclass.constructor.apply( this, arguments );
     }
@@ -44,13 +51,13 @@ YUI().add( 'puzzle', function( Y ){
             imageModelURI = this.get( "imageModel" );
             this._destNode.setStyle( "background", "url('" + imageModelURI + "')" );
 
-            this._initSlices();
-
             this._btnShuffle = Y.one( "#btn-shuffle" );
             this._shuffleHandler = this._btnShuffle.on( CLICK, Y.bind( this._shufflePuzzle, this ) );
             
-            this._commandView = Y.Node.getDOMNode( Y.one( "#command-view" ) );
-            Y.on( "change", Y.bind( this._onCommandViewSelectionChange, this ), this._commandView );
+            this._actionView = Y.Node.getDOMNode( Y.one( "#action-view" ) );
+            Y.on( "change", Y.bind( this._onActionViewSelectionChange, this ), this._actionView );
+
+            this._initSlices();
 
             this._undoManager = new Y.UndoManager();
 
@@ -91,9 +98,10 @@ YUI().add( 'puzzle', function( Y ){
             var imageURI, image;
 
             imageURI = this.get( "image" );
-            image = Node.create( '<img style="visibility:hidden;"></img>' );
+            image = new Image();
+            image.style.visibility = "hidden";
 
-            Y.on( "load", Y.bind( function( image ){
+            Y.on( "load", Y.bind( function(){
                 var destNode = this._destNode, cells, rows, imageParts, slice,
                     targetSlice, sliceWidth, sliceHeight, i, j, delta, xPos, yPos;
 
@@ -140,8 +148,6 @@ YUI().add( 'puzzle', function( Y ){
                     }
                 }
                 
-                Y.one( "body" ).removeChild( image );
-                
                 this._slices = Node.all( SLICE_SELECTOR );
 
                 this._slices.each( function(slice, k) {
@@ -151,10 +157,13 @@ YUI().add( 'puzzle', function( Y ){
 
                     ddSource.after( "drag:end", Y.bind( this._afterDragEnd, this, ddSource ) );
                 }, this );
-                
+
                 this._btnShuffle.removeAttribute( "disabled" );
-                
-            }, this, Node.getDOMNode( image ) ), image );
+
+                Y.later( 0, this, function(){
+                    Y.one( "body" ).removeChild( image );
+                }, this );
+            }, this ), image );
 
             Y.on( "error", Y.bind( function(){
                 alert( 'Image cannot be loaded!' );
@@ -203,11 +212,12 @@ YUI().add( 'puzzle', function( Y ){
                 newPos[slice] = pos;
             }, this );
 
-            shuffleAction = new Y.UndoableAction({
-                label: "Shuffling slices"
+            shuffleAction = new Y.Puzzle.ShuffleAction({
+                label: "Shuffling slices",
+                slices: this._slices,
+                oldPositions: oldPos,
+                newPositions: newPos
             });
-            shuffleAction.undo = Y.bind( this._updateSlicesPos, this, oldPos );
-            shuffleAction.redo = Y.bind( this._updateSlicesPos, this, newPos );
 
             this._undoManager.add( shuffleAction );
         },
@@ -248,11 +258,12 @@ YUI().add( 'puzzle', function( Y ){
                 pos = dd.realXY;
             }
 
-            moveAction = new Y.UndoableAction({
-                label: "Move slice (id = " + slice.get( "id" ) + ")"
-            });
-            moveAction.undo = Y.bind( this._updateSlicePos, this, slice, dd.nodeXY );
-            moveAction.redo = Y.bind( this._updateSlicePos, this, slice, pos );
+            moveAction = new Y.Puzzle.MoveAction({
+                label: "Move slice (id = " + slice.get( "id" ) + ")",
+                'slice': slice, 
+                oldPos: dd.nodeXY,
+                newPos: pos
+            } );
 
             this._undoManager.add( moveAction );
         },
@@ -302,27 +313,15 @@ YUI().add( 'puzzle', function( Y ){
                 this._btnRedo.removeAttribute( DISABLED ) :
                 this._btnRedo.setAttribute( DISABLED, true );
 
-            options = this._commandView.options;
+            options = this._actionView.options;
             undoIndex = this._undoManager.get( "undoIndex" );
 
             options[ undoIndex ].selected = true;
         },
 
-        _updateSlicesPos : function( positions ){
-            this._slices.each( function(slice, k) {
-                var slicePos = positions[slice];
-
-                this._updateSlicePos( slice, slicePos );
-            }, this );
-        },
-
-        _updateSlicePos : function( slice, pos ){
-            slice.setXY( pos );
-        },
-
         _onActionAdded : function( action ){
             var options, option;
-            options = this._commandView.options;
+            options = this._actionView.options;
 
             option = document.createElement( "option" );
             option.text = action.get( "label" );
@@ -341,8 +340,8 @@ YUI().add( 'puzzle', function( Y ){
             this._updateUI();
         },
 
-        _onCommandViewSelectionChange : function( e ){
-            var selectedAction = this._commandView.selectedIndex;
+        _onActionViewSelectionChange : function( e ){
+            var selectedAction = this._actionView.selectedIndex;
 
             this._undoManager.processTo( selectedAction );
         },
@@ -350,10 +349,10 @@ YUI().add( 'puzzle', function( Y ){
         _onActionCanceled : function( params ){
             var undoIndex;
 
-            this._commandView.remove( params.index + 1 );
+            this._actionView.remove( params.index + 1 );
 
             undoIndex = this._undoManager.get( "undoIndex" );
-            this._commandView.options[ undoIndex ].selected = true;
+            this._actionView.options[ undoIndex ].selected = true;
         },
 
         _onSetLimitClick : function( e ){
@@ -363,4 +362,150 @@ YUI().add( 'puzzle', function( Y ){
 
     Y.Puzzle = Puzzle;
 
-}, '1.0', { requires: [ 'dd-drag', 'gallery-undo' ]} );
+
+    /*
+     * Puzzle MoveAction implementation
+     */
+    var NEWPOS = "newPos",
+        SLICE  = "slice";
+
+    function MoveAction(config){
+        MoveAction.superclass.constructor.apply( this, arguments );
+    }
+
+    MoveAction.NAME = "MoveAction";
+
+    MoveAction.ATTRS = {
+        slice : {
+            value : null,
+            validator : function( value ){
+                return value instanceof Y.Node;
+            }
+        },
+
+        oldPos : {
+            value : null,
+            validator : Lang.isArray
+        },
+
+        newPos : {
+            value : null,
+            validator : Lang.isArray
+        }
+
+    };
+
+    
+    Y.extend( MoveAction, Y.UndoableAction, {
+
+        initializer : function( config ){
+        },
+
+        undo : function(){
+            var oldPos = this.get( "oldPos" );
+
+            this._updateSlicePos( oldPos );
+        },
+
+        redo : function() {
+            var newPos = this.get( NEWPOS );
+
+            this._updateSlicePos( newPos );
+        },
+
+        merge : function( newAction ) {
+            var oldSlice, newSlice, newPos;
+
+            if( newAction instanceof MoveAction ){
+                newSlice = newAction.get( SLICE );
+                oldSlice = this.get( SLICE );
+                
+                if( oldSlice === newSlice ){
+                    newPos = newAction.get( NEWPOS );
+                    this.set( NEWPOS, newPos );
+                    return true;
+                }
+            }
+
+            return false;
+        },
+
+        _updateSlicePos : function( pos ){
+            var slice = this.get( SLICE );
+
+            slice.setXY( pos );
+        }
+    } );
+
+    Y.Puzzle.MoveAction = MoveAction;
+    
+    
+    
+    /*
+     * Puzzle ShuffleAction implementation
+     */
+    
+    function ShuffleAction(config){
+        ShuffleAction.superclass.constructor.apply( this, arguments );
+    }
+
+    ShuffleAction.NAME = "ShuffleAction";
+
+    ShuffleAction.ATTRS = {
+        slices: {
+            value: null,
+            validator: function( value ){
+                return value instanceof Y.NodeList;
+            }
+        },
+
+        oldPositions: {
+            value: null,
+            validator: Lang.isObject
+        },
+        
+        newPositions: {
+            value: null,
+            validator: Lang.isObject
+        }
+    };
+
+    
+    Y.extend( ShuffleAction, Y.UndoableAction, {
+
+        initializer : function( config ){
+        },
+
+        undo : function(){
+            var oldPositions = this.get( "oldPositions" );
+            
+            this._updateSlicesPos( oldPositions );
+        },
+
+        redo : function() {
+            var newPositions = this.get( "newPositions" );
+            
+            this._updateSlicesPos( newPositions );
+        },
+
+        _updateSlicesPos : function( positions ){
+            var slices = this.get( "slices" );
+
+            slices.each( function(slice, k) {
+                var slicePos = positions[slice];
+                
+                slice.setXY( slicePos );
+            }, this );
+        }
+    } );
+
+    Y.Puzzle.ShuffleAction = ShuffleAction;
+
+
+    /*
+     * Instantiate the Puzzle
+     */
+    var puzzle = new Y.Puzzle({
+        partsPerSide : 4
+    });
+});

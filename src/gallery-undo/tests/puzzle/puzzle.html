@@ -16,15 +16,6 @@
     <script type="text/javascript" src="../../../../build/gallery-undo/gallery-undo.js"></script>
     <script type="text/javascript" src="puzzle.js"></script>
 
-    <script type="text/javascript">
-        YUI().use( 'puzzle', function(Y){
-            var puzzle = new Y.Puzzle({
-                partsPerSide : 4
-            });
-        } );
-
-    </script>
-
 </head>
 
 <body>
@@ -43,9 +34,9 @@
      <div id="target-container" class="target-container">
     </div>
 
-    <h4>Pick undo/redo command from the list below:</h4>
-    <div class="command-view-container">
-        <select id="command-view" size="8" style="width: 100%;">
+    <h4>Pick undo/redo action from the list below:</h4>
+    <div class="action-view-container">
+        <select id="action-view" size="8" style="width: 100%;">
             <option value="0">&#60;initial state&#62;</option>
         </select>
     </div>
