@@ -23,28 +23,17 @@ YUI().use( 'gallery-undo', function(Y) {
 
             });
 
-            this._actionView = Y.Node.getDOMNode( Y.one( "#action-view" ) );
-            Y.on( "change", Y.bind( this._onActionViewSelectionChange, this ), this._actionView );
-
             this._undoManager = new Y.UndoManager();
 
             this._undoManager.subscribe( "actionAdded", Y.bind( this._onActionAdded, this ) );
             this._undoManager.subscribe( "undoFinished", Y.bind( this._onUndoFinished, this ) );
             this._undoManager.subscribe( "redoFinished", Y.bind( this._onRedoFinished, this ) );
-            this._undoManager.subscribe( "actionCanceled", Y.bind( this._onActionCanceled, this ) );
 
             this._btnUndo = Y.one( "#btn-undo" );
             this._btnRedo = Y.one( "#btn-redo" );
 
-            this._txtLimit = Y.one( "#txt-setlimit" );
-            this._btnLimit = Y.one( "#btn-setlimit" );
-
             this._btnUndoHandler = this._btnUndo.on( CLICK, Y.bind( this._onUndo, this ) );
             this._btnRedoHandler = this._btnRedo.on( CLICK, Y.bind( this._onRedo, this ) );
-
-            this._btnLimit.on( CLICK, Y.bind( this._onSetLimitClick, this ) );
-
-            this._txtLimit.set( "value", this._undoManager.get( "limit" ) );
 
             this._updateUI();
 
@@ -103,8 +92,6 @@ YUI().use( 'gallery-undo', function(Y) {
         },
 
         _updateUI : function(){
-            var options, undoIndex;
-
             this._undoManager.canUndo() ?
                 this._btnUndo.removeAttribute( DISABLED ) :
                 this._btnUndo.setAttribute( DISABLED, true );
@@ -112,23 +99,9 @@ YUI().use( 'gallery-undo', function(Y) {
             this._undoManager.canRedo() ?
                 this._btnRedo.removeAttribute( DISABLED ) :
                 this._btnRedo.setAttribute( DISABLED, true );
-
-            options = this._actionView.options;
-            undoIndex = this._undoManager.get( "undoIndex" );
-
-            options[ undoIndex ].selected = true;
         },
 
         _onActionAdded : function( action ){
-            var options, option;
-            options = this._actionView.options;
-
-            option = document.createElement( "option" );
-            option.text = action.get( "label" );
-            option.value = options.length;
-            option.setAttribute( "selected", "true" );
-            options.add( option );
-
             this._updateUI();
         },
 
@@ -138,25 +111,6 @@ YUI().use( 'gallery-undo', function(Y) {
 
         _onRedoFinished : function(){
             this._updateUI();
-        },
-
-        _onActionViewSelectionChange : function( e ){
-            var selectedAction = this._actionView.selectedIndex;
-
-            this._undoManager.processTo( selectedAction );
-        },
-
-        _onActionCanceled : function( params ){
-            var undoIndex;
-
-            this._actionView.remove( params.index + 1 );
-
-            undoIndex = this._undoManager.get( "undoIndex" );
-            this._actionView.options[ undoIndex ].selected = true;
-        },
-
-        _onSetLimitClick : function( e ){
-            this._undoManager.set( "limit", parseInt( this._txtLimit.get( "value" ), 10 ) );
         }
     });
 
@@ -240,6 +194,9 @@ YUI().use( 'gallery-undo', function(Y) {
             marker.setMap( null );
 
             if( map.getCenter().equals( center ) && map.getZoom() === zoomLevel ){
+                /*
+                 * Google Maps API3 will not fire any event in this situation, so we should fire undoFinished event manually
+                 */
                 this.fire( "undoFinished" );
             } else {
                 this._idleHandler = GMAPS.event.addListener( map, 'idle', Y.bind( function(){
@@ -267,6 +224,9 @@ YUI().use( 'gallery-undo', function(Y) {
             marker.setMap( map );
 
             if( map.getCenter().equals( center ) && map.getZoom() === zoomLevel ){
+                /*
+                 * Google Maps API3 will not fire any event in this situation, so we should fire undoFinished event manually
+                 */
                 this.fire( "redoFinished" );
             } else {
                 this._idleHandler = GMAPS.event.addListener( map, 'idle', Y.bind( function(){

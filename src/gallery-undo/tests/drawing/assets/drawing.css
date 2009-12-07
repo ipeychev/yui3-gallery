@@ -1,6 +1,6 @@
 .map  {
     width: 800px;
-    height: 200px;
+    height: 400px;
 }
 
 
@@ -9,24 +9,4 @@
     width: 120px;
     height: 40px;
     margin-bottom: 10px;
-}
-
-.button-setlimit {
-    float: left;
-    height: 35px;
-    margin-left: 10px;
-}
-
-.text-setlimit {
-    font-size:1.5em;
-    float: left;
-    margin-left: 30px;
-    vertical-align: middle;
-    text-align:center;
-}
-
-.action-view-container {
-    position: relative;
-    float: left;
-    width: 400px;
 }
