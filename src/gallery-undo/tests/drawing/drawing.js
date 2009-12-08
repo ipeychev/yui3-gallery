@@ -225,7 +225,7 @@ YUI().use( 'gallery-undo', function(Y) {
 
             if( map.getCenter().equals( center ) && map.getZoom() === zoomLevel ){
                 /*
-                 * Google Maps API3 will not fire any event in this situation, so we should fire undoFinished event manually
+                 * Google Maps API3 will not fire any event in this situation, so we should fire redoFinished event manually
                  */
                 this.fire( "redoFinished" );
             } else {
