@@ -1,5 +1,20 @@
+/**
+ * Provides UndoableAction class
+ *
+ * @module gallery-undo
+ */
+
 (function(){
 
+
+/**
+ * Create a UndoableAction
+ *
+ * @class UndoableAction
+ * @extends Base
+ * @param config {Object} Configuration object
+ * @constructor
+ */
 function UndoableAction( config ){
     UndoableAction.superclass.constructor.apply( this, arguments );
 }
@@ -8,43 +23,137 @@ var Lang = Y.Lang,
     UAName = "UndoableAction",
     LABEL = "label",
     BEFOREUNDO = "beforeUndo",
-    UNDOPERFORMED = "undoPerformed",
+    UNDOFINISHED = "undoFinished",
     BEFOREREDO = "beforeRedo",
-    REDOPERFORMED = "redoPerformed";
+    REDOFINISHED = "redoFinished";
 
-UndoableAction.NAME = UAName;
+Y.mix( UndoableAction, {
+    /**
+     * The identity of UndoableAction.
+     *
+     * @property UndoableAction.NAME
+     * @type String
+     * @static
+     */
+    NAME : UAName,
 
-UndoableAction.ATTRS = {
-    label: {
-        value: "",
-        validator: Lang.isString
-    },
-    
-    asyncProcessing : {
-        value: false,
-        validator: Lang.isBoolean
+    /**
+     * Static property used to define the default attribute configuration of UndoableAction.
+     *
+     * @property UndoableAction.ATTRS
+     * @type Object
+     * @protected
+     * @static
+     */
+    ATTRS : {
+        /**
+         * The label of action
+         *
+         * @attribute label
+         * @type String
+         * @default ""
+         */
+        label: {
+            value: "",
+            validator: Lang.isString
+        },
+
+        
+        /**
+         * Boolean, indicates if action must be processed asynchronously.
+         * If true, <code>undo</code> method must fire <code>undoFinished</code> event.
+         * Respectively, <code>redo</code> method must fire <code>redoFinished</code> event
+         *
+         * @attribute asyncProcessing
+         * @type Boolean
+         * @default false
+         */
+        asyncProcessing : {
+            value: false,
+            validator: Lang.isBoolean
+        }
     }
-};
+});
 
 
 Y.extend( UndoableAction, Y.Base, {
     
+    /**
+     * Container for child actions of this action
+     *
+     * @property _childActions
+     * @protected
+     * @type Array
+     */
     _childActions : [],
 
+    /**
+     * Publishes events
+     *
+     * @method initializer
+     * @protected
+     */
     initializer : function( cfg ) {
         this._initEvents();
     },
 
+    /**
+     * Destructor lifecycle implementation for UndoableAction class.
+     *
+     * @method destructor
+     * @protected
+     */
     destructor : function() {
     },
 
+    
+    /**
+     * Publishes UndoableAction's events
+     *
+     * @method _initEvents
+     * @protected
+     */
     _initEvents : function(){
+        
+        /**
+         * Signals the beginning of action undo.
+         * 
+         * @event beforeUndo
+         * @param event {Event.Facade} An Event Facade object
+         */
         this.publish( BEFOREUNDO );
-        this.publish( UNDOPERFORMED );
+        
+        /**
+         * Signals the end of action undo.
+         * 
+         * @event undoFinished
+         * @param event {Event.Facade} An Event Facade object
+         */
+        this.publish( UNDOFINISHED );
+        
+        /**
+         * Signals the beginning of action redo.
+         * 
+         * @event beforeRedo
+         * @param event {Event.Facade} An Event Facade object
+         */
         this.publish( BEFOREREDO );
-        this.publish( REDOPERFORMED );
+        
+        /**
+         * Signals the end of action redo.
+         * 
+         * @event redoFinished
+         * @param event {Event.Facade} An Event Facade object
+         */
+        this.publish( REDOFINISHED );
     },
 
+    
+    /**
+     * The default implemetation undoes all child actions in reverse order.
+     *
+     * @method undo
+     */
     undo : function(){
         var childActions, action, i;
 
@@ -57,13 +166,19 @@ Y.extend( UndoableAction, Y.Base, {
             action.undo();
         }
 
-        this.fire( UNDOPERFORMED );
+        this.fire( UNDOFINISHED );
     },
     
+    
+    /**
+     * The default implemetation redoes all child actions.
+     *
+     * @method redo
+     */
     redo : function(){
         var childActions, action, i, length;
 
-        this.fire( BEFOREUNDO );
+        this.fire( BEFOREREDO );
 
         childActions = this._childActions;
         length = childActions.length;
@@ -73,20 +188,36 @@ Y.extend( UndoableAction, Y.Base, {
             action.redo();
         }
 
-        this.fire( REDOPERFORMED );
+        this.fire( REDOFINISHED );
     },
         
     
+    /**
+     * The default implemetation returns false.
+     *
+     * @method merge
+     * @return {Boolean} false
+     */
     merge : function( action ){
         return false;
     },
 
-
+    
+    /**
+     * UndoManager invokes <code>cancel</code> method of action before removing it from the list.<br>
+     * The default implemetation does nothing.
+     *
+     * @method cancel
+     */
     cancel : function(){
-        
     },
     
     
+    /**
+     * Overrides <code>toString()</code> method.<br>
+     * The default implementation returns the value of <code>label</code> property.
+     * 
+     */
     toString : function(){
         return this.get( LABEL );
     }

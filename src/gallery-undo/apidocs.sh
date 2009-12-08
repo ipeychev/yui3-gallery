@@ -10,17 +10,17 @@ parser_in="js"
 
 # The location to output the parser data.  This output is a file containing a 
 # json string, and copies of the parsed files.
-parser_out=../../build/gallery-accordion/apidocs/parser_out
+parser_out=../../build/gallery-undo/apidocs/parser_out
 
 # The directory to put the html file outputted by the generator
-generator_out=../../build/gallery-accordion/apidocs/
+generator_out=../../build/gallery-undo/apidocs/
 
 # The location of the template files.  Any subdirectories here will be copied
 # verbatim to the destination directory.
 template=$yuidoc_home/template
 
 # The version of your project to display within the documentation.
-version=1.06
+version=1.00
 
 # The version of YUI the project is using.  This effects the output for
 # YUI configuration attributes.  This should start with '2' or '3'.
