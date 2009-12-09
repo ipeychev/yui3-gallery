@@ -1,0 +1,811 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>API: gallery-undo  UndoableAction   (YUI Library)</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css" />
+
+    <script type="text/javascript" src="assets/api-js"></script>
+    <script type="text/javascript" src="assets/ac-js"></script>
+</head>
+
+<body id="yahoo-com">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="http://developer.yahoo.com/yui/" title="Yahoo! UI Library">Yahoo! UI Library</a></h1>
+        <h3>gallery-undo&nbsp; <span class="subtitle">1.00</span></h3>
+        <a href="./index.html" title="Yahoo! UI Library">Yahoo! UI Library</a> 
+            &gt; <a href="./module_gallery-undo.html" title="gallery-undo">gallery-undo</a>
+                 &gt; UndoableAction 
+                
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <h2>
+                        
+
+                        
+                        
+                            Class <b property="yui:name">UndoableAction</b>
+                        <span class="extends">
+                           - extends <a href="Base.html" title="Base">Base</a>
+                        </span>
+
+                    </h2>
+                    <!-- class tree goes here -->
+                    
+                
+  
+
+                    <div class="summary description" property="yui:description">
+                        Create a UndoableAction
+                    </div>
+
+                        <div class="section constructor details" rel="yui:constructor" resource="#constructor">
+                        <h3 id="constructor">Constructor</h3>
+                        <div class="content">
+                            <div class="detail">
+                                <strong property="yui:name">UndoableAction</strong>
+                                <code>
+                                    (
+  
+                                        
+                                                
+                                                config
+                                    )
+                                </code>
+                                <div class="description">
+                                        <dl rel="yui:parameters">
+                                            <dt>Parameters:</dt>
+                                                <dd rel="yui:parameter">
+                                                    <code><span property="yui:name">config</span>
+                                                    &lt;<span property="yui:type">Object</span>&gt;
+                                                    </code>
+                                                    <span property="yui:description">  Configuration object</span>
+                                                </dd>
+                                        </dl>
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div rel="yui:properties" resource="#properties">
+                        <div class="section field details">
+                            <h3 id="properties">Properties</h3>
+                            <div class="content">
+                                    <div class="protected" rel="yui:property" resource="#property__childActions">
+                                    <h4><a name="property__childActions" property="yui:name">_childActions</a>
+                                        - <code>protected <span property="yui:type">Array</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            Container for child actions of this action
+                                        </div>
+                                    </div>
+     
+                                        
+
+
+                                    <hr />
+                                    </div>
+                                    <div class="protected" rel="yui:property" resource="#property_UndoableAction.ATTRS">
+                                    <h4><a name="property_UndoableAction.ATTRS" property="yui:name">UndoableAction.ATTRS</a>
+                                        - <code>protected static <span property="yui:type">Object</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            Static property used to define the default attribute configuration of UndoableAction.
+                                        </div>
+                                    </div>
+     
+                                        
+
+
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:property" resource="#property_UndoableAction.NAME">
+                                    <h4><a name="property_UndoableAction.NAME" property="yui:name">UndoableAction.NAME</a>
+                                        - <code>static <span property="yui:type">String</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            The identity of UndoableAction.
+                                        </div>
+                                    </div>
+     
+                                        
+
+
+                                    <hr />
+                                    </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div rel="yui:methods" resource="#methods">
+                        <div class="section method details">
+                            <h3 id="methods">Methods</h3>
+                            <div class="content">
+                                    <div class="protected" rel="yui:method" resource="#method__initEvents">
+                                    <h4>
+                                        <a name="method__initEvents">_initEvents</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">_initEvents</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Publishes UndoableAction's events
+                                        </div>
+
+                                        <div class="description">
+
+
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_cancel">
+                                    <h4>
+                                        <a name="method_cancel">cancel</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">cancel</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            UndoManager invokes <code>cancel</code> method of action before removing it from the list.<br>
+The default implemetation does nothing.
+                                        </div>
+
+                                        <div class="description">
+
+
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="protected" rel="yui:method" resource="#method_destructor">
+                                    <h4>
+                                        <a name="method_destructor">destructor</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">destructor</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Destructor lifecycle implementation for UndoableAction class.
+                                        </div>
+
+                                        <div class="description">
+
+
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="protected" rel="yui:method" resource="#method_initializer">
+                                    <h4>
+                                        <a name="method_initializer">initializer</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                         protected 
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">initializer</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Publishes events
+                                        </div>
+
+                                        <div class="description">
+
+
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_merge">
+                                    <h4>
+                                        <a name="method_merge">merge</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        Boolean
+                                            <strong property="yui:name">merge</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            The default implemetation returns false.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl>
+                                                    <dt>Returns:
+                                                    <code property="yui:return">
+                                                            Boolean
+                                                    </code></dt>
+                                                    <dd property="yui:returnInfo">false</dd>
+                                                </dl>
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_redo">
+                                    <h4>
+                                        <a name="method_redo">redo</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">redo</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            The default implemetation redoes all child actions.
+                                        </div>
+
+                                        <div class="description">
+
+
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_toString">
+                                    <h4>
+                                        <a name="method_toString">toString</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">toString</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Overrides <code>toString()</code> method.<br>
+The default implementation returns the value of <code>label</code> property.
+                                        </div>
+
+                                        <div class="description">
+
+
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:method" resource="#method_undo">
+                                    <h4>
+                                        <a name="method_undo">undo</a></h4>
+                                    <div class="detail" >
+                                        <code>
+                                        
+                                        
+                                        
+                                        void
+                                            <strong property="yui:name">undo</strong>
+                                           (
+                                            )
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            The default implemetation undoes all child actions in reverse order.
+                                        </div>
+
+                                        <div class="description">
+
+
+
+
+             
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div rel="yui:events" resource="#events">
+                        <div class="section method details">
+                            <h3 id="events">Events</h3>
+                            <div class="content">
+                                    <div class="" rel="yui:event" resource="#event_asyncProcessingChange">
+                                    <h4>
+                                        <a name="event_asyncProcessingChange">asyncProcessingChange</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">asyncProcessingChange</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Fires when the value for the configuration attribute 'asyncProcessing' is changed. You can listen for the event using the <a href="Attribute.html#method_on">on</a> method if you wish to be notified before the attribute's value has changed, or using the <a href="Event.Target.html#method_after">after</a> method if you wish to be notified after the attribute's value has changed.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">An Event Facade object with      the following attribute specific properties added:	<dl>		<dt>prevVal</dt>		<dd>The value of the attribute, prior to it being set</dd>		<dt>newVal</dt>		<dd>The value the attribute is to be set to</dd>		<dt>attrName</dt>		<dd>The name of the attribute being set</dd>		<dt>subAttrName</dt>		<dd>If setting a property within the attribute's value,           the name of the sub-attribute property being set</dd>	</dl></span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_beforeRedo">
+                                    <h4>
+                                        <a name="event_beforeRedo">beforeRedo</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">beforeRedo</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Signals the beginning of action redo.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">  An Event Facade object</span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_beforeUndo">
+                                    <h4>
+                                        <a name="event_beforeUndo">beforeUndo</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">beforeUndo</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Signals the beginning of action undo.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">  An Event Facade object</span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_labelChange">
+                                    <h4>
+                                        <a name="event_labelChange">labelChange</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">labelChange</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Fires when the value for the configuration attribute 'label' is changed. You can listen for the event using the <a href="Attribute.html#method_on">on</a> method if you wish to be notified before the attribute's value has changed, or using the <a href="Event.Target.html#method_after">after</a> method if you wish to be notified after the attribute's value has changed.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">An Event Facade object with      the following attribute specific properties added:	<dl>		<dt>prevVal</dt>		<dd>The value of the attribute, prior to it being set</dd>		<dt>newVal</dt>		<dd>The value the attribute is to be set to</dd>		<dt>attrName</dt>		<dd>The name of the attribute being set</dd>		<dt>subAttrName</dt>		<dd>If setting a property within the attribute's value,           the name of the sub-attribute property being set</dd>	</dl></span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_redoFinished">
+                                    <h4>
+                                        <a name="event_redoFinished">redoFinished</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">redoFinished</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Signals the end of action redo.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">  An Event Facade object</span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_undoFinished">
+                                    <h4>
+                                        <a name="event_undoFinished">undoFinished</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">undoFinished</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Signals the end of action undo.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">  An Event Facade object</span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div rel="yui:attributes" resource="#configattributes">
+                        <div class="section field details">
+                            <h3 id="configattributes">Configuration Attributes</h3>
+                            <div class="content">
+                                    <div class="" rel="yui:attribute" resource="#config_asyncProcessing">
+                                    <h4><a name="config_asyncProcessing">asyncProcessing</a>
+                                        <code>- <span property="yui:type">Boolean</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            Boolean, indicates if action must be processed asynchronously.
+If true, <code>undo</code> method must fire <code>undoFinished</code> event.
+Respectively, <code>redo</code> method must fire <code>redoFinished</code> event
+                                        </div>
+                                    </div>
+ 
+     
+                                    <div class="default">
+                                        Default Value: false
+                                    </div>        
+
+                                    <hr />
+                                    </div>        
+                                    <div class="" rel="yui:attribute" resource="#config_label">
+                                    <h4><a name="config_label">label</a>
+                                        <code>- <span property="yui:type">String</span></code>
+                                    </h4>
+                                    <div class="detail">
+                                        <div class="description" property="yui:description">
+                                            The label of action
+                                        </div>
+                                    </div>
+ 
+     
+                                    <div class="default">
+                                        Default Value: ""
+                                    </div>        
+
+                                    <hr />
+                                    </div>        
+
+                            </div>
+                        </div>
+
+                    </div>
+
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_gallery-undo.html" title="gallery-undo">gallery-undo</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="UndoableAction.html" title="UndoableAction">UndoableAction</a></li>
+                                <li class=""><a href="UndoManager.html" title="UndoManager">UndoManager</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class=""><a href="gallery-undoableaction.js.html" title="gallery-undoableaction.js">gallery-undoableaction.js</a></li>
+                                <li class=""><a href="gallery-undomanager.js.html" title="gallery-undomanager.js">gallery-undomanager.js</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="propertyList" class="module">
+                        <h4>Properties</h4>
+                        <ul class="content">        
+                                <li class="protected"><a href="#property__childActions" title="_childActions">_childActions</a></li>
+                                <li class="protected"><a href="#property_UndoableAction.ATTRS" title="UndoableAction.ATTRS">UndoableAction.ATTRS</a></li>
+                                <li class=""><a href="#property_UndoableAction.NAME" title="UndoableAction.NAME">UndoableAction.NAME</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="methodsList" class="module">
+                        <h4>Methods</h4>
+                        <ul class="content">        
+                                <li class="protected"><a href="#method__initEvents" title="_initEvents">_initEvents</a></li>
+                                <li class=""><a href="#method_cancel" title="cancel">cancel</a></li>
+                                <li class="protected"><a href="#method_destructor" title="destructor">destructor</a></li>
+                                <li class="protected"><a href="#method_initializer" title="initializer">initializer</a></li>
+                                <li class=""><a href="#method_merge" title="merge">merge</a></li>
+                                <li class=""><a href="#method_redo" title="redo">redo</a></li>
+                                <li class=""><a href="#method_toString" title="toString">toString</a></li>
+                                <li class=""><a href="#method_undo" title="undo">undo</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="eventsList" class="module">
+                        <h4>Events</h4>
+                        <ul class="content">        
+                                <li class=""><a href="#event_asyncProcessingChange" title="asyncProcessingChange">asyncProcessingChange</a></li>
+                                <li class=""><a href="#event_beforeRedo" title="beforeRedo">beforeRedo</a></li>
+                                <li class=""><a href="#event_beforeUndo" title="beforeUndo">beforeUndo</a></li>
+                                <li class=""><a href="#event_labelChange" title="labelChange">labelChange</a></li>
+                                <li class=""><a href="#event_redoFinished" title="redoFinished">redoFinished</a></li>
+                                <li class=""><a href="#event_undoFinished" title="undoFinished">undoFinished</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="configList" class="module">
+                        <h4>Configuration Attributes</h4>
+                        <ul class="content">        
+                                <li class=""><a href="#config_asyncProcessing" title="asyncProcessing">asyncProcessing</a></li>
+                                <li class=""><a href="#config_label" title="label">label</a></li>
+                        </ul>
+                    </div>
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Copyright &copy; 2009 Yahoo! Inc. All rights reserved.
+	</div>
+</div>
+<script type="text/javascript">
+    ALL_YUI_PROPS = [{"url": "UndoManager.html#event_actionAdded", "access": "", "host": "UndoManager", "type": "event", "name": "actionAdded"}, {"url": "UndoManager.html#event_actionCanceled", "access": "", "host": "UndoManager", "type": "event", "name": "actionCanceled"}, {"url": "UndoManager.html#property__actionHandle", "access": "protected", "host": "UndoManager", "type": "property", "name": "_actionHandle"}, {"url": "UndoManager.html#event_actionRedone", "access": "", "host": "UndoManager", "type": "event", "name": "actionRedone"}, {"url": "UndoManager.html#property__actions", "access": "protected", "host": "UndoManager", "type": "property", "name": "_actions"}, {"url": "UndoManager.html#event_actionUndone", "access": "", "host": "UndoManager", "type": "event", "name": "actionUndone"}, {"url": "UndoManager.html#method_add", "access": "", "host": "UndoManager", "type": "method", "name": "add"}, {"url": "UndoManager.html#method__afterLimit", "access": "protected", "host": "UndoManager", "type": "method", "name": "_afterLimit"}, {"url": "UndoableAction.html#config_asyncProcessing", "access": "", "host": "UndoableAction", "type": "config", "name": "asyncProcessing"}, {"url": "UndoableAction.html#event_asyncProcessingChange", "access": "", "host": "UndoableAction", "type": "event", "name": "asyncProcessingChange"}, {"url": "UndoManager.html#event_beforeCanceling", "access": "", "host": "UndoManager", "type": "event", "name": "beforeCanceling"}, {"url": "UndoManager.html#event_beforeRedo", "access": "", "host": "UndoManager", "type": "event", "name": "beforeRedo"}, {"url": "UndoableAction.html#event_beforeRedo", "access": "", "host": "UndoableAction", "type": "event", "name": "beforeRedo"}, {"url": "UndoManager.html#event_beforeUndo", "access": "", "host": "UndoManager", "type": "event", "name": "beforeUndo"}, {"url": "UndoableAction.html#event_beforeUndo", "access": "", "host": "UndoableAction", "type": "event", "name": "beforeUndo"}, {"url": "UndoableAction.html#method_cancel", "access": "", "host": "UndoableAction", "type": "method", "name": "cancel"}, {"url": "UndoManager.html#event_cancelingFinished", "access": "", "host": "UndoManager", "type": "event", "name": "cancelingFinished"}, {"url": "UndoManager.html#method_canRedo", "access": "", "host": "UndoManager", "type": "method", "name": "canRedo"}, {"url": "UndoManager.html#method_canUndo", "access": "", "host": "UndoManager", "type": "method", "name": "canUndo"}, {"url": "UndoableAction.html#property__childActions", "access": "protected", "host": "UndoableAction", "type": "property", "name": "_childActions"}, {"url": "UndoManager.html#method_destructor", "access": "protected", "host": "UndoManager", "type": "method", "name": "destructor"}, {"url": "UndoableAction.html#method_destructor", "access": "protected", "host": "UndoableAction", "type": "method", "name": "destructor"}, {"url": "UndoManager.html#method_getRedoLabel", "access": "", "host": "UndoManager", "type": "method", "name": "getRedoLabel"}, {"url": "UndoManager.html#method_getUndoLabel", "access": "", "host": "UndoManager", "type": "method", "name": "getUndoLabel"}, {"url": "UndoManager.html#method__initEvents", "access": "protected", "host": "UndoManager", "type": "method", "name": "_initEvents"}, {"url": "UndoableAction.html#method__initEvents", "access": "protected", "host": "UndoableAction", "type": "method", "name": "_initEvents"}, {"url": "UndoManager.html#method_initializer", "access": "protected", "host": "UndoManager", "type": "method", "name": "initializer"}, {"url": "UndoableAction.html#method_initializer", "access": "protected", "host": "UndoableAction", "type": "method", "name": "initializer"}, {"url": "UndoableAction.html#config_label", "access": "", "host": "UndoableAction", "type": "config", "name": "label"}, {"url": "UndoableAction.html#event_labelChange", "access": "", "host": "UndoableAction", "type": "event", "name": "labelChange"}, {"url": "UndoManager.html#config_limit", "access": "", "host": "UndoManager", "type": "config", "name": "limit"}, {"url": "UndoManager.html#method__limitActions", "access": "protected", "host": "UndoManager", "type": "method", "name": "_limitActions"}, {"url": "UndoManager.html#event_limitChange", "access": "", "host": "UndoManager", "type": "event", "name": "limitChange"}, {"url": "UndoableAction.html#method_merge", "access": "", "host": "UndoableAction", "type": "method", "name": "merge"}, {"url": "UndoManager.html#method__onAsyncRedoFinished", "access": "protected", "host": "UndoManager", "type": "method", "name": "_onAsyncRedoFinished"}, {"url": "UndoManager.html#method__onAsyncUndoFinished", "access": "protected", "host": "UndoManager", "type": "method", "name": "_onAsyncUndoFinished"}, {"url": "UndoManager.html#property__processing", "access": "protected", "host": "UndoManager", "type": "property", "name": "_processing"}, {"url": "UndoManager.html#method_processTo", "access": "", "host": "UndoManager", "type": "method", "name": "processTo"}, {"url": "UndoManager.html#method_purgeAll", "access": "", "host": "UndoManager", "type": "method", "name": "purgeAll"}, {"url": "UndoManager.html#method_purgeTo", "access": "", "host": "UndoManager", "type": "method", "name": "purgeTo"}, {"url": "UndoManager.html#method_redo", "access": "", "host": "UndoManager", "type": "method", "name": "redo"}, {"url": "UndoableAction.html#method_redo", "access": "", "host": "UndoableAction", "type": "method", "name": "redo"}, {"url": "UndoManager.html#event_redoFinished", "access": "", "host": "UndoManager", "type": "event", "name": "redoFinished"}, {"url": "UndoableAction.html#event_redoFinished", "access": "", "host": "UndoableAction", "type": "event", "name": "redoFinished"}, {"url": "UndoManager.html#method__redoTo", "access": "protected", "host": "UndoManager", "type": "method", "name": "_redoTo"}, {"url": "UndoableAction.html#method_toString", "access": "", "host": "UndoableAction", "type": "method", "name": "toString"}, {"url": "UndoManager.html#method_undo", "access": "", "host": "UndoManager", "type": "method", "name": "undo"}, {"url": "UndoableAction.html#method_undo", "access": "", "host": "UndoableAction", "type": "method", "name": "undo"}, {"url": "UndoableAction.html#property_UndoableAction.ATTRS", "access": "protected", "host": "UndoableAction", "type": "property", "name": "UndoableAction.ATTRS"}, {"url": "UndoableAction.html#property_UndoableAction.NAME", "access": "", "host": "UndoableAction", "type": "property", "name": "UndoableAction.NAME"}, {"url": "UndoManager.html#event_undoFinished", "access": "", "host": "UndoManager", "type": "event", "name": "undoFinished"}, {"url": "UndoableAction.html#event_undoFinished", "access": "", "host": "UndoableAction", "type": "event", "name": "undoFinished"}, {"url": "UndoManager.html#property__undoIndex", "access": "protected", "host": "UndoManager", "type": "property", "name": "_undoIndex"}, {"url": "UndoManager.html#config_undoIndex", "access": "", "host": "UndoManager", "type": "config", "name": "undoIndex"}, {"url": "UndoManager.html#event_undoIndexChange", "access": "", "host": "UndoManager", "type": "event", "name": "undoIndexChange"}, {"url": "UndoManager.html#property_UndoManager.ATTRS", "access": "protected", "host": "UndoManager", "type": "property", "name": "UndoManager.ATTRS"}, {"url": "UndoManager.html#property_UndoManager.NAME", "access": "", "host": "UndoManager", "type": "property", "name": "UndoManager.NAME"}, {"url": "UndoManager.html#method__undoTo", "access": "protected", "host": "UndoManager", "type": "method", "name": "_undoTo"}];
+</script>
+</body>
+</html>

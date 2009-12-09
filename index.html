@@ -1,6 +1,6 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
-<head><a href="../../yui3accordion/index.html"></a>
+<head>
    <title>YUI3 Gallery modules</title>
    <link rel="stylesheet" href="http://yui.yahooapis.com/2.8.0r4/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css">
 
@@ -40,6 +40,7 @@
     .module {
         background-color: #FFFEEB;
         border: 1px solid #F7CA75;
+        margin-bottom: 2em;
     }
 
     .module-caption {
@@ -79,14 +80,56 @@
 </head>
 <body>
     <div id="doc" class="yui-t7">
-    <div id="hd" role="banner"><h1>YUI3 Gallery modules:</h1></div>
+    <div id="hd" role="banner"><h1>My YUI3 Gallery modules:</h1></div>
     <div id="bd" role="main">
         <div class="yui-g">
             <div class="module">
                 <ul>
                    <li>
                        <div class="module-caption">
-                           <h2>YUI3 Accordion</h2>
+                           <h2>YUI3 Undo Framework</h2>
+                       </div>
+
+                       <div class="module-links">
+                           <span><a href="gallery-undo/index.html">Home</a></span>
+                           <span><a href="http://github.com/ipeychev/yui3-gallery">Source</a></span>
+                           <span><a href="gallery-undo/apidocs/index.html">API docs</a></span>
+                           <span><a href="http://github.com/ipeychev/yui3-gallery">Issues</a></span>
+                       </div>
+
+                       <div id="descr" class="module-descr">
+                           <p style="font-size:1.2em;">
+                               YUI3 Undo Framework allows easy adding undo/redo functionality to an application.<br>
+                               It consists of two classes:
+                           </p>
+
+                           <ul>
+                                <li>
+                                    UndoManager
+                                </li>
+                                <li>
+                                    UndoableAction
+                                </li>
+                            </ul>
+
+                           <p style="font-size:1.2em;">
+                               UndoManager manages a list of UndoableAction-s. In addition to standard undo/redo functionality, YUI3 Undo Framework supports asynchronous actions also.
+                               An asynchronous action must fire <span style="font-style:italic;">undoFinished</span> event in order to notify that its undo/redo process has been finished.
+                           </p>
+                           
+                       </div>
+                       <div class="module-footer">
+                           YUI3 Undo Framework is <a href="http://developer.yahoo.com/yui/license.html">BSD</a> licensed.
+                       </div>
+                   </li>
+               </ul>
+            </div>
+            
+            <div class="module">
+                <ul>
+                   <li>
+                       <div class="module-caption">
+                           <h2>YUI3 Accordion widget</h2>
                        </div>
 
                        <div class="module-links">
@@ -140,6 +183,7 @@ Accordion widget for YUI3 allows grouping items, containing arbitrary data insid
                    </li>
                </ul>
             </div>
+            
         </div>
 
         </div>

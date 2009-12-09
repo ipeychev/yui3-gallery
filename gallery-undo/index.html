@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>YUI3 Undo Framework</title>
+
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssfonts/fonts-min.css">
+
+        <style type="text/css">
+            html, body {
+                height:100%;
+                background-color: #F2FBFF;
+            }
+
+            h1 {
+                font-size: 170%;
+                font-weight:bold;
+                line-height: 130%;
+                margin:0 0 0 0px;
+                padding: 1em 0.5em 1em;
+            }
+
+            h2 {
+                font-size:150%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            h3 {
+                font-size:130%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            h4 {
+                font-size:110%;
+                font-weight:bold;
+                margin:0.6em 0 0;
+                top:0;
+            }
+
+            li {
+                list-style-type:disc;
+                margin:0 0 0 30px;
+                padding:0;
+                line-height: 1.4em;
+            }
+
+            p {
+                line-height: 1.6em;
+            }
+
+        </style>
+    </head>
+    <body class="yui-skin-sam">
+        <div style="margin:auto; width:900px;">
+            <h1>Introduction</h1>
+            <p>
+               YUI3 Undo Framework allows easy adding undo/redo functionality to an application.<br>
+               It consists of two classes:
+           </p>
+
+           <ul>
+                <li>
+                    UndoManager
+                </li>
+                <li>
+                    UndoableAction
+                </li>
+            </ul>
+
+           <p>
+               UndoManager manages a list of UndoableAction-s. In addition to standard undo/redo functionality, YUI3 Undo Framework supports asynchronous actions also.
+               An asynchronous action must fire <span style="font-style:italic;">undoFinished</span> event in order to notify that its undo/redo process has been completed.
+           </p>
+
+           <h1>Workflow</h1>
+
+           <h3>
+               You start with including 
+           </h3>
+
+           <h1>Examples</h1>
+        </div>
+    </body>
+</html>
+ 
