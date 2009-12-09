@@ -193,12 +193,14 @@ Y.extend( UndoableAction, Y.Base, {
         
     
     /**
+     * Depending on the application, an UndoableAction may merge with another action. If merge was successfull, merge must return true; otherwise returns false.
      * The default implemetation returns false.
      *
      * @method merge
+     * @param {Y.UndoableAction} newAction The action to merge with
      * @return {Boolean} false
      */
-    merge : function( action ){
+    merge : function( newAction ){
         return false;
     },
 
