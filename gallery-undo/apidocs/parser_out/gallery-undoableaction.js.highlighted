@@ -193,12 +193,14 @@
         
     
     <span class="c">/**</span>
+<span class="c">     * Depending on the application, an UndoableAction may merge with another action. If merge was successfull, merge must return true; otherwise returns false.</span>
 <span class="c">     * The default implemetation returns false.</span>
 <span class="c">     *</span>
 <span class="c">     * @method merge</span>
+<span class="c">     * @param {Y.UndoableAction} newAction The action to merge with</span>
 <span class="c">     * @return {Boolean} false</span>
 <span class="c">     */</span>
-    <span class="nx">merge</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">action</span> <span class="p">){</span>
+    <span class="nx">merge</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">newAction</span> <span class="p">){</span>
         <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
     <span class="p">}</span><span class="o">,</span>
 

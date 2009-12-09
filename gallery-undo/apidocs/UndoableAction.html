@@ -283,15 +283,30 @@ The default implemetation does nothing.
                                         Boolean
                                             <strong property="yui:name">merge</strong>
                                            (
+                                                
+                                                        
+                                                         newAction
+                                                    
+                                                
                                             )
                                         </code>
                                         
                                         <div class="description" property="yui:description">
-                                            The default implemetation returns false.
+                                            Depending on the application, an UndoableAction may merge with another action. If merge was successfull, merge must return true; otherwise returns false.
+The default implemetation returns false.
                                         </div>
 
                                         <div class="description">
 
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                        <code><span property="yui:name">newAction</span>
+                                                        &lt;<span property="yui:type">Y.UndoableAction</span>&gt;
+                                                        </code>
+                                                        <span property="yui:description"> The action to merge with</span>
+                                                        </dd>
+                                                </dl>
 
                                                 <dl>
                                                     <dt>Returns:
