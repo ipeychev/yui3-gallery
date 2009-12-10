@@ -628,7 +628,7 @@ YUI.add('gallery-undo', function(Y) {
         
         /**
          * Handles the completion of undo method of asynchronous action.
-         * Fires <code>actionUndone</code> event. Checks if <code>newIndex<code> is less than current index. If true, invokes _undoTo again, or fires <code>undoFinished</code> event otherwise.
+         * Fires <code>actionUndone</code> event. Checks if <code>newIndex</code> is less than current index. If true, invokes _undoTo again, or fires <code>undoFinished</code> event otherwise.
          * 
          * @method _onAsyncUndoFinished
          * @protected
@@ -655,7 +655,7 @@ YUI.add('gallery-undo', function(Y) {
 
         /**
          * Handles the completion of redo method of asynchronous action. 
-         * Fires <code>actionRedone</code> event. Checks if <code>newIndex<code> is bigger than current index. If true, invokes _redoTo again, or fires <code>redoFinished</code> event otherwise.
+         * Fires <code>actionRedone</code> event. Checks if <code>newIndex</code> is bigger than current index. If true, invokes _redoTo again, or fires <code>redoFinished</code> event otherwise.
          * 
          * @method _onAsyncRedoFinished
          * @protected
@@ -878,12 +878,14 @@ Y.extend( UndoableAction, Y.Base, {
         
     
     /**
+     * Depending on the application, an UndoableAction may merge with another action. If merge was successfull, merge must return true; otherwise returns false.
      * The default implemetation returns false.
      *
      * @method merge
+     * @param {Y.UndoableAction} newAction The action to merge with
      * @return {Boolean} false
      */
-    merge : function( action ){
+    merge : function( newAction ){
         return false;
     },
 
