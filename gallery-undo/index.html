@@ -125,7 +125,7 @@
             </ul>
 
            <p>
-               <a href="apidocs/UndoManager.html">UndoManager</a> manages a list of <a href="apidocs/UndoableAction.html">UndoableAction</a>-s. In addition to standard undo/redo functionality, YUI3 Undo Framework supports asynchronous actions also.
+               <a href="apidocs/UndoManager.html">UndoManager</a> manages a list of <a href="apidocs/UndoableAction.html">UndoableAction</a>-s. In addition to standard undo/redo functionality, YUI3 Undo Framework supports asynchronous actions as well.
                An asynchronous action must fire <a href="apidocs/UndoableAction.html#event_undoFinished">undoFinished</a> event in order to notify that its undo/redo process has been completed.
            </p>
 
@@ -147,14 +147,14 @@
            <h3>2. <a name="add_undoableaction">Adding UndoableAction</a></h3>
            <p>
                Once you have instantiated <a href="apidocs/UndoManager.html">UndoManager</a>, you have to add one or more <a href="apidocs/UndoableAction.html">UndoableAction</a>-s.
-               The UndoableAction represents an <span style="font-style:italic">action</span> in you application. What kind of action is it, is up to you - the devleloper. That could be typing a symbol in a text document, drag&amp;drop action, moving map, etc.
+               The UndoableAction represents an <span style="font-style:italic">action</span> in your application. What kind of action is it, is up to the developer. That could be typing a symbol in a text document, drag&amp;drop action, moving map, etc.
                Once you instantiate an <a href="apidocs/UndoableAction.html">UndoableAction</a>, you must add it to <a href="apidocs/UndoManager.html">UndoManager</a>.
            </p>
 
            <ul>
                <li><a href="apidocs/UndoableAction.html#method_undo">undo</a> - undoes the action</li>
                <li><a href="apidocs/UndoableAction.html#method_redo">redo</a> - redoes the action</li>
-               <li><a href="apidocs/UndoableAction.html#method_merge">merge</a> - merges the action with another one.</li>
+               <li><a href="apidocs/UndoableAction.html#method_merge">merge</a> - merges the action with another one</li>
                <li><a href="apidocs/UndoableAction.html#method_cancel">cancel</a> - cancels the action</li>
            </ul>
            
@@ -211,8 +211,8 @@
 
            <h3>3. <a name="asynchronous_actions">Asynchronous actions</a></h3>
            <p>
-               Sometimes it is not known when an action finishes its job. For example, it may send <a href="http://en.wikipedia.org/wiki/XMLHttpRequest">XMLHttpRequest (XHR)</a> to the server, or doind its job after some timeout by using <a href="http://www.w3schools.com/jsref/met_win_settimeout.asp">setTimeout</a> method.
-               In this case we can flag it as an asynchronous action - by setting its <a href="apidocs/UndoableAction.html#config_asyncProcessing">asyncProcessing</a> property to true.
+               Sometimes it is not known when an action finishes its job. For example, it may send <a href="http://en.wikipedia.org/wiki/XMLHttpRequest">XMLHttpRequest (XHR)</a> to the server, or doing its job after some timeout by using <a href="http://www.w3schools.com/jsref/met_win_settimeout.asp">setTimeout</a> method.
+               In this case, we can flag it as an asynchronous action - by setting <a href="apidocs/UndoableAction.html#config_asyncProcessing">asyncProcessing</a> property to true.
            </p>
            <p>
                In the process of undoing/redoing actions, UndoManager will check if the current action is asynchronous. If yes, it will invoke its <a href="apidocs/UndoableAction.html#method_undo">undo</a>/<a href="apidocs/UndoableAction.html#method_redo">redo</a> methods and wait until action fires <a href="apidocs/UndoableAction.html#event_undoFinished">undoFinished</a> or <a href="apidocs/UndoableAction.html#event_redoFinished">redoFinished</a> events.
@@ -258,7 +258,7 @@
            </pre>
 
            <p>
-               UndoManager provides convinient functions in order to check is undo or redo possible in some moment. These are:
+               UndoManager provides convenient functions in order to check is undo or redo possible in some moment. These are:
            </p>
 
            <ul>
@@ -266,7 +266,7 @@
                <li><a href="apidocs/UndoManager.html#method_canRedo">canUndo</a></li>
            </ul>
 
-           <h3>5. <a name="events">Listening for events</a></h3>
+           <h3>5. <a name="events">Events</a></h3>
            <p>
                Both <a href="apidocs/UndoManager.html">UndoManager</a> and <a href="apidocs/UndoableAction.html">UndoableAction</a> provide a few events.
                UndoableAction provides these events:
@@ -283,13 +283,13 @@
 
            <br><br>
            <p>
-               <a href="apidocs/UndoManager.html">UndoManager</a> fires the same events (an more) but with slighty different meaning. Undo/Redo process may include more than one action - this depends on actions implementation or the developer may
+               <a href="apidocs/UndoManager.html">UndoManager</a> fires the same events (an more) but with slightly different meaning. Undo/Redo process may include more than one action - this depends on actions implementation or the developer may
                have invoked <a href="apidocs/UndoManager.html#method_processTo">processTo</a> method. UndoManager fires the following events:
            </p>
 
            <ul>
                <li><a href="apidocs/UndoManager.html#event_actionAdded">actionAdded</a> - fires when an action has been added to UndoManager.</li>
-               <li><a href="apidocs/UndoManager.html#event_beforeCanceling">beforeCanceling</a> - an action can be canceled if we have done <a href="apidocs/UndoManager.html#method_undo">undo</a> one or more times and then we <a href="apidocs/UndoManager.html#method_add">add</a> new action to the list. UndoManager will purge the actions after the current till the end of the list. Also, if there are limited number of actions, on each add UndoManager will discard as many actions, as needed in order to free place for the new one.</li>
+               <li><a href="apidocs/UndoManager.html#event_beforeCanceling">beforeCanceling</a> - canceling may happen if we have undone some actions and we <a href="apidocs/UndoManager.html#method_add">add</a> another one to the list. UndoManager will purge all actions after the current one until the end of the list. Also, if there is a limited number of actions, on each add UndoManager will discard as many actions, as needed in order to free place for the new one.</li>
                <li><a href="apidocs/UndoManager.html#event_actionCanceled">actionCanceled</a> - fires when UndoManager cancels an action.</li>
                <li><a href="apidocs/UndoManager.html#event_cancelingFinished">cancelingFinished</a> - fires when canceling process finishes.</li>
                <li><a href="apidocs/UndoManager.html#event_beforeUndo">beforeUndo</a> - fires before the start of undo process. More than one action may be undone during this process.</li>
