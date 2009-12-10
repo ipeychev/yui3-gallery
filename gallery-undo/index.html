@@ -111,7 +111,7 @@
 
             <h2><a name="intro">Introduction</a></h2>
             <p>
-               YUI3 Undo Framework allows easy adding undo/redo functionality to an application.<br>
+               YUI3 Undo Framework allows adding undo/redo functionality to an application.<br>
                It consists of two classes:
            </p>
 
@@ -125,7 +125,7 @@
             </ul>
 
            <p>
-               <a href="apidocs/UndoManager.html">UndoManager</a> manages a list of <a href="apidocs/UndoableAction.html">UndoableAction</a>-s. In addition to standard undo/redo functionality, YUI3 Undo Framework supports asynchronous actions as well.
+               <a href="apidocs/UndoManager.html">UndoManager</a> manages a list of <a href="apidocs/UndoableAction.html">UndoableAction</a>-s. In addition to standard undo/redo functionality, YUI3 Undo Framework supports asynchronous actions too.
                An asynchronous action must fire <a href="apidocs/UndoableAction.html#event_undoFinished">undoFinished</a> event in order to notify that its undo/redo process has been completed.
            </p>
 
@@ -283,7 +283,7 @@
 
            <br><br>
            <p>
-               <a href="apidocs/UndoManager.html">UndoManager</a> fires the same events (an more) but with slightly different meaning. Undo/Redo process may include more than one action - this depends on actions implementation or the developer may
+               <a href="apidocs/UndoManager.html">UndoManager</a> fires the same events (and more) but with slightly different meaning. Undo/Redo process may include more than one action - this depends on actions implementation or the developer may
                have invoked <a href="apidocs/UndoManager.html#method_processTo">processTo</a> method. UndoManager fires the following events:
            </p>
 
