@@ -6,6 +6,8 @@
 
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssreset/reset-min.css">
         <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.0.0/build/cssfonts/fonts-min.css">
+        <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCore.css">
+        <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shThemeDefault.css">
 
         <style type="text/css">
             html, body {
@@ -13,51 +15,79 @@
                 background-color: #F2FBFF;
             }
 
+            .main-cont {
+                margin: 2em auto;
+                padding: 1em;
+                width: 1024px;
+                background-color: #EAF2F5;
+                border: 1px solid #BEDCE7;
+            }
+
             h1 {
                 font-size: 170%;
                 font-weight:bold;
                 line-height: 130%;
-                margin:0 0 0 0px;
-                padding: 1em 0.5em 1em;
+                margin: 1em;
             }
 
             h2 {
                 font-size:150%;
                 font-weight:bold;
-                margin:1.5em 0 0;
-                top:0;
+                margin: 0.8em;
             }
 
             h3 {
                 font-size:130%;
                 font-weight:bold;
-                margin:1.5em 0 0;
-                top:0;
+                margin: 0.6em;
             }
 
             h4 {
                 font-size:110%;
                 font-weight:bold;
-                margin:0.6em 0 0;
-                top:0;
             }
 
             li {
                 list-style-type:disc;
                 margin:0 0 0 30px;
-                padding:0;
                 line-height: 1.4em;
             }
 
             p {
+                font-size: 108%;
                 line-height: 1.6em;
             }
 
+            a {
+                text-decoration:none;
+            }
+
+            a:hover {
+                text-decoration:underline;
+            }
+
+            a[name]:hover {
+                text-decoration:none;
+            }
+
         </style>
+
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushCss.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.js"></script>
+
+        <script type="text/javascript">
+            SyntaxHighlighter.config.clipboardSwf = 'syntaxhighlighter/scripts/clipboard.swf';
+            SyntaxHighlighter.all();
+        </script>
+        
     </head>
     <body class="yui-skin-sam">
-        <div style="margin:auto; width:900px;">
-            <h1>Introduction</h1>
+        <div class="main-cont">
+            <h1>YU3 Undo Framework, ver. 1.0</h1>
+            <hr>
+            <h2><a name="intro">Introduction</a></h2>
             <p>
                YUI3 Undo Framework allows easy adding undo/redo functionality to an application.<br>
                It consists of two classes:
@@ -65,25 +95,188 @@
 
            <ul>
                 <li>
-                    UndoManager
+                    <a href="apidocs/UndoManager.html">UndoManager</a>
                 </li>
                 <li>
-                    UndoableAction
+                    <a href="apidocs/UndoableAction.html">UndoableAction</a>
                 </li>
             </ul>
 
            <p>
-               UndoManager manages a list of UndoableAction-s. In addition to standard undo/redo functionality, YUI3 Undo Framework supports asynchronous actions also.
-               An asynchronous action must fire <span style="font-style:italic;">undoFinished</span> event in order to notify that its undo/redo process has been completed.
+               <a href="apidocs/UndoManager.html">UndoManager</a> manages a list of <a href="apidocs/UndoableAction.html">UndoableAction</a>-s. In addition to standard undo/redo functionality, YUI3 Undo Framework supports asynchronous actions also.
+               An asynchronous action must fire <a href="apidocs/UndoableAction.html#event_undoFinished">undoFinished</a> event in order to notify that its undo/redo process has been completed.
            </p>
 
-           <h1>Workflow</h1>
+           <h2><a name="usage">Using the module</a></h2>
 
-           <h3>
-               You start with including 
-           </h3>
+           <h3>1. <a name="instantiate_undomanager">Instantiating UndoManager</a></h3>
+           <p>
+               In order to implement undo/redo functionality to your application, the first thing you have to do is to include the module in your YUI3 instance.<br>
+               Next, you must instantiate <a href="apidocs/UndoManager.html">UndoManager</a>. You may limit the number of actions, which can be added to the list with actions, by setting <a href="apidocs/UndoManager.html#config_limit">limit</a> property.
+               By default, the number of actions is 0 (unlimited).
+           </p>
 
-           <h1>Examples</h1>
+           <pre class="brush: js;">
+                YUI().use( 'gallery-undo', function( Y ){
+                    var undoManager = new Y.UndoManager();
+                });
+           </pre>
+
+           <h3>2. <a name="add_undoableaction">Adding UndoableAction</a></h3>
+           <p>
+               Once you have instantiated <a href="apidocs/UndoManager.html">UndoManager</a>, you have to add one or more <a href="apidocs/UndoableAction.html">UndoableAction</a>-s.
+               The UndoableAction represents an <span style="font-style:italic">action</span> in you application. What kind of action is it, is up to you - the devleloper. That could be typing a symbol in a text document, drag&amp;drop action, moving map, etc.
+               Once you instantiate an <a href="apidocs/UndoableAction.html">UndoableAction</a>, you must add it to <a href="apidocs/UndoManager.html">UndoManager</a>.
+           </p>
+
+           <ul>
+               <li><a href="apidocs/UndoableAction.html#method_undo">undo</a> - undoes the action</li>
+               <li><a href="apidocs/UndoableAction.html#method_redo">redo</a> - redoes the action</li>
+               <li><a href="apidocs/UndoableAction.html#method_merge">merge</a> - merges the action with another one.</li>
+               <li><a href="apidocs/UndoableAction.html#method_cancel">cancel</a> - cancels the action</li>
+           </ul>
+           
+           <p>
+               The implementation of these functions is up to the developer and the application.
+           </p>
+
+           <p style="margin-top: 1.6em;">
+               Usually, the developer will extend Y.UndoableAction, implement <a href="apidocs/UndoableAction.html#method_undo">undo</a>, <a href="apidocs/UndoableAction.html#method_redo">redo</a>, <a href="apidocs/UndoableAction.html#method_merge">merge</a> and <a href="apidocs/UndoableAction.html#method_cancel">cancel</a> methods and add it to <a href="apidocs/UndoManager.html">UndoManager</a>:
+           </p>
+
+           <pre class="brush: js;">
+                function MyAction(config){
+                    MyAction.superclass.constructor.apply( this, arguments );
+                }
+
+                MyAction.NAME = "MyAction";
+
+                MyAction.ATTRS = {
+                    ...
+                };
+
+                Y.extend( MyAction, Y.UndoableAction, {
+
+                    initializer : function( config ){
+                        ...
+                    },
+
+                    undo : function(){
+                        ...
+                    },
+
+                    redo : function() {
+                        ...
+                    },
+
+                    merge : function( newAction ) {
+                        ...
+                    },
+
+                    cancel : function() {
+                        ...
+                    }
+                } );
+
+                Y.MyAction = MyAction;
+
+                var myAction = new Y.MyAction({
+                    label: "My undoable action"
+                });
+
+                undoManager.add( myAction );
+           </pre>
+
+           <h3>3. <a name="asynchronous_actions">Asynchronous actions</a></h3>
+           <p>
+               Sometimes it is not known when an action finishes its job. For example, it may send <a href="http://en.wikipedia.org/wiki/XMLHttpRequest">XMLHttpRequest (XHR)</a> to the server, or doind its job after some timeout by using <a href="http://www.w3schools.com/jsref/met_win_settimeout.asp">setTimeout</a> method.
+               In this case we can flag it as an asynchronous action - by setting its <a href="apidocs/UndoableAction.html#config_asyncProcessing">asyncProcessing</a> property to true.
+           </p>
+           <p>
+               In the process of undoing/redoing actions, UndoManager will check if the current action is asynchronous. If yes, it will invoke its <a href="apidocs/UndoableAction.html#method_undo">undo</a>/<a href="apidocs/UndoableAction.html#method_redo">redo</a> methods and wait until action fires <a href="apidocs/UndoableAction.html#event_undoFinished">undoFinished</a> or <a href="apidocs/UndoableAction.html#event_redoFinished">redoFinished</a> events.
+           </p>
+
+           <pre class="brush: js;">
+                Y.extend( MyAction, Y.UndoableAction, {
+                    undo : function(){
+                        // doing something asynchronous
+                        this.fire( "undoFinished" );
+                    },
+
+                    redo : function() {
+                        // doing something asynchronous
+                        this.fire( "redoFinished" );
+                    }
+                });
+
+                var myAction = new Y.MyAction({
+                    label: "My asynchronous undoable action",
+                    asyncProcessing: true
+                });
+           </pre>
+
+           <h3>4. <a name="working_undomanager">Working with UndoManager</a></h3>
+
+           <p>
+               UndoManager provides three functions in order to undo/redo actions:
+           </p>
+
+           <ul>
+               <li><a href="apidocs/UndoManager.html#method_undo">undo</a> - undoes the action before current index by calling its undo method.</li>
+               <li><a href="apidocs/UndoManager.html#method_redo">redo</a> - redoes the action at current index by calling its redo method.</li>
+               <li><a href="apidocs/UndoManager.html#method_processTo">processTo</a> - undoes or redoes actions while reaching the action index, passed as parameter.</li>
+           </ul>
+
+           <pre class="brush: js;">
+           undoManager.undo();
+           ...
+           undoManager.redo();
+           ...
+           undoManager.processTo(3);
+           </pre>
+
+           <p>
+               UndoManager provides convinient functions in order to check is undo or redo possible in some moment. These are:
+           </p>
+
+           <ul>
+               <li><a href="apidocs/UndoManager.html#method_canUndo">canUndo</a></li>
+               <li><a href="apidocs/UndoManager.html#method_canRedo">canUndo</a></li>
+           </ul>
+
+           <h3>5. <a name="events">Listening for events</a></h3>
+           <p>
+               Both <a href="apidocs/UndoManager.html">UndoManager</a> and <a href="apidocs/UndoableAction.html">UndoableAction</a> provide a few events.
+               UndoableAction provides these events:
+           </p>
+
+           <ul>
+               <li><a href="apidocs/UndoableAction.html#event_beforeUndo">beforeUndo</a></li>
+               <li><a href="apidocs/UndoableAction.html#event_undoFinished">undoFinished</a></li>
+               <li><a href="apidocs/UndoableAction.html#event_beforeRedo">beforeRedo</a></li>
+               <li><a href="apidocs/UndoableAction.html#event_redoFinished">redoFinished</a></li>
+           </ul>
+
+           In case of asynchronous action, UndoManager will listen to both of these events - <a href="apidocs/UndoableAction.html#event_undoFinished">undoFinished</a> and <a href="apidocs/UndoableAction.html#event_redoFinished">redoFinished</a> events.
+
+           <br><br>
+           <p>
+               <a href="apidocs/UndoManager.html">UndoManager</a> fires the same events (an more) but with slighty different meaning. Undo/Redo process may include more than one action - this depends on actions implementation or the developer may
+               have invoked <a href="apidocs/UndoManager.html#method_processTo">processTo</a> method. UndoManager fires the following events:
+           </p>
+
+           <ul>
+               <li><a href="apidocs/UndoManager.html#event_actionAdded">actionAdded</a> - fires when an action has been added to UndoManager.</li>
+               <li><a href="apidocs/UndoManager.html#event_beforeCanceling">beforeCanceling</a> - an action can be canceled if we have done <a href="apidocs/UndoManager.html#method_undo">undo</a> one or more times and then we <a href="apidocs/UndoManager.html#method_add">add</a> new action to the list. UndoManager will purge the actions after the current till the end of the list. Also, if there are limited number of actions, on each add UndoManager will discard as many actions, as needed in order to free place for the new one.</li>
+               <li><a href="apidocs/UndoManager.html#event_actionCanceled">actionCanceled</a> - fires when UndoManager cancels an action.</li>
+               <li><a href="apidocs/UndoManager.html#event_cancelingFinished">cancelingFinished</a> - fires when canceling process finishes.</li>
+               <li><a href="apidocs/UndoManager.html#event_beforeUndo">beforeUndo</a> - fires before the start of undo process. More than one action may be undone during this process.</li>
+               <li><a href="apidocs/UndoManager.html#event_actionUndone">actionUndone</a> - fires when an action finishes its undo regardless is it asynchronous or not.</li>
+               <li><a href="apidocs/UndoManager.html#event_undoFinished">undoFinished</a> - fires when undo process completes.</li>
+               <li><a href="apidocs/UndoManager.html#event_beforeRedo">beforeRedo</a> - fires before the start of redo process. More than one action may be redone during this process.</li>
+               <li><a href="apidocs/UndoManager.html#event_redoFinished">redoFinished</a> - fires when redo process completes.</li>
+           </ul>
+           
         </div>
     </body>
 </html>
