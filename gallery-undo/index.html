@@ -70,28 +70,44 @@
                 text-decoration:none;
             }
 
+            .menu {
+                border: 1px solid #BEDCE7;
+                padding: 0.5em;
+            }
+
+            .menu a {
+                font-size: 130%;
+                margin-right: 1em;
+            }
+
+            .examples {
+                margin: 1em;
+            }
+
+            .examples-hidden {
+                display: none;
+            }
+
         </style>
-
-        <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
-        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushCss.js"></script>
-        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.js"></script>
-        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.js"></script>
-
-        <script type="text/javascript">
-            SyntaxHighlighter.config.clipboardSwf = 'syntaxhighlighter/scripts/clipboard.swf';
-            SyntaxHighlighter.all();
-        </script>
-        
     </head>
     <body class="yui-skin-sam">
         <div class="main-cont">
             <h1>YUI3 Undo Framework, ver. 1.0</h1>
-            
-            <div>
-                <a href="#examples">Examples</a>
-            </div>
 
-            <hr>
+            <div class="menu" >
+                <a href="#examples" id="examples-menu" class="examples-menu">Examples</a>
+                <a href="http://github.com/ipeychev/yui3-gallery/tree/master/src/gallery-undo">Source</a>
+                <a href="http://ipeychev.github.com/yui3-gallery/gallery-undo/apidocs/index.html">API docs</a>
+                <a href="http://github.com/ipeychev/yui3-gallery/issues">Issues</a>
+                <a href="http://github.com/ipeychev/yui3-gallery/issues" style="display:none;">Vote</a>
+
+                <div id="examples-cont" class="examples examples-hidden">
+                    <ul>
+                       <li><a href="puzzle/puzzle.html">Synchronous undo/redo</a></li>
+                       <li><a href="drawing/drawing.html">Asynchronous undo/redo</a></li>
+                   </ul>
+                </div>
+            </div>
 
             <h2><a name="intro">Introduction</a></h2>
             <p>
@@ -290,6 +306,29 @@
                <li><a href="drawing/drawing.html">Asynchronous undo/redo</a></li>
            </ul>
         </div>
+
+
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushCss.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.js"></script>
+
+        <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui.js"></script>
+
+        <script type="text/javascript">
+            SyntaxHighlighter.config.clipboardSwf = 'syntaxhighlighter/scripts/clipboard.swf';
+            SyntaxHighlighter.all();
+
+            YUI().use( 'node', function(Y){
+               var examplesMenu = Y.one( "#examples-menu" );
+               var examples = Y.one( "#examples-cont" );
+
+               examplesMenu.on( "click", function( e ){
+                   examples.toggleClass( "examples-hidden" );
+                   e.preventDefault();
+               });
+            });
+        </script>
     </body>
 </html>
  
