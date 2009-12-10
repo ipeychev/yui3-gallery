@@ -626,7 +626,7 @@
         
         <span class="c">/**</span>
 <span class="c">         * Handles the completion of undo method of asynchronous action.</span>
-<span class="c">         * Fires &lt;code&gt;actionUndone&lt;/code&gt; event. Checks if &lt;code&gt;newIndex&lt;code&gt; is less than current index. If true, invokes _undoTo again, or fires &lt;code&gt;undoFinished&lt;/code&gt; event otherwise.</span>
+<span class="c">         * Fires &lt;code&gt;actionUndone&lt;/code&gt; event. Checks if &lt;code&gt;newIndex&lt;/code&gt; is less than current index. If true, invokes _undoTo again, or fires &lt;code&gt;undoFinished&lt;/code&gt; event otherwise.</span>
 <span class="c">         * </span>
 <span class="c">         * @method _onAsyncUndoFinished</span>
 <span class="c">         * @protected</span>
@@ -653,7 +653,7 @@
 
         <span class="c">/**</span>
 <span class="c">         * Handles the completion of redo method of asynchronous action. </span>
-<span class="c">         * Fires &lt;code&gt;actionRedone&lt;/code&gt; event. Checks if &lt;code&gt;newIndex&lt;code&gt; is bigger than current index. If true, invokes _redoTo again, or fires &lt;code&gt;redoFinished&lt;/code&gt; event otherwise.</span>
+<span class="c">         * Fires &lt;code&gt;actionRedone&lt;/code&gt; event. Checks if &lt;code&gt;newIndex&lt;/code&gt; is bigger than current index. If true, invokes _redoTo again, or fires &lt;code&gt;redoFinished&lt;/code&gt; event otherwise.</span>
 <span class="c">         * </span>
 <span class="c">         * @method _onAsyncRedoFinished</span>
 <span class="c">         * @protected</span>
