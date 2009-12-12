@@ -62,12 +62,16 @@
                 text-decoration:none;
             }
 
+            a:link, a:visited {
+                color: #0065B5;
+            }
+
             a:hover {
-                text-decoration:underline;
+                color: #FF6600;
             }
 
             a[name]:hover {
-                text-decoration:none;
+                color: inherit;
             }
 
             .menu {
@@ -147,10 +151,11 @@
            <h3>2. <a name="add_undoableaction">Adding UndoableAction</a></h3>
            <p>
                Once you have instantiated <a href="apidocs/UndoManager.html">UndoManager</a>, you have to add one or more <a href="apidocs/UndoableAction.html">UndoableAction</a>-s.
-               The UndoableAction represents an <span style="font-style:italic">action</span> in your application. What kind of action is it, is up to the developer. That could be typing a symbol in a text document, drag&amp;drop action, moving map, etc.
+               The UndoableAction represents an <span style="font-style:italic">action</span> in your application. What kind of action is it, is up to the developer. That could be typing a character in a text document, drag&amp;drop action, moving map, etc.
                Once you instantiate an <a href="apidocs/UndoableAction.html">UndoableAction</a>, you must add it to <a href="apidocs/UndoManager.html">UndoManager</a>.
            </p>
 
+           <p>There are a few functions the developer may want to override:</p>
            <ul>
                <li><a href="apidocs/UndoableAction.html#method_undo">undo</a> - undoes the action</li>
                <li><a href="apidocs/UndoableAction.html#method_redo">redo</a> - redoes the action</li>
@@ -212,7 +217,7 @@
            <h3>3. <a name="asynchronous_actions">Asynchronous actions</a></h3>
            <p>
                Sometimes it is not known when an action finishes its job. For example, it may send <a href="http://en.wikipedia.org/wiki/XMLHttpRequest">XMLHttpRequest (XHR)</a> to the server, or doing its job after some timeout by using <a href="http://www.w3schools.com/jsref/met_win_settimeout.asp">setTimeout</a> method.
-               In this case, we can flag it as an asynchronous action - by setting <a href="apidocs/UndoableAction.html#config_asyncProcessing">asyncProcessing</a> property to true.
+               In this case, the developer should flag it as an asynchronous action - by setting <a href="apidocs/UndoableAction.html#config_asyncProcessing">asyncProcessing</a> property to true.
            </p>
            <p>
                In the process of undoing/redoing actions, UndoManager will check if the current action is asynchronous. If yes, it will invoke its <a href="apidocs/UndoableAction.html#method_undo">undo</a>/<a href="apidocs/UndoableAction.html#method_redo">redo</a> methods and wait until action fires <a href="apidocs/UndoableAction.html#event_undoFinished">undoFinished</a> or <a href="apidocs/UndoableAction.html#event_redoFinished">redoFinished</a> events.
