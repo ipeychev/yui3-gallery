@@ -1,8 +1,5 @@
 
-YUI( {
-    combine: false,
-    filter: "RAW"
-} ).use( 'dd-drag', 'gallery-undo', function( Y ){
+YUI().use( 'dd-drag', 'gallery-undo', function( Y ){
     
     /*
      * Puzzle implementation
