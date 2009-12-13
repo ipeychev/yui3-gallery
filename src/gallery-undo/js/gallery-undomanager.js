@@ -28,6 +28,8 @@
     BEFOREUNDO = "beforeUndo",
     ACTIONUNDONE = "actionUndone",
     UNDOFINISHED = "undoFinished",
+    BEFOREPURGE = "beforePurge",
+    PURGEFINISHED = "purgeFinished",
     BEFOREREDO = "beforeRedo",
     REDOFINISHED = "redoFinished",
     ACTIONREDONE = "actionRedone",
@@ -215,6 +217,24 @@
              */
             this.publish( CANCELINGFINISHED );
             
+            /**
+             * Signals the beginning of a process in which one or more actions will be purged from the list.
+             *
+             * @event beforePurge
+             * @param event {Event.Facade} An Event Facade object
+             */
+            this.publish( BEFOREPURGE );
+
+
+            /**
+             * Signals the end of purge process. One or more actions have been purged from the list.
+             * <code>UndoManager</code> canceles each action before to purge it.
+             *
+             * @event purgeFinished
+             * @param event {Event.Facade} An Event Facade object
+             */
+            this.publish( PURGEFINISHED );
+
             /**
              * Signals the beginning of a process in which one or more actions will be undone.
              * 
@@ -528,23 +548,29 @@
          * @param {Number} index The index in the list to which actions should be be removed
          */
         purgeTo : function( index ){
-            var action, i;
+            var action, i = this._actions.length - 1;
 
-            for( i = this._actions.length - 1; i >= index; i-- ) {
-                action = this._actions.splice( i, 1 )[0];
+            if( i >= index ){
+                this.fire( BEFOREPURGE );
 
-                action.cancel();
-                this.fire( ACTIONCANCELED, {
-                    'action': action,
-                    index : i
-                });
+                for( ; i >= index; i-- ) {
+                    action = this._actions.splice( i, 1 )[0];
+
+                    action.cancel();
+                    this.fire( ACTIONCANCELED, {
+                        'action': action,
+                        index : i
+                    });
+                }
+
+                if( this._undoIndex > index ){
+                    this._undoIndex = index;
+                }
+
+                this._processing = false;
+
+                this.fire( PURGEFINISHED );
             }
-
-            if( this._undoIndex > index ){
-                this._undoIndex = index;
-            }
-
-            this._processing = false;
         },
 
         

@@ -30,6 +30,8 @@ YUI.add('gallery-undo', function(Y) {
     BEFOREUNDO = "beforeUndo",
     ACTIONUNDONE = "actionUndone",
     UNDOFINISHED = "undoFinished",
+    BEFOREPURGE = "beforePurge",
+    PURGEFINISHED = "purgeFinished",
     BEFOREREDO = "beforeRedo",
     REDOFINISHED = "redoFinished",
     ACTIONREDONE = "actionRedone",
@@ -218,6 +220,24 @@ YUI.add('gallery-undo', function(Y) {
             this.publish( CANCELINGFINISHED );
             
             /**
+             * Signals the beginning of a process in which one or more actions will be purged from the list.
+             *
+             * @event beforePurge
+             * @param event {Event.Facade} An Event Facade object
+             */
+            this.publish( BEFOREPURGE );
+
+
+            /**
+             * Signals the end of purge process. One or more actions have been purged from the list.
+             * <code>UndoManager</code> invokes canceles each action before to purge it.
+             *
+             * @event purgeFinished
+             * @param event {Event.Facade} An Event Facade object
+             */
+            this.publish( PURGEFINISHED );
+
+            /**
              * Signals the beginning of a process in which one or more actions will be undone.
              * 
              * @event beforeUndo
@@ -288,7 +308,7 @@ YUI.add('gallery-undo', function(Y) {
          * Adds an UndoableAction to UndoManager.<br>
          * Removes and cancels all actions from the current action index till the end of the list.
          * Tries to merge the current action with the <code>newAction</code>, passed as parameter. If <code>currentAction.merge(newAction)</code> returns false, UndoManager places the <code>newAction</code> at the end of the list.<br>
-         * Fires actionAdded event if action has been added to the list, or actionMerged if <code>newAction</code> has been merged.
+         * Fires <code>actionAdded</code> event if action has been added to the list, or <code>actionMerged</code> if <code>newAction</code> has been merged.
          * @method add
          * @param {Y.UndoableAction} newAction The action to be added
          * @return {Boolean} True if action was added to the list. The result might be False if UndoManager was processing another (asynchronous) action.
@@ -530,23 +550,29 @@ YUI.add('gallery-undo', function(Y) {
          * @param {Number} index The index in the list to which actions should be be removed
          */
         purgeTo : function( index ){
-            var action, i;
+            var action, i = this._actions.length - 1;
 
-            for( i = this._actions.length - 1; i >= index; i-- ) {
-                action = this._actions.splice( i, 1 )[0];
+            if( i >= index ){
+                this.fire( BEFOREPURGE );
 
-                action.cancel();
-                this.fire( ACTIONCANCELED, {
-                    'action': action,
-                    index : i
-                });
+                for( ; i >= index; i-- ) {
+                    action = this._actions.splice( i, 1 )[0];
+
+                    action.cancel();
+                    this.fire( ACTIONCANCELED, {
+                        'action': action,
+                        index : i
+                    });
+                }
+
+                if( this._undoIndex > index ){
+                    this._undoIndex = index;
+                }
+
+                this._processing = false;
+
+                this.fire( PURGEFINISHED );
             }
-
-            if( this._undoIndex > index ){
-                this._undoIndex = index;
-            }
-
-            this._processing = false;
         },
 
         
