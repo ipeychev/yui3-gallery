@@ -150,6 +150,37 @@ YUI({
             Y.Assert.areEqual( 0, that.undoManager.get( "limit" ), "The number of actions must be unlimited now" );
         },
 
+        testLimitTo1Action: function(){
+            var actions = that.undoManager._actions, undoableAction;
+
+            that.undoManager.purgeAll();
+            that.undoManager.set( "limit", 1 );
+
+            undoableAction = new TestUndoableAction({
+              "label" : "Action0"
+            });
+            that.undoManager.add( undoableAction );
+
+            Y.Assert.areEqual( 1, actions.length, "There must be 1 item" );
+            Y.Assert.areEqual( "Action0", actions[0].get( "label" ), "Label must be Action0" );
+
+            undoableAction = new TestUndoableAction({
+              "label" : "Action1"
+            });
+            that.undoManager.add( undoableAction );
+
+            Y.Assert.areEqual( 1, actions.length, "There must be 1 item" );
+            Y.Assert.areEqual( "Action1", actions[0].get( "label" ), "Label must be Action1" );
+
+            undoableAction = new TestUndoableAction({
+              "label" : "Action2"
+            });
+            that.undoManager.add( undoableAction );
+
+            Y.Assert.areEqual( 1, actions.length, "There must be 1 item" );
+            Y.Assert.areEqual( "Action2", actions[0].get( "label" ), "Label must be Action2" );
+        },
+
         testSetLimit0: function(){
             var actions = that.undoManager._actions;
 
