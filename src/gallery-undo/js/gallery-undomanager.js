@@ -21,6 +21,7 @@
     var Lang = Y.Lang,
     UMName = "UndoManager",
     ACTIONADDED = "actionAdded",
+    ACTIONMERGED = "actionMerged",
     BEFORECANCELING = "beforeCanceling",
     ACTIONCANCELED = "actionCanceled",
     CANCELINGFINISHED = "cancelingFinished",
@@ -168,6 +169,20 @@
              *  </dl>
              */
             this.publish( ACTIONADDED );
+
+            /**
+             * Signals an <code>Y.UndoableAction</code> has been merged with another one
+             *
+             * @event actionMerged
+             * @param event {Event.Facade} An Event Facade object with the following attribute specific properties added:
+             *  <dl>
+             *      <dt><code>Y.UndoableAction</code> action</dt>
+             *          <dd>The action, accepted merge</dd>
+             *      <dt><code>Y.UndoableAction</code> mergedAction</dt>
+             *          <dd>The merged action</dd>
+             *  </dl>
+             */
+            this.publish( ACTIONMERGED );
             
             /**
              * Signals the beginning of a process in which one or more actions will be canceled.
@@ -270,8 +285,8 @@
         /**
          * Adds an UndoableAction to UndoManager.<br>
          * Removes and cancels all actions from the current action index till the end of the list.
-         * Tries to merge the current action with the <code>newAction</code>, passed as parameter. If <code>currentAction.merge(newAction)</code> returns false, UndoManager places the <code>newAction</code> at the end of the list.
-         *
+         * Tries to merge the current action with the <code>newAction</code>, passed as parameter. If <code>currentAction.merge(newAction)</code> returns false, UndoManager places the <code>newAction</code> at the end of the list.<br>
+         * Fires <code>actionAdded</code> event if action has been added to the list, or <code>actionMerged</code> if <code>newAction</code> has been merged.
          * @method add
          * @param {Y.UndoableAction} newAction The action to be added
          * @return {Boolean} True if action was added to the list. The result might be False if UndoManager was processing another (asynchronous) action.
@@ -316,11 +331,12 @@
                 actions.push( newAction );
             }
         
-            this._limitActions();
-            
             if( !merged ){
-                this._undoIndex++;        
+                this._undoIndex++;
+                this._limitActions();
                 this.fire( ACTIONADDED, newAction );
+            } else {
+                this.fire( ACTIONMERGED, curAction, newAction );
             }
             
             return true;
