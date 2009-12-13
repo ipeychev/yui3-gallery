@@ -1261,6 +1261,50 @@ During this time undoing/redoing and adding new actions will be suspended.
                                     </div>
                                     <hr />
                                     </div>
+                                    <div class="" rel="yui:event" resource="#event_beforePurge">
+                                    <h4>
+                                        <a name="event_beforePurge">beforePurge</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">beforePurge</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Signals the beginning of a process in which one or more actions will be purged from the list.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">  An Event Facade object</span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
                                     <div class="" rel="yui:event" resource="#event_beforeRedo">
                                     <h4>
                                         <a name="event_beforeRedo">beforeRedo</a></h4>
@@ -1427,6 +1471,51 @@ During this time undoing/redoing and adding new actions will be suspended.
                                                                 &lt;<span property="yui:type">Event.Facade</span>&gt;
                                                             </code>
                                                             <span property="yui:description">An Event Facade object with      the following attribute specific properties added:	<dl>		<dt>prevVal</dt>		<dd>The value of the attribute, prior to it being set</dd>		<dt>newVal</dt>		<dd>The value the attribute is to be set to</dd>		<dt>attrName</dt>		<dd>The name of the attribute being set</dd>		<dt>subAttrName</dt>		<dd>If setting a property within the attribute's value,           the name of the sub-attribute property being set</dd>	</dl></span>
+                                                        </dd>
+                                                        
+                                                </dl>
+
+
+                                        </div>
+
+                                    </div>
+                                    <hr />
+                                    </div>
+                                    <div class="" rel="yui:event" resource="#event_purgeFinished">
+                                    <h4>
+                                        <a name="event_purgeFinished">purgeFinished</a></h4>
+                                    <div class="detail">
+                                        <code>
+                                        
+                                        
+                                        
+                                            <strong property="yui:name">purgeFinished</strong>
+
+                                            (
+                                                
+                                                        
+                                                         event
+                                                    
+                                                
+                                            )
+
+                                        </code>
+                                        
+                                        <div class="description" property="yui:description">
+                                            Signals the end of purge process. One or more actions have been purged from the list.
+<code>UndoManager</code> canceles each action before to purge it.
+                                        </div>
+
+                                        <div class="description">
+
+
+                                                <dl rel="yui:parameters">
+                                                    <dt>Parameters:</dt>
+                                                        <dd rel="yui:parameter">
+                                                            <code><span property="yui:name">event</span>
+                                                                &lt;<span property="yui:type">Event.Facade</span>&gt;
+                                                            </code>
+                                                            <span property="yui:description">  An Event Facade object</span>
                                                         </dd>
                                                         
                                                 </dl>
@@ -1692,10 +1781,12 @@ Otherwise, it is the index of the last action that was undone.
                                 <li class=""><a href="#event_actionRedone" title="actionRedone">actionRedone</a></li>
                                 <li class=""><a href="#event_actionUndone" title="actionUndone">actionUndone</a></li>
                                 <li class=""><a href="#event_beforeCanceling" title="beforeCanceling">beforeCanceling</a></li>
+                                <li class=""><a href="#event_beforePurge" title="beforePurge">beforePurge</a></li>
                                 <li class=""><a href="#event_beforeRedo" title="beforeRedo">beforeRedo</a></li>
                                 <li class=""><a href="#event_beforeUndo" title="beforeUndo">beforeUndo</a></li>
                                 <li class=""><a href="#event_cancelingFinished" title="cancelingFinished">cancelingFinished</a></li>
                                 <li class=""><a href="#event_limitChange" title="limitChange">limitChange</a></li>
+                                <li class=""><a href="#event_purgeFinished" title="purgeFinished">purgeFinished</a></li>
                                 <li class=""><a href="#event_redoFinished" title="redoFinished">redoFinished</a></li>
                                 <li class=""><a href="#event_undoFinished" title="undoFinished">undoFinished</a></li>
                                 <li class=""><a href="#event_undoIndexChange" title="undoIndexChange">undoIndexChange</a></li>
@@ -1719,7 +1810,7 @@ Otherwise, it is the index of the last action that was undone.
 	</div>
 </div>
 <script type="text/javascript">
-    ALL_YUI_PROPS = [{"url": "UndoManager.html#event_actionAdded", "access": "", "host": "UndoManager", "type": "event", "name": "actionAdded"}, {"url": "UndoManager.html#event_actionCanceled", "access": "", "host": "UndoManager", "type": "event", "name": "actionCanceled"}, {"url": "UndoManager.html#property__actionHandle", "access": "protected", "host": "UndoManager", "type": "property", "name": "_actionHandle"}, {"url": "UndoManager.html#event_actionMerged", "access": "", "host": "UndoManager", "type": "event", "name": "actionMerged"}, {"url": "UndoManager.html#event_actionRedone", "access": "", "host": "UndoManager", "type": "event", "name": "actionRedone"}, {"url": "UndoManager.html#property__actions", "access": "protected", "host": "UndoManager", "type": "property", "name": "_actions"}, {"url": "UndoManager.html#event_actionUndone", "access": "", "host": "UndoManager", "type": "event", "name": "actionUndone"}, {"url": "UndoManager.html#method_add", "access": "", "host": "UndoManager", "type": "method", "name": "add"}, {"url": "UndoManager.html#method__afterLimit", "access": "protected", "host": "UndoManager", "type": "method", "name": "_afterLimit"}, {"url": "UndoManager.html#event_beforeCanceling", "access": "", "host": "UndoManager", "type": "event", "name": "beforeCanceling"}, {"url": "UndoManager.html#event_beforeRedo", "access": "", "host": "UndoManager", "type": "event", "name": "beforeRedo"}, {"url": "UndoManager.html#event_beforeUndo", "access": "", "host": "UndoManager", "type": "event", "name": "beforeUndo"}, {"url": "UndoManager.html#event_cancelingFinished", "access": "", "host": "UndoManager", "type": "event", "name": "cancelingFinished"}, {"url": "UndoManager.html#method_canRedo", "access": "", "host": "UndoManager", "type": "method", "name": "canRedo"}, {"url": "UndoManager.html#method_canUndo", "access": "", "host": "UndoManager", "type": "method", "name": "canUndo"}, {"url": "UndoManager.html#method_destructor", "access": "protected", "host": "UndoManager", "type": "method", "name": "destructor"}, {"url": "UndoManager.html#method_getRedoLabel", "access": "", "host": "UndoManager", "type": "method", "name": "getRedoLabel"}, {"url": "UndoManager.html#method_getUndoLabel", "access": "", "host": "UndoManager", "type": "method", "name": "getUndoLabel"}, {"url": "UndoManager.html#method__initEvents", "access": "protected", "host": "UndoManager", "type": "method", "name": "_initEvents"}, {"url": "UndoManager.html#method_initializer", "access": "protected", "host": "UndoManager", "type": "method", "name": "initializer"}, {"url": "UndoManager.html#config_limit", "access": "", "host": "UndoManager", "type": "config", "name": "limit"}, {"url": "UndoManager.html#method__limitActions", "access": "protected", "host": "UndoManager", "type": "method", "name": "_limitActions"}, {"url": "UndoManager.html#event_limitChange", "access": "", "host": "UndoManager", "type": "event", "name": "limitChange"}, {"url": "UndoManager.html#method__onAsyncRedoFinished", "access": "protected", "host": "UndoManager", "type": "method", "name": "_onAsyncRedoFinished"}, {"url": "UndoManager.html#method__onAsyncUndoFinished", "access": "protected", "host": "UndoManager", "type": "method", "name": "_onAsyncUndoFinished"}, {"url": "UndoManager.html#property__processing", "access": "protected", "host": "UndoManager", "type": "property", "name": "_processing"}, {"url": "UndoManager.html#method_processTo", "access": "", "host": "UndoManager", "type": "method", "name": "processTo"}, {"url": "UndoManager.html#method_purgeAll", "access": "", "host": "UndoManager", "type": "method", "name": "purgeAll"}, {"url": "UndoManager.html#method_purgeTo", "access": "", "host": "UndoManager", "type": "method", "name": "purgeTo"}, {"url": "UndoManager.html#method_redo", "access": "", "host": "UndoManager", "type": "method", "name": "redo"}, {"url": "UndoManager.html#event_redoFinished", "access": "", "host": "UndoManager", "type": "event", "name": "redoFinished"}, {"url": "UndoManager.html#method__redoTo", "access": "protected", "host": "UndoManager", "type": "method", "name": "_redoTo"}, {"url": "UndoManager.html#method_undo", "access": "", "host": "UndoManager", "type": "method", "name": "undo"}, {"url": "UndoManager.html#event_undoFinished", "access": "", "host": "UndoManager", "type": "event", "name": "undoFinished"}, {"url": "UndoManager.html#property__undoIndex", "access": "protected", "host": "UndoManager", "type": "property", "name": "_undoIndex"}, {"url": "UndoManager.html#config_undoIndex", "access": "", "host": "UndoManager", "type": "config", "name": "undoIndex"}, {"url": "UndoManager.html#event_undoIndexChange", "access": "", "host": "UndoManager", "type": "event", "name": "undoIndexChange"}, {"url": "UndoManager.html#property_UndoManager.ATTRS", "access": "protected", "host": "UndoManager", "type": "property", "name": "UndoManager.ATTRS"}, {"url": "UndoManager.html#property_UndoManager.NAME", "access": "", "host": "UndoManager", "type": "property", "name": "UndoManager.NAME"}, {"url": "UndoManager.html#method__undoTo", "access": "protected", "host": "UndoManager", "type": "method", "name": "_undoTo"}];
+    ALL_YUI_PROPS = [{"url": "UndoManager.html#event_actionAdded", "access": "", "host": "UndoManager", "type": "event", "name": "actionAdded"}, {"url": "UndoManager.html#event_actionCanceled", "access": "", "host": "UndoManager", "type": "event", "name": "actionCanceled"}, {"url": "UndoManager.html#property__actionHandle", "access": "protected", "host": "UndoManager", "type": "property", "name": "_actionHandle"}, {"url": "UndoManager.html#event_actionMerged", "access": "", "host": "UndoManager", "type": "event", "name": "actionMerged"}, {"url": "UndoManager.html#event_actionRedone", "access": "", "host": "UndoManager", "type": "event", "name": "actionRedone"}, {"url": "UndoManager.html#property__actions", "access": "protected", "host": "UndoManager", "type": "property", "name": "_actions"}, {"url": "UndoManager.html#event_actionUndone", "access": "", "host": "UndoManager", "type": "event", "name": "actionUndone"}, {"url": "UndoManager.html#method_add", "access": "", "host": "UndoManager", "type": "method", "name": "add"}, {"url": "UndoManager.html#method__afterLimit", "access": "protected", "host": "UndoManager", "type": "method", "name": "_afterLimit"}, {"url": "UndoManager.html#event_beforeCanceling", "access": "", "host": "UndoManager", "type": "event", "name": "beforeCanceling"}, {"url": "UndoManager.html#event_beforePurge", "access": "", "host": "UndoManager", "type": "event", "name": "beforePurge"}, {"url": "UndoManager.html#event_beforeRedo", "access": "", "host": "UndoManager", "type": "event", "name": "beforeRedo"}, {"url": "UndoManager.html#event_beforeUndo", "access": "", "host": "UndoManager", "type": "event", "name": "beforeUndo"}, {"url": "UndoManager.html#event_cancelingFinished", "access": "", "host": "UndoManager", "type": "event", "name": "cancelingFinished"}, {"url": "UndoManager.html#method_canRedo", "access": "", "host": "UndoManager", "type": "method", "name": "canRedo"}, {"url": "UndoManager.html#method_canUndo", "access": "", "host": "UndoManager", "type": "method", "name": "canUndo"}, {"url": "UndoManager.html#method_destructor", "access": "protected", "host": "UndoManager", "type": "method", "name": "destructor"}, {"url": "UndoManager.html#method_getRedoLabel", "access": "", "host": "UndoManager", "type": "method", "name": "getRedoLabel"}, {"url": "UndoManager.html#method_getUndoLabel", "access": "", "host": "UndoManager", "type": "method", "name": "getUndoLabel"}, {"url": "UndoManager.html#method__initEvents", "access": "protected", "host": "UndoManager", "type": "method", "name": "_initEvents"}, {"url": "UndoManager.html#method_initializer", "access": "protected", "host": "UndoManager", "type": "method", "name": "initializer"}, {"url": "UndoManager.html#config_limit", "access": "", "host": "UndoManager", "type": "config", "name": "limit"}, {"url": "UndoManager.html#method__limitActions", "access": "protected", "host": "UndoManager", "type": "method", "name": "_limitActions"}, {"url": "UndoManager.html#event_limitChange", "access": "", "host": "UndoManager", "type": "event", "name": "limitChange"}, {"url": "UndoManager.html#method__onAsyncRedoFinished", "access": "protected", "host": "UndoManager", "type": "method", "name": "_onAsyncRedoFinished"}, {"url": "UndoManager.html#method__onAsyncUndoFinished", "access": "protected", "host": "UndoManager", "type": "method", "name": "_onAsyncUndoFinished"}, {"url": "UndoManager.html#property__processing", "access": "protected", "host": "UndoManager", "type": "property", "name": "_processing"}, {"url": "UndoManager.html#method_processTo", "access": "", "host": "UndoManager", "type": "method", "name": "processTo"}, {"url": "UndoManager.html#method_purgeAll", "access": "", "host": "UndoManager", "type": "method", "name": "purgeAll"}, {"url": "UndoManager.html#event_purgeFinished", "access": "", "host": "UndoManager", "type": "event", "name": "purgeFinished"}, {"url": "UndoManager.html#method_purgeTo", "access": "", "host": "UndoManager", "type": "method", "name": "purgeTo"}, {"url": "UndoManager.html#method_redo", "access": "", "host": "UndoManager", "type": "method", "name": "redo"}, {"url": "UndoManager.html#event_redoFinished", "access": "", "host": "UndoManager", "type": "event", "name": "redoFinished"}, {"url": "UndoManager.html#method__redoTo", "access": "protected", "host": "UndoManager", "type": "method", "name": "_redoTo"}, {"url": "UndoManager.html#method_undo", "access": "", "host": "UndoManager", "type": "method", "name": "undo"}, {"url": "UndoManager.html#event_undoFinished", "access": "", "host": "UndoManager", "type": "event", "name": "undoFinished"}, {"url": "UndoManager.html#property__undoIndex", "access": "protected", "host": "UndoManager", "type": "property", "name": "_undoIndex"}, {"url": "UndoManager.html#config_undoIndex", "access": "", "host": "UndoManager", "type": "config", "name": "undoIndex"}, {"url": "UndoManager.html#event_undoIndexChange", "access": "", "host": "UndoManager", "type": "event", "name": "undoIndexChange"}, {"url": "UndoManager.html#property_UndoManager.ATTRS", "access": "protected", "host": "UndoManager", "type": "property", "name": "UndoManager.ATTRS"}, {"url": "UndoManager.html#property_UndoManager.NAME", "access": "", "host": "UndoManager", "type": "property", "name": "UndoManager.NAME"}, {"url": "UndoManager.html#method__undoTo", "access": "protected", "host": "UndoManager", "type": "method", "name": "_undoTo"}];
 </script>
 </body>
 </html>

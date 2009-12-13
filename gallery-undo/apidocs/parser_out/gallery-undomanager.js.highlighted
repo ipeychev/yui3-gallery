@@ -28,6 +28,8 @@
     <span class="nx">BEFOREUNDO</span> <span class="o">=</span> <span class="s2">&quot;beforeUndo&quot;</span><span class="o">,</span>
     <span class="nx">ACTIONUNDONE</span> <span class="o">=</span> <span class="s2">&quot;actionUndone&quot;</span><span class="o">,</span>
     <span class="nx">UNDOFINISHED</span> <span class="o">=</span> <span class="s2">&quot;undoFinished&quot;</span><span class="o">,</span>
+    <span class="nx">BEFOREPURGE</span> <span class="o">=</span> <span class="s2">&quot;beforePurge&quot;</span><span class="o">,</span>
+    <span class="nx">PURGEFINISHED</span> <span class="o">=</span> <span class="s2">&quot;purgeFinished&quot;</span><span class="o">,</span>
     <span class="nx">BEFOREREDO</span> <span class="o">=</span> <span class="s2">&quot;beforeRedo&quot;</span><span class="o">,</span>
     <span class="nx">REDOFINISHED</span> <span class="o">=</span> <span class="s2">&quot;redoFinished&quot;</span><span class="o">,</span>
     <span class="nx">ACTIONREDONE</span> <span class="o">=</span> <span class="s2">&quot;actionRedone&quot;</span><span class="o">,</span>
@@ -215,6 +217,24 @@
 <span class="c">             */</span>
             <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">CANCELINGFINISHED</span> <span class="p">);</span>
             
+            <span class="c">/**</span>
+<span class="c">             * Signals the beginning of a process in which one or more actions will be purged from the list.</span>
+<span class="c">             *</span>
+<span class="c">             * @event beforePurge</span>
+<span class="c">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">BEFOREPURGE</span> <span class="p">);</span>
+
+
+            <span class="c">/**</span>
+<span class="c">             * Signals the end of purge process. One or more actions have been purged from the list.</span>
+<span class="c">             * &lt;code&gt;UndoManager&lt;/code&gt; canceles each action before to purge it.</span>
+<span class="c">             *</span>
+<span class="c">             * @event purgeFinished</span>
+<span class="c">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">PURGEFINISHED</span> <span class="p">);</span>
+
             <span class="c">/**</span>
 <span class="c">             * Signals the beginning of a process in which one or more actions will be undone.</span>
 <span class="c">             * </span>
@@ -528,23 +548,29 @@
 <span class="c">         * @param {Number} index The index in the list to which actions should be be removed</span>
 <span class="c">         */</span>
         <span class="nx">purgeTo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">index</span> <span class="p">){</span>
-            <span class="kd">var</span> <span class="nx">action</span><span class="o">,</span> <span class="nx">i</span><span class="o">;</span>
+            <span class="kd">var</span> <span class="nx">action</span><span class="o">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span>
 
-            <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="nx">index</span><span class="o">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">)</span> <span class="p">{</span>
-                <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span> <span class="nx">i</span><span class="o">,</span> <span class="mi">1</span> <span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="nx">index</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFOREPURGE</span> <span class="p">);</span>
 
-                <span class="nx">action</span><span class="p">.</span><span class="nx">cancel</span><span class="p">();</span>
-                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONCANCELED</span><span class="o">,</span> <span class="p">{</span>
-                    <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span><span class="o">,</span>
-                    <span class="nx">index</span> <span class="o">:</span> <span class="nx">i</span>
-                <span class="p">});</span>
+                <span class="k">for</span><span class="p">(</span> <span class="o">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="nx">index</span><span class="o">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span> <span class="nx">i</span><span class="o">,</span> <span class="mi">1</span> <span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+
+                    <span class="nx">action</span><span class="p">.</span><span class="nx">cancel</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONCANCELED</span><span class="o">,</span> <span class="p">{</span>
+                        <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span><span class="o">,</span>
+                        <span class="nx">index</span> <span class="o">:</span> <span class="nx">i</span>
+                    <span class="p">});</span>
+                <span class="p">}</span>
+
+                <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&gt;</span> <span class="nx">index</span> <span class="p">){</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">=</span> <span class="nx">index</span><span class="o">;</span>
+                <span class="p">}</span>
+
+                <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">PURGEFINISHED</span> <span class="p">);</span>
             <span class="p">}</span>
-
-            <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&gt;</span> <span class="nx">index</span> <span class="p">){</span>
-                <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">=</span> <span class="nx">index</span><span class="o">;</span>
-            <span class="p">}</span>
-
-            <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
         <span class="p">}</span><span class="o">,</span>
 
         
