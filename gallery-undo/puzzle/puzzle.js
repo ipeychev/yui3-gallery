@@ -344,12 +344,7 @@ YUI().use( 'dd-drag', 'gallery-undo', function( Y ){
         },
 
         _onActionCanceled : function( params ){
-            var undoIndex;
-
             this._actionView.remove( params.index + 1 );
-
-            undoIndex = this._undoManager.get( "undoIndex" );
-            this._actionView.options[ undoIndex ].selected = true;
         },
 
         _onSetLimitClick : function( e ){
