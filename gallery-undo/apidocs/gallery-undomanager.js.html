@@ -276,8 +276,7 @@
 
 
             <span class="c">/**</span>
-<span class="c">             * Signals the end of purge process. One or more actions have been purged from the list.</span>
-<span class="c">             * &lt;code&gt;UndoManager&lt;/code&gt; canceles each action before to purge it.</span>
+<span class="c">             * Signals the end of purge process. &lt;code&gt;UndoManager&lt;/code&gt; cancels each action before its removing.</span>
 <span class="c">             *</span>
 <span class="c">             * @event purgeFinished</span>
 <span class="c">             * @param event {Event.Facade} An Event Facade object</span>
@@ -581,7 +580,7 @@
     
     
         <span class="c">/**</span>
-<span class="c">         * Removes all actions from the list</span>
+<span class="c">         * Cancels and removes all actions from the list</span>
 <span class="c">         * </span>
 <span class="c">         * @method purgeAll</span>
 <span class="c">         */</span>
@@ -591,7 +590,7 @@
 
 
         <span class="c">/**</span>
-<span class="c">         * Removes actions from the end of the list (the most recent actions) to index passed as parameter.</span>
+<span class="c">         * Cancels and removes actions from the end of the list (the most recent actions) to the index, passed as parameter.</span>
 <span class="c">         * </span>
 <span class="c">         * @method purgeTo</span>
 <span class="c">         * @param {Number} index The index in the list to which actions should be be removed</span>
