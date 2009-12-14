@@ -227,8 +227,7 @@
 
 
             /**
-             * Signals the end of purge process. One or more actions have been purged from the list.
-             * <code>UndoManager</code> canceles each action before to purge it.
+             * Signals the end of purge process. <code>UndoManager</code> cancels each action before its removing.
              *
              * @event purgeFinished
              * @param event {Event.Facade} An Event Facade object
@@ -532,7 +531,7 @@
     
     
         /**
-         * Removes all actions from the list
+         * Cancels and removes all actions from the list
          * 
          * @method purgeAll
          */
@@ -542,7 +541,7 @@
 
 
         /**
-         * Removes actions from the end of the list (the most recent actions) to index passed as parameter.
+         * Cancels and removes actions from the end of the list (the most recent actions) to the index, passed as parameter.
          * 
          * @method purgeTo
          * @param {Number} index The index in the list to which actions should be be removed

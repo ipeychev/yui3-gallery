@@ -60,7 +60,7 @@ YUI({
                 Y.Assert.areEqual( i, undoIndex, "Undo index must be: " + i );
                 Y.Assert.areEqual( true, that.undoManager.canUndo(), "Undoing must be allowed" );
                 Y.Assert.areEqual( true, that.undoManager.canRedo(), "Redoing must be allowed" );
-                Y.Assert.areEqual( i, testArray.length, "Test array must contain:" + i + " items" );
+                Y.Assert.areEqual( i, testArray.length, "Test array must contain:" + i + " actions" );
             }
 
             that.undoManager.undo();
@@ -81,7 +81,7 @@ YUI({
                 Y.Assert.areEqual( i + 1, undoIndex, "Undo index must be: " + (i + 1) );
                 Y.Assert.areEqual( true, that.undoManager.canUndo(), "Undoing must be allowed" );
                 Y.Assert.areEqual( true, that.undoManager.canRedo(), "Redoing must be allowed" );
-                Y.Assert.areEqual( i + 1, testArray.length, "Test array must contain:" + (i + 1) + " items" );
+                Y.Assert.areEqual( i + 1, testArray.length, "Test array must contain:" + (i + 1) + " actions" );
             }
 
             that.undoManager.redo();
@@ -188,7 +188,7 @@ YUI({
             that.undoManager.processTo(0);
             that.undoManager.set( "limit", 3 );
 
-            Y.Assert.areEqual( 3, actions.length, "There must be 3 items" );
+            Y.Assert.areEqual( 3, actions.length, "There must be 3 actions" );
             Y.Assert.areEqual( "Action0", actions[0].get( "label" ), "Label must be Action0" );
             Y.Assert.areEqual( "Action1", actions[1].get( "label" ), "Label must be Action1" );
             Y.Assert.areEqual( "Action2", actions[2].get( "label" ), "Label must be Action2" );
@@ -201,7 +201,7 @@ YUI({
             that.undoManager.processTo(1);
             that.undoManager.set( "limit", 3 );
 
-            Y.Assert.areEqual( 3, actions.length, "There must be 3 items" );
+            Y.Assert.areEqual( 3, actions.length, "There must be 3 actions" );
             Y.Assert.areEqual( "Action0", actions[0].get( "label" ), "Label must be Action0" );
             Y.Assert.areEqual( "Action1", actions[1].get( "label" ), "Label must be Action1" );
             Y.Assert.areEqual( "Action2", actions[2].get( "label" ), "Label must be Action2" );
@@ -214,7 +214,7 @@ YUI({
             that.undoManager.processTo( 2 );
             that.undoManager.set( "limit", 3 );
 
-            Y.Assert.areEqual( 3, actions.length, "There must be 3 items" );
+            Y.Assert.areEqual( 3, actions.length, "There must be 3 actions" );
             Y.Assert.areEqual( "Action0", actions[0].get( "label" ), "Label must be Action0" );
             Y.Assert.areEqual( "Action1", actions[1].get( "label" ), "Label must be Action1" );
             Y.Assert.areEqual( "Action2", actions[2].get( "label" ), "Label must be Action2" );
@@ -227,7 +227,7 @@ YUI({
             that.undoManager.processTo( 3 );
             that.undoManager.set( "limit", 3 );
 
-            Y.Assert.areEqual( 3, actions.length, "There must be 3 items" );
+            Y.Assert.areEqual( 3, actions.length, "There must be 3 actions" );
             Y.Assert.areEqual( "Action1", actions[0].get( "label" ), "Label must be Action1" );
             Y.Assert.areEqual( "Action2", actions[1].get( "label" ), "Label must be Action2" );
             Y.Assert.areEqual( "Action3", actions[2].get( "label" ), "Label must be Action3" );
@@ -240,7 +240,7 @@ YUI({
             that.undoManager.processTo( 4 );
             that.undoManager.set( "limit", 3 );
 
-            Y.Assert.areEqual( 3, actions.length, "There must be 3 items" );
+            Y.Assert.areEqual( 3, actions.length, "There must be 3 actions" );
             Y.Assert.areEqual( "Action2", actions[0].get( "label" ), "Label must be Action2" );
             Y.Assert.areEqual( "Action3", actions[1].get( "label" ), "Label must be Action3" );
             Y.Assert.areEqual( "Action4", actions[2].get( "label" ), "Label must be Action4" );
@@ -253,7 +253,7 @@ YUI({
             that.undoManager.processTo( 5 );
             that.undoManager.set( "limit", 3 );
 
-            Y.Assert.areEqual( 3, actions.length, "There must be 3 items" );
+            Y.Assert.areEqual( 3, actions.length, "There must be 3 actions" );
             Y.Assert.areEqual( "Action2", actions[0].get( "label" ), "Label must be Action2" );
             Y.Assert.areEqual( "Action3", actions[1].get( "label" ), "Label must be Action3" );
             Y.Assert.areEqual( "Action4", actions[2].get( "label" ), "Label must be Action4" );
@@ -266,7 +266,7 @@ YUI({
             that.undoManager.processTo(1);
             that.undoManager.set( "limit", 4 );
 
-            Y.Assert.areEqual( 4, actions.length, "There must be 4 items" );
+            Y.Assert.areEqual( 4, actions.length, "There must be 4 actions" );
             Y.Assert.areEqual( "Action0", actions[0].get( "label" ), "Label must be Action0" );
             Y.Assert.areEqual( "Action1", actions[1].get( "label" ), "Label must be Action1" );
             Y.Assert.areEqual( "Action2", actions[2].get( "label" ), "Label must be Action2" );
@@ -280,7 +280,7 @@ YUI({
             that.undoManager.processTo(2);
             that.undoManager.set( "limit", 4 );
 
-            Y.Assert.areEqual( 4, actions.length, "There must be 4 items" );
+            Y.Assert.areEqual( 4, actions.length, "There must be 4 actions" );
             Y.Assert.areEqual( "Action0", actions[0].get( "label" ), "Label must be Action0" );
             Y.Assert.areEqual( "Action1", actions[1].get( "label" ), "Label must be Action1" );
             Y.Assert.areEqual( "Action2", actions[2].get( "label" ), "Label must be Action2" );
@@ -294,7 +294,7 @@ YUI({
             that.undoManager.processTo(3);
             that.undoManager.set( "limit", 4 );
 
-            Y.Assert.areEqual( 4, actions.length, "There must be 4 items" );
+            Y.Assert.areEqual( 4, actions.length, "There must be 4 actions" );
             Y.Assert.areEqual( "Action1", actions[0].get( "label" ), "Label must be Action1" );
             Y.Assert.areEqual( "Action2", actions[1].get( "label" ), "Label must be Action2" );
             Y.Assert.areEqual( "Action3", actions[2].get( "label" ), "Label must be Action3" );
@@ -308,7 +308,7 @@ YUI({
             that.undoManager.processTo(4);
             that.undoManager.set( "limit", 4 );
 
-            Y.Assert.areEqual( 4, actions.length, "There must be 4 items" );
+            Y.Assert.areEqual( 4, actions.length, "There must be 4 actions" );
             Y.Assert.areEqual( "Action1", actions[0].get( "label" ), "Label must be Action1" );
             Y.Assert.areEqual( "Action2", actions[1].get( "label" ), "Label must be Action2" );
             Y.Assert.areEqual( "Action3", actions[2].get( "label" ), "Label must be Action3" );
@@ -322,14 +322,63 @@ YUI({
             that.undoManager.processTo(3);
             that.undoManager.set( "limit", 2 );
 
-            Y.Assert.areEqual( 2, actions.length, "There must be 2 items" );
+            Y.Assert.areEqual( 2, actions.length, "There must be 2 actions" );
             Y.Assert.areEqual( "Action2", actions[0].get( "label" ), "Label must be Action2" );
             Y.Assert.areEqual( "Action3", actions[1].get( "label" ), "Label must be Action3" );
         }
     });
 
+
+    var testPurgeActions = new Y.Test.Case({
+        testPurgeActions : function(){
+            var i, undoableAction, maxActions = 10, targetIndex, actions;
+
+            that.undoManager.purgeAll();
+            that.undoManager.set( "limit", 0 );
+
+            for( i = 0; i < maxActions; i++ ){
+                undoableAction = new TestUndoableAction({
+                  "label" : "Action" + i
+                });
+
+                that.undoManager.add(undoableAction);
+            }
+
+            maxActions = parseInt(maxActions/2, 10);
+            targetIndex = parseInt( maxActions - 1, 10);
+
+            that.undoManager.processTo(targetIndex);
+            that.undoManager.purgeTo( maxActions );
+
+            actions = that.undoManager._actions;
+            Y.Assert.areEqual( maxActions, actions.length, "There must be ", maxActions, " actions" );
+            Y.Assert.areEqual( targetIndex, that.undoManager.get( "undoIndex" ), "Undo index must be " + targetIndex );
+
+
+            that.undoManager.purgeTo( maxActions ); // must do nothing
+            Y.Assert.areEqual( maxActions, actions.length, "There must be ", maxActions, " actions" );
+            Y.Assert.areEqual( targetIndex, that.undoManager.get( "undoIndex" ), "Undo index must be " + targetIndex );
+
+            maxActions -= 1;
+            that.undoManager.purgeTo( maxActions );
+            Y.Assert.areEqual( maxActions, actions.length, "There must be ", maxActions, " actions" );
+            Y.Assert.areEqual( targetIndex, that.undoManager.get( "undoIndex" ), "Undo index must be " + targetIndex );
+
+
+            that.undoManager.undo();
+            Y.Assert.areEqual( maxActions, actions.length, "There must be ", maxActions, " actions" );
+            Y.Assert.areEqual( targetIndex - 1, that.undoManager.get( "undoIndex" ), "Undo index must be " + targetIndex - 1 );
+
+
+            that.undoManager.redo();
+            Y.Assert.areEqual( maxActions, actions.length, "There must be ", maxActions, " actions" );
+            Y.Assert.areEqual( targetIndex, that.undoManager.get( "undoIndex" ), "Undo index must be " + targetIndex );
+        }
+    });
+
     Y.Test.Runner.add(testSynchronousActions);
     Y.Test.Runner.add(testSynchronousActionsLimit);
+    Y.Test.Runner.add(testPurgeActions);
 
     console = new Y.Console({
         verbose : false,
