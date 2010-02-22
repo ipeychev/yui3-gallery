@@ -1402,6 +1402,47 @@ Y.extend( Accordion, Y.Widget, {
         }
     },
     
+
+    /**
+     * Handles the change of "bodyContentChange" property of given item
+     *
+     * @method _afterBodyContentChange
+     * @protected
+     * @param params {EventFacade} The event facade for the attribute change
+     */
+    _afterBodyContentChange : function( params ){
+        var item, itemContentHeight, body, bodyHeight, expanded, auto, anim;
+
+        item = params.currentTarget;
+        auto = item.get( "contentHeight" ).method === "auto";
+        expanded = item.get( EXPANDED );
+
+        if( auto && expanded && params.src !== Y.Widget.UI_SRC ){
+            Y.later( 0, this, function(){
+                itemContentHeight = this._getItemContentHeight( item );
+
+                body = item.getStdModNode( WidgetStdMod.BODY );
+                bodyHeight = this._getNodeOffsetHeight( body );
+
+                if( itemContentHeight !== bodyHeight ){
+                    anim = this._animations[ item ];
+
+                    // stop waiting animation
+                    if( anim ){
+                        anim.stop();
+                    }
+
+                    this._adjustStretchItems();
+
+                    if( itemContentHeight < bodyHeight ){
+                        this._processCollapsing( item, itemContentHeight, !expanded );
+                    } else if( itemContentHeight > bodyHeight ){
+                        this._processExpanding( item, itemContentHeight, !expanded );
+                    }
+                }
+            } );
+        }
+    },
     
     
     /**
@@ -1617,7 +1658,8 @@ Y.extend( Accordion, Y.Widget, {
         itemHandles = {
             "expandedChange" : item.after( "expandedChange", Y.bind( this._afterItemExpand, this ) ),
             "alwaysVisibleChange" : item.after( "alwaysVisibleChange", Y.bind( this._afterItemAlwaysVisible, this ) ),
-            "contentHeightChange" : item.after( "contentHeightChange", Y.bind( this._afterContentHeight, this ) )
+            "contentHeightChange" : item.after( "contentHeightChange", Y.bind( this._afterContentHeight, this ) ),
+            "bodyContentChange" : item.after( "bodyContentChange", Y.bind( this._afterBodyContentChange, this ) )
         };
         
         this._itemsHandles[ item ] = itemHandles;
