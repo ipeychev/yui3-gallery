@@ -238,10 +238,6 @@ Y.extend( Accordion, Y.Widget, {
         this._initEvents();
 
         this.after( "render", Y.bind( this._afterRender, this ) );
-
-        this._forCollapsing = {};
-        this._forExpanding = {};
-        this._animations   = {};
     },
 
     
@@ -437,13 +433,40 @@ Y.extend( Accordion, Y.Widget, {
         this.publish( ITEMREORDERED );
     },
 
+
+    /**
+     * Contains items for collapsing
+     * @property _forCollapsing
+     * @protected
+     * @type Object
+     */
+    _forCollapsing : {},
+
+
+    /**
+     * Contains items for expanding
+     * @property _forExpanding
+     * @protected
+     * @type Object
+     */
+    _forExpanding : {},
+
+
+    /**
+    * Contains currently running animations
+    * @property _animations
+    * @protected
+    * @type Object
+    */
+    _animations   : {},
+
     
     /**
      * Collection of items handles.
      * Keeps track of each items's event handle, as returned from <code>Y.on</code> or <code>Y.after</code>.
      * @property _itemHandles
      * @private
-     * @type Array
+     * @type Object
      */
     _itemsHandles: {},
     
