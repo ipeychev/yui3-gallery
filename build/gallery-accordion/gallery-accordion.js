@@ -1876,7 +1876,7 @@ AccordionItem.ATTRS = {
     },
 
     /**
-     * @description The node, contains label
+     * @description The node, which contains item's label
      *
      * @attribute nodeLabel
      * @default null
