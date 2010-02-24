@@ -1402,13 +1402,13 @@ Y.extend( Accordion, Y.Widget, {
     
 
     /**
-     * Handles the change of "bodyContentChange" property of given item
+     * Handles the change of "contentUpdate" property of given item
      *
-     * @method _afterBodyContentChange
+     * @method _afterContentUpdate
      * @protected
      * @param params {EventFacade} The event facade for the attribute change
      */
-    _afterBodyContentChange : function( params ){
+    _afterContentUpdate : function( params ){
         var item, itemContentHeight, body, bodyHeight, expanded, auto, anim;
 
         item = params.currentTarget;
@@ -1657,7 +1657,7 @@ Y.extend( Accordion, Y.Widget, {
             "expandedChange" : item.after( "expandedChange", Y.bind( this._afterItemExpand, this ) ),
             "alwaysVisibleChange" : item.after( "alwaysVisibleChange", Y.bind( this._afterItemAlwaysVisible, this ) ),
             "contentHeightChange" : item.after( "contentHeightChange", Y.bind( this._afterContentHeight, this ) ),
-            "bodyContentChange" : item.after( "bodyContentChange", Y.bind( this._afterBodyContentChange, this ) )
+            "contentUpdate" : item.after( "contentUpdate", Y.bind( this._afterContentUpdate, this ) )
         };
         
         this._itemsHandles[ item ] = itemHandles;

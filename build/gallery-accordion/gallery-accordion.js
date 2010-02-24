@@ -1404,13 +1404,13 @@ Y.extend( Accordion, Y.Widget, {
     
 
     /**
-     * Handles the change of "bodyContentChange" property of given item
+     * Handles the change of "contentUpdate" property of given item
      *
-     * @method _afterBodyContentChange
+     * @method _afterContentUpdate
      * @protected
      * @param params {EventFacade} The event facade for the attribute change
      */
-    _afterBodyContentChange : function( params ){
+    _afterContentUpdate : function( params ){
         var item, itemContentHeight, body, bodyHeight, expanded, auto, anim;
 
         item = params.currentTarget;
@@ -1659,7 +1659,7 @@ Y.extend( Accordion, Y.Widget, {
             "expandedChange" : item.after( "expandedChange", Y.bind( this._afterItemExpand, this ) ),
             "alwaysVisibleChange" : item.after( "alwaysVisibleChange", Y.bind( this._afterItemAlwaysVisible, this ) ),
             "contentHeightChange" : item.after( "contentHeightChange", Y.bind( this._afterContentHeight, this ) ),
-            "bodyContentChange" : item.after( "bodyContentChange", Y.bind( this._afterBodyContentChange, this ) )
+            "contentUpdate" : item.after( "contentUpdate", Y.bind( this._afterContentUpdate, this ) )
         };
         
         this._itemsHandles[ item ] = itemHandles;
@@ -1787,6 +1787,7 @@ Y.extend( Accordion, Y.Widget, {
 Y.Accordion = Accordion;
 
 }());
+
 
 /**
  * Provides AccordionItem class
@@ -2495,10 +2496,10 @@ Y.extend( AccordionItem, Y.Widget, {
      * @param  config {Object} Configuration object literal for the AccordionItem
      */
     initializer: function( config ) {
-
         this.after( "labelChange",  Y.bind( this._labelChanged, this ) );
         this.after( "closableChange", Y.bind( this._closableChanged, this ) );
     },
+    
     
     /**
      * Destructor lifecycle implementation for the AccordionItem class.
@@ -2664,6 +2665,16 @@ Y.extend( AccordionItem, Y.Widget, {
         }
         
         return false;
+    },
+
+
+    /**
+     * Recalculates the height of the item and resizes it, if needed. This method should be used if the content of the item has been modified via 'innerHTML'
+     *
+     * @method refresh
+     */
+    refresh : function(){
+        this.fire( "contentUpdate" );
     },
 
 
@@ -2886,6 +2897,7 @@ Base.build( AccordionItem.NAME, AccordionItem, [ WidgetStdMod ], {
 Y.AccordionItem = AccordionItem;
 
 }());
+
 
 
 

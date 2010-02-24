@@ -705,10 +705,10 @@ Y.extend( AccordionItem, Y.Widget, {
      * @param  config {Object} Configuration object literal for the AccordionItem
      */
     initializer: function( config ) {
-
         this.after( "labelChange",  Y.bind( this._labelChanged, this ) );
         this.after( "closableChange", Y.bind( this._closableChanged, this ) );
     },
+    
     
     /**
      * Destructor lifecycle implementation for the AccordionItem class.
@@ -874,6 +874,16 @@ Y.extend( AccordionItem, Y.Widget, {
         }
         
         return false;
+    },
+
+
+    /**
+     * Recalculates the height of the item and resizes it, if needed. This method should be used if the content of the item has been modified via 'innerHTML'
+     *
+     * @method refresh
+     */
+    refresh : function(){
+        this.fire( "contentUpdate" );
     },
 
 
