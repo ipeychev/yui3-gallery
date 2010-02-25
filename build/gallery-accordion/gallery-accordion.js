@@ -1788,7 +1788,6 @@ Y.Accordion = Accordion;
 
 }());
 
-
 /**
  * Provides AccordionItem class
  *
@@ -2669,11 +2668,11 @@ Y.extend( AccordionItem, Y.Widget, {
 
 
     /**
-     * Recalculates the height of the item and resizes it, if needed. This method should be used if the content of the item has been modified via 'innerHTML'
+     * Forces the item to update its size as result of content updating via 'innerHTML'
      *
      * @method refresh
      */
-    refresh : function(){
+    resize : function(){
         this.fire( "contentUpdate" );
     },
 
@@ -2897,7 +2896,6 @@ Base.build( AccordionItem.NAME, AccordionItem, [ WidgetStdMod ], {
 Y.AccordionItem = AccordionItem;
 
 }());
-
 
 
 
