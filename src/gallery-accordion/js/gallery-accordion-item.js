@@ -878,7 +878,7 @@ Y.extend( AccordionItem, Y.Widget, {
 
 
     /**
-     * Forces the item to update its size as result of content updating via 'innerHTML'.
+     * Forces the item to resize as result of direct content manipulation (via 'innerHTML').
      * This method should be invoked if 'contentHeight' property has been set to 'auto'.
      *
      * @method resize
