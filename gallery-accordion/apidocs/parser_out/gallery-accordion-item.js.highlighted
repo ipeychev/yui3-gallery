@@ -128,7 +128,7 @@
     <span class="p">}</span><span class="o">,</span>
 
     <span class="c">/**</span>
-<span class="c">     * @description The node, contains label</span>
+<span class="c">     * @description The node, which contains item&#39;s label</span>
 <span class="c">     *</span>
 <span class="c">     * @attribute nodeLabel</span>
 <span class="c">     * @default null</span>
@@ -705,10 +705,10 @@
 <span class="c">     * @param  config {Object} Configuration object literal for the AccordionItem</span>
 <span class="c">     */</span>
     <span class="nx">initializer</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">config</span> <span class="p">)</span> <span class="p">{</span>
-
         <span class="k">this</span><span class="p">.</span><span class="nx">after</span><span class="p">(</span> <span class="s2">&quot;labelChange&quot;</span><span class="o">,</span>  <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_labelChanged</span><span class="o">,</span> <span class="k">this</span> <span class="p">)</span> <span class="p">);</span>
         <span class="k">this</span><span class="p">.</span><span class="nx">after</span><span class="p">(</span> <span class="s2">&quot;closableChange&quot;</span><span class="o">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_closableChanged</span><span class="o">,</span> <span class="k">this</span> <span class="p">)</span> <span class="p">);</span>
     <span class="p">}</span><span class="o">,</span>
+    
     
     <span class="c">/**</span>
 <span class="c">     * Destructor lifecycle implementation for the AccordionItem class.</span>
@@ -874,6 +874,17 @@
         <span class="p">}</span>
         
         <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="p">}</span><span class="o">,</span>
+
+
+    <span class="c">/**</span>
+<span class="c">     * Forces the item to resize as result of direct content manipulation (via &#39;innerHTML&#39;).</span>
+<span class="c">     * This method should be invoked if &#39;contentHeight&#39; property has been set to &#39;auto&#39;.</span>
+<span class="c">     *</span>
+<span class="c">     * @method resize</span>
+<span class="c">     */</span>
+    <span class="nx">resize</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="s2">&quot;contentUpdate&quot;</span> <span class="p">);</span>
     <span class="p">}</span><span class="o">,</span>
 
 
