@@ -95,8 +95,7 @@
                 boundingBox: "#bb1",
                 contentBox: "#acc1",
                 useAnimation: true,
-                reorderItems: true,
-                collapseOthersOnExpand: false
+                reorderItems: true
             });
 
             accordion.render();
@@ -120,10 +119,10 @@
                             </div>
                             <div class="yui-widget-bd">
                                 <div id="pm1" style="position: relative;">
-                                    <h1>Accordion widget, ver. 1.07</h1>
+                                    <h1>Accordion widget, ver. 1.08</h1>
                                     <p>
-                                        Accordion is a visual widget that allows the expansion/collapse of grouped items containing arbitrary data. Accordion items can be added or removed dynamically, reordered via drag-and-drop, closed and set as always visible.<br/>
-                                        The height of the content inside each item can be set in three different ways:<br/>
+                                        Accordion is a visual widget that allows the expansion/collapse of grouped items containing arbitrary data. Accordion items can be added or removed dynamically, reordered via drag-and-drop, closed and set as always visible.<br>
+                                        The height of the content inside each item can be set in three different ways:<br>
                                     </p>
                                     <ul>
                                         <li>auto - the browser will calculate content height</li>
@@ -146,9 +145,9 @@
                             </div>
                             <div id="bodyid2" class="yui-widget-bd">
                                 <div id="pm2" style="position:relative; overflow: auto; height: 100%;">
-                                    <h3>
+                                    <h4>
                                         Examples:
-                                    </h3>
+                                    </h4>
                                     <ul>
                                         <li>
                                             <h4>
@@ -175,6 +174,11 @@
                                                 <a href="accordion_overflow.html">Scrollable items</a>
                                             </h4>
                                         </li>
+                                        <li>
+                                            <h4>
+                                                <a href="force_item_to_resize.html">Force an "auto" item to resize</a>
+                                            </h4>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
@@ -195,12 +199,12 @@
                                     <ul>
                                         <li>
                                             <h4>
-                                                <a href="http://github.com/ipeychev/yui3-gallery/tree/master/src/gallery-accordion" target="_blank">Source code<br/></a>
+                                                <a href="http://github.com/ipeychev/yui3-gallery/tree/master/src/gallery-accordion" target="_blank">Source code<br></a>
                                             </h4>
                                         </li>
                                         <li>
                                             <h4>
-                                                <a href="apidocs/index.html" target="_blank">API Documentation<br/></a>
+                                                <a href="apidocs/index.html" target="_blank">API Documentation<br></a>
                                             </h4>
                                         </li>
                                     </ul>
@@ -222,42 +226,49 @@
                             <div id="bodyid3" class="yui-widget-bd">
                                 <div id="pm3" style="position:relative; overflow:auto; height:100%;">
                                     <p>
-                                        22.11.2009 - ver. 1.07<br/>
-                                         - Parsing data from markup improved for icon, nodeLabel, iconsContainer, iconAlwaysVisible, iconExpanded and iconClose configuration properties.<br/>
-                                           Valid input is not only Node, but raw HTMLElement and a selector string also.<br/>
+                                        25.02.2010 - ver 1.08<br>
+                                         - AccordionItem has a new function - resize(). It should be invoked if the content has been updated directly (by using
+                                         innerHTML).
+                                           This is neeed only if "contentHeight" property has been set to "auto". The function also causes resizing of all other
+                                           expanded and stretched items.
+                                    </p>
+                                    <p>
+                                        22.11.2009 - ver. 1.07<br>
+                                         - Parsing data from markup improved for icon, nodeLabel, iconsContainer, iconAlwaysVisible, iconExpanded and iconClose configuration properties.<br>
+                                           Valid input is not only Node, but raw HTMLElement and a selector string also.<br>
                                         - Item reordering is false by default, instead true. As result, drag modules are now optional, not required.
                                     </p>
                                     <p>
-                                        06.11.2009 - ver. 1.06<br/>
+                                        06.11.2009 - ver. 1.06<br>
                                         Accordion supports setting config attributes via HTML5 "data-". These are:
                                     </p>
                                     <ul>
-                                      <li>data-label - string<br/>
-                                      <li>data-expanded - "true", "yes" or "1"<br/>
-                                      <li>data-alwaysvisible - "true", "yes" or "1"<br/>
-                                      <li>data-closable - "true", "yes" or "1"<br/>
-                                      <li>data-contentheight - "auto", "stretch" or "fixed-X", where X is a number<br/><br/>
+                                      <li>data-label - string<br>
+                                      <li>data-expanded - "true", "yes" or "1"<br>
+                                      <li>data-alwaysvisible - "true", "yes" or "1"<br>
+                                      <li>data-closable - "true", "yes" or "1"<br>
+                                      <li>data-contentheight - "auto", "stretch" or "fixed-X", where X is a number<br><br>
                                     </ul>
                                     <p>
-                                        02.11.2009 - ver 1.05:<br/>
-                                        - Setting item label bugfix <br/>
+                                        02.11.2009 - ver 1.05:<br>
+                                        - Setting item label bugfix <br>
                                     </p>
                                     <p>
-                                        12.10.2009 - ver 1.04:<br/>
-                                        - AccordionItem - header rewritten<br/>
+                                        12.10.2009 - ver 1.04:<br>
+                                        - AccordionItem - header rewritten<br>
                                     </p>
                                     <p>
-                                        06.10.2009 - ver 1.03:<br/>
-                                        - Local constants created instead string literals<br/>
-                                        - Event listeners unbundled<br/>
+                                        06.10.2009 - ver 1.03:<br>
+                                        - Local constants created instead string literals<br>
+                                        - Event listeners unbundled<br>
                                         - Removed unnecessary underscores.
                                     </p>
                                     <p>
-                                        30.09.2009:<br/>
+                                        30.09.2009:<br>
                                          - Switched to YUI3 GA
                                     </p>
                                     <p>
-                                        29.09.2009:<br/>
+                                        29.09.2009:<br>
                                         - Added new example - Overwrite the default properties
                                     </p>
                                 </div>
