@@ -33,7 +33,7 @@ var Lang = Y.Lang,
     COLLAPSE_HEIGHT = IEQuirksMode ? 1 : 0,
     getCN = Y.ClassNameManager.getClassName,
     
-    C_ITEM = "yui-accordion-item",
+    C_ITEM = "yui3-accordion-item",
     C_PROXY_VISIBLE = getCN( AccName, "proxyel", "visible" ),
     DRAGGROUP = getCN( AccName, "graggroup" ),
 
@@ -1481,7 +1481,7 @@ Y.extend( Accordion, Y.Widget, {
         var cb, itemsDom;
 
         cb = this.get( CONTENT_BOX );
-        itemsDom = cb.queryAll( "> div." + C_ITEM );
+        itemsDom = cb.queryAll( "> ." + C_ITEM );
 
         itemsDom.each( function( itemNode, index, itemsDom ){
             var newItem;
@@ -1509,7 +1509,7 @@ Y.extend( Accordion, Y.Widget, {
         contentBox = this.get( CONTENT_BOX );
         itemChosenEvent = this.get( 'itemChosen' );
         
-        contentBox.delegate( itemChosenEvent, Y.bind( this._onItemChosenEvent, this ), 'div.yui-widget-hd' );
+        contentBox.delegate( itemChosenEvent, Y.bind( this._onItemChosenEvent, this ), '.yui3-widget-hd' );
     },
 
 

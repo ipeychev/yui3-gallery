@@ -35,7 +35,7 @@ var Lang = Y.Lang,
     COLLAPSE_HEIGHT = IEQuirksMode ? 1 : 0,
     getCN = Y.ClassNameManager.getClassName,
     
-    C_ITEM = "yui-accordion-item",
+    C_ITEM = "yui3-accordion-item",
     C_PROXY_VISIBLE = getCN( AccName, "proxyel", "visible" ),
     DRAGGROUP = getCN( AccName, "graggroup" ),
 
@@ -1483,7 +1483,7 @@ Y.extend( Accordion, Y.Widget, {
         var cb, itemsDom;
 
         cb = this.get( CONTENT_BOX );
-        itemsDom = cb.queryAll( "> div." + C_ITEM );
+        itemsDom = cb.queryAll( "> ." + C_ITEM );
 
         itemsDom.each( function( itemNode, index, itemsDom ){
             var newItem;
@@ -1511,7 +1511,7 @@ Y.extend( Accordion, Y.Widget, {
         contentBox = this.get( CONTENT_BOX );
         itemChosenEvent = this.get( 'itemChosen' );
         
-        contentBox.delegate( itemChosenEvent, Y.bind( this._onItemChosenEvent, this ), 'div.yui-widget-hd' );
+        contentBox.delegate( itemChosenEvent, Y.bind( this._onItemChosenEvent, this ), '.yui3-widget-hd' );
     },
 
 
@@ -1849,9 +1849,9 @@ var Lang = Y.Lang,
     AUTO = "auto",
     STRETCH = "stretch",
     FIXED = "fixed",
-    HEADER_SELECTOR = ".yui-widget-hd",
+    HEADER_SELECTOR = ".yui3-widget-hd",
     DOT = ".",
-    HEADER_SELECTOR_SUB = ".yui-widget-hd " + DOT,
+    HEADER_SELECTOR_SUB = ".yui3-widget-hd " + DOT,
     INNER_HTML = "innerHTML",
     ICONS_CONTAINER = "iconsContainer",
     ICON = "icon",
@@ -2286,12 +2286,12 @@ AccordionItem.HTML_PARSER = {
   * e.g.
   * <pre>
   *    {
-  *       icon : '&lt;a class="yui-accordion-item-icon"&gt;&lt;/a&gt;',
-  *       label: '&lt;a href="#" class="yui-accordion-item-label"&gt;&lt;/a&gt;',
-  *       iconsContainer: '&lt;div class="yui-accordion-item-icons"&gt;&lt;/div&gt;',
-  *       iconAlwaysVisible: '&lt;a href="#" class="yui-accordion-item-iconalwaysvisible"&gt;&lt;/a&gt;',
-  *       iconExpanded: '&lt;a href="#" class="yui-accordion-item-iconexpanded"&gt;&lt;/a&gt;',
-  *       iconClose: '&lt;a href="#" class="yui-accordion-item-iconclose yui-accordion-item-iconclose-hidden"&gt;&lt;/a&gt;'
+  *       icon : '&lt;a class="yui3-accordion-item-icon"&gt;&lt;/a&gt;',
+  *       label: '&lt;a href="#" class="yui3-accordion-item-label"&gt;&lt;/a&gt;',
+  *       iconsContainer: '&lt;div class="yui3-accordion-item-icons"&gt;&lt;/div&gt;',
+  *       iconAlwaysVisible: '&lt;a href="#" class="yui3-accordion-item-iconalwaysvisible"&gt;&lt;/a&gt;',
+  *       iconExpanded: '&lt;a href="#" class="yui3-accordion-item-iconexpanded"&gt;&lt;/a&gt;',
+  *       iconClose: '&lt;a href="#" class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"&gt;&lt;/a&gt;'
   *    }
   * </pre>
   * @property WidgetStdMod.TEMPLATES

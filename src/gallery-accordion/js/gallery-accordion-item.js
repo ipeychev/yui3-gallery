@@ -59,9 +59,9 @@ var Lang = Y.Lang,
     AUTO = "auto",
     STRETCH = "stretch",
     FIXED = "fixed",
-    HEADER_SELECTOR = ".yui-widget-hd",
+    HEADER_SELECTOR = ".yui3-widget-hd",
     DOT = ".",
-    HEADER_SELECTOR_SUB = ".yui-widget-hd " + DOT,
+    HEADER_SELECTOR_SUB = ".yui3-widget-hd " + DOT,
     INNER_HTML = "innerHTML",
     ICONS_CONTAINER = "iconsContainer",
     ICON = "icon",
@@ -496,12 +496,12 @@ AccordionItem.HTML_PARSER = {
   * e.g.
   * <pre>
   *    {
-  *       icon : '&lt;a class="yui-accordion-item-icon"&gt;&lt;/a&gt;',
-  *       label: '&lt;a href="#" class="yui-accordion-item-label"&gt;&lt;/a&gt;',
-  *       iconsContainer: '&lt;div class="yui-accordion-item-icons"&gt;&lt;/div&gt;',
-  *       iconAlwaysVisible: '&lt;a href="#" class="yui-accordion-item-iconalwaysvisible"&gt;&lt;/a&gt;',
-  *       iconExpanded: '&lt;a href="#" class="yui-accordion-item-iconexpanded"&gt;&lt;/a&gt;',
-  *       iconClose: '&lt;a href="#" class="yui-accordion-item-iconclose yui-accordion-item-iconclose-hidden"&gt;&lt;/a&gt;'
+  *       icon : '&lt;a class="yui3-accordion-item-icon"&gt;&lt;/a&gt;',
+  *       label: '&lt;a href="#" class="yui3-accordion-item-label"&gt;&lt;/a&gt;',
+  *       iconsContainer: '&lt;div class="yui3-accordion-item-icons"&gt;&lt;/div&gt;',
+  *       iconAlwaysVisible: '&lt;a href="#" class="yui3-accordion-item-iconalwaysvisible"&gt;&lt;/a&gt;',
+  *       iconExpanded: '&lt;a href="#" class="yui3-accordion-item-iconexpanded"&gt;&lt;/a&gt;',
+  *       iconClose: '&lt;a href="#" class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"&gt;&lt;/a&gt;'
   *    }
   * </pre>
   * @property WidgetStdMod.TEMPLATES
