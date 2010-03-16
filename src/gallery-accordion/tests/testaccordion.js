@@ -3,7 +3,8 @@
 YUI({
     combine: false, 
     debug: true, 
-    filter:"RAW"
+    filter:"RAW",
+    base: "../../../../yui3/build/"
 }).use("gallery-accordion", 'test', 'console', 'console-filters', 'dd-plugin', 'event-simulate', function(Y) {
 
     var console = new Y.Console({
@@ -26,8 +27,7 @@ YUI({
      */
     
     this.accordion1 = new Y.Accordion( {
-        boundingBox: "#bb1",
-        contentBox: "#acc1",
+        srcNode: "#acc1",
         useAnimation: true,
         collapseOthersOnExpand: true
     });
@@ -303,7 +303,6 @@ YUI({
             newItem = new Y.AccordionItem( {
                 label: "Item, added from script",
                 expanded: true,
-                contentBox: "dynamicContentBox",
                 contentHeight: {
                     method: "fixed",
                     height: 30
@@ -461,8 +460,7 @@ YUI({
     var that = this;
 
     this.accordion2 = new Y.Accordion( {
-        boundingBox: "#bb2",
-        contentBox: "#acc2",
+        srcNode: "#acc2",
         useAnimation: false,
         reorderItems: true,
         collapseOthersOnExpand: false
