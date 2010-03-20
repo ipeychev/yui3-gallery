@@ -2203,28 +2203,6 @@ Y.AccordionItem = Y.Base.create( AccItemName, Y.Widget, [Y.WidgetStdMod], {
 
 
     /**
-     * Parses and returns the yuiConfig attribute from contentBox. It must be stringified JSON object.
-     * This function will be replaced with more clever solution when YUI 3.1 becomes available
-     *
-     * @method _getConfigDOMAttribute
-     * @param contentBox {Node} Widget's contentBox
-     * @return {Object} The parsed yuiConfig value
-     * @private
-     */
-    _getConfigDOMAttribute: function( contentBox ) {
-        if( !this._parsedCfg ){
-            this._parsedCfg = contentBox.getAttribute( YUICONFIG );
-
-            if( this._parsedCfg ){
-                this._parsedCfg = JSON.parse( this._parsedCfg );
-            }
-        }
-
-        return this._parsedCfg;
-    },
-
-
-    /**
      * Parses and returns the value of contentHeight property, if set method "fixed".
      * The value must be in this format: fixed-X, where X is integer
      *
@@ -2410,6 +2388,32 @@ Y.AccordionItem = Y.Base.create( AccItemName, Y.Widget, [Y.WidgetStdMod], {
      */
     _setIconClose: function( value ){
         return Y.get( value ) || null;
+    },
+
+
+    /**
+     * Overwrites in order to parse yuiConfig attribute before entering in HTML_PARSER attributes
+     *
+     * @method _applyParser
+     * @protected
+     * @param config {Object} User configuration object (will be populated with values from Node)
+    */
+    _applyParser : function(config) {
+        var srcNode;
+
+        srcNode = this.get( "srcNode" );
+
+        if( srcNode ){
+            this._parsedYUIConfig = srcNode.getAttribute( YUICONFIG );
+
+            if( this._parsedYUIConfig ){
+                this._parsedYUIConfig = JSON.parse( this._parsedYUIConfig );
+            }
+        }
+
+        Y.AccordionItem.superclass._applyParser.apply( this, arguments );
+
+        delete this._parsedYUIConfig;
     }
 }, {
     /**
@@ -2670,7 +2674,7 @@ Y.AccordionItem = Y.Base.create( AccItemName, Y.Widget, [Y.WidgetStdMod], {
         label: function( srcNode ){
             var node, labelSelector, yuiConfig, label;
 
-            yuiConfig = this._getConfigDOMAttribute( srcNode );
+            yuiConfig = this._parsedYUIConfig;
 
             if( yuiConfig && Lang.isValue( yuiConfig.label ) ){
                 return yuiConfig.label;
@@ -2701,7 +2705,7 @@ Y.AccordionItem = Y.Base.create( AccItemName, Y.Widget, [Y.WidgetStdMod], {
         expanded: function( srcNode ){
             var yuiConfig, expanded;
 
-            yuiConfig = this._getConfigDOMAttribute( srcNode );
+            yuiConfig = this._parsedYUIConfig;
 
             if( yuiConfig && Lang.isBoolean( yuiConfig.expanded ) ){
                 return yuiConfig.expanded;
@@ -2719,7 +2723,7 @@ Y.AccordionItem = Y.Base.create( AccItemName, Y.Widget, [Y.WidgetStdMod], {
         alwaysVisible: function( srcNode ){
             var yuiConfig, alwaysVisible;
 
-            yuiConfig = this._getConfigDOMAttribute( srcNode );
+            yuiConfig = this._parsedYUIConfig;
 
             if( yuiConfig && Lang.isBoolean( yuiConfig.alwaysVisible ) ){
                 alwaysVisible = yuiConfig.alwaysVisible;
@@ -2745,7 +2749,7 @@ Y.AccordionItem = Y.Base.create( AccItemName, Y.Widget, [Y.WidgetStdMod], {
         closable: function( srcNode ){
             var yuiConfig, closable;
 
-            yuiConfig = this._getConfigDOMAttribute( srcNode );
+            yuiConfig = this._parsedYUIConfig;
 
             if( yuiConfig && Lang.isBoolean( yuiConfig.closable ) ){
                 return yuiConfig.closable;
@@ -2764,7 +2768,7 @@ Y.AccordionItem = Y.Base.create( AccItemName, Y.Widget, [Y.WidgetStdMod], {
             var contentHeightClass, classValue, height = 0, index, yuiConfig,
                 contentHeight;
 
-            yuiConfig = this._getConfigDOMAttribute( srcNode );
+            yuiConfig = this._parsedYUIConfig;
 
             if( yuiConfig && yuiConfig.contentHeight ){
                 return yuiConfig.contentHeight;
