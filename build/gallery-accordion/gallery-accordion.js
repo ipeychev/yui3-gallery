@@ -2392,7 +2392,7 @@ Y.AccordionItem = Y.Base.create( AccItemName, Y.Widget, [Y.WidgetStdMod], {
 
 
     /**
-     * Overwrites in order to parse yuiConfig attribute before entering in HTML_PARSER attributes
+     * Overwrites Widget's _applyParser method in order to parse yuiConfig attribute before entering in HTML_PARSER attributes
      *
      * @method _applyParser
      * @protected
