@@ -705,7 +705,7 @@ Y.Accordion = Y.Base.create( AccName, Y.Widget, [], {
             'item': item
         });
 
-        if( body.get( "clientHeight" ) <= 0 ){
+        if( body.get( "clientHeight" ) <= COLLAPSE_HEIGHT ){
             notifyOthers = true;
             this.fire( BEFOREITEMEXPAND, {
                 'item': item
