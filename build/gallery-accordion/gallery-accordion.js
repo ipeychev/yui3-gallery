@@ -2859,4 +2859,4 @@ Y.AccordionItem = Y.Base.create( AccItemName, Y.Widget, [Y.WidgetStdMod], {
 
 
 
-}, '@VERSION@' ,{requires:['event', 'anim-easing', 'widget', 'widget-stdmod', 'json-parse'], optional:['dd-constrain', 'dd-proxy', 'dd-drop']});
+}, '@VERSION@' ,{optional:['dd-constrain', 'dd-proxy', 'dd-drop'], requires:['event', 'anim-easing', 'widget', 'widget-stdmod', 'json-parse']});
