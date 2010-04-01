@@ -3,8 +3,7 @@
 YUI({
     combine: false, 
     debug: true, 
-    filter:"RAW",
-    base: "../../../../yui3/build/"
+    filter:"RAW"
 }).use("gallery-accordion", 'test', 'console', 'console-filters', 'dd-plugin', 'event-simulate', function(Y) {
 
     var console = new Y.Console({
