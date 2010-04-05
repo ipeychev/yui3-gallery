@@ -1,0 +1,231 @@
+<div class="highlight"><pre><span class="c">/**</span>
+<span class="c"> * Provides UndoableAction class</span>
+<span class="c"> *</span>
+<span class="c"> * @module gallery-undo</span>
+<span class="c"> */</span>
+
+<span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+
+
+<span class="c">/**</span>
+<span class="c"> * Create a UndoableAction</span>
+<span class="c"> *</span>
+<span class="c"> * @class UndoableAction</span>
+<span class="c"> * @extends Base</span>
+<span class="c"> * @param config {Object} Configuration object</span>
+<span class="c"> * @constructor</span>
+<span class="c"> */</span>
+<span class="kd">function</span> <span class="nx">UndoableAction</span><span class="p">(</span> <span class="nx">config</span> <span class="p">){</span>
+    <span class="nx">UndoableAction</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span> <span class="k">this</span><span class="o">,</span> <span class="nx">arguments</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">Lang</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="o">,</span>
+    <span class="nx">UAName</span> <span class="o">=</span> <span class="s2">&quot;UndoableAction&quot;</span><span class="o">,</span>
+    <span class="nx">LABEL</span> <span class="o">=</span> <span class="s2">&quot;label&quot;</span><span class="o">,</span>
+    <span class="nx">BEFOREUNDO</span> <span class="o">=</span> <span class="s2">&quot;beforeUndo&quot;</span><span class="o">,</span>
+    <span class="nx">UNDOFINISHED</span> <span class="o">=</span> <span class="s2">&quot;undoFinished&quot;</span><span class="o">,</span>
+    <span class="nx">BEFOREREDO</span> <span class="o">=</span> <span class="s2">&quot;beforeRedo&quot;</span><span class="o">,</span>
+    <span class="nx">REDOFINISHED</span> <span class="o">=</span> <span class="s2">&quot;redoFinished&quot;</span><span class="o">;</span>
+
+<span class="nx">Y</span><span class="p">.</span><span class="nx">mix</span><span class="p">(</span> <span class="nx">UndoableAction</span><span class="o">,</span> <span class="p">{</span>
+    <span class="c">/**</span>
+<span class="c">     * The identity of UndoableAction.</span>
+<span class="c">     *</span>
+<span class="c">     * @property UndoableAction.NAME</span>
+<span class="c">     * @type String</span>
+<span class="c">     * @static</span>
+<span class="c">     */</span>
+    <span class="nx">NAME</span> <span class="o">:</span> <span class="nx">UAName</span><span class="o">,</span>
+
+    <span class="c">/**</span>
+<span class="c">     * Static property used to define the default attribute configuration of UndoableAction.</span>
+<span class="c">     *</span>
+<span class="c">     * @property UndoableAction.ATTRS</span>
+<span class="c">     * @type Object</span>
+<span class="c">     * @protected</span>
+<span class="c">     * @static</span>
+<span class="c">     */</span>
+    <span class="nx">ATTRS</span> <span class="o">:</span> <span class="p">{</span>
+        <span class="c">/**</span>
+<span class="c">         * The label of action</span>
+<span class="c">         *</span>
+<span class="c">         * @attribute label</span>
+<span class="c">         * @type String</span>
+<span class="c">         * @default &quot;&quot;</span>
+<span class="c">         */</span>
+        <span class="kd">label</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="o">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isString</span>
+        <span class="p">}</span><span class="o">,</span>
+
+        
+        <span class="c">/**</span>
+<span class="c">         * Boolean, indicates if action must be processed asynchronously.</span>
+<span class="c">         * If true, &lt;code&gt;undo&lt;/code&gt; method must fire &lt;code&gt;undoFinished&lt;/code&gt; event.</span>
+<span class="c">         * Respectively, &lt;code&gt;redo&lt;/code&gt; method must fire &lt;code&gt;redoFinished&lt;/code&gt; event</span>
+<span class="c">         *</span>
+<span class="c">         * @attribute asyncProcessing</span>
+<span class="c">         * @type Boolean</span>
+<span class="c">         * @default false</span>
+<span class="c">         */</span>
+        <span class="nx">asyncProcessing</span> <span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">false</span><span class="o">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+
+<span class="nx">Y</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span> <span class="nx">UndoableAction</span><span class="o">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Base</span><span class="o">,</span> <span class="p">{</span>
+    
+    <span class="c">/**</span>
+<span class="c">     * Container for child actions of this action</span>
+<span class="c">     *</span>
+<span class="c">     * @property _childActions</span>
+<span class="c">     * @protected</span>
+<span class="c">     * @type Array</span>
+<span class="c">     */</span>
+    <span class="nx">_childActions</span> <span class="o">:</span> <span class="p">[]</span><span class="o">,</span>
+
+    <span class="c">/**</span>
+<span class="c">     * Publishes events</span>
+<span class="c">     *</span>
+<span class="c">     * @method initializer</span>
+<span class="c">     * @protected</span>
+<span class="c">     */</span>
+    <span class="nx">initializer</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">cfg</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_initEvents</span><span class="p">();</span>
+    <span class="p">}</span><span class="o">,</span>
+
+    <span class="c">/**</span>
+<span class="c">     * Destructor lifecycle implementation for UndoableAction class.</span>
+<span class="c">     *</span>
+<span class="c">     * @method destructor</span>
+<span class="c">     * @protected</span>
+<span class="c">     */</span>
+    <span class="nx">destructor</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span><span class="o">,</span>
+
+    
+    <span class="c">/**</span>
+<span class="c">     * Publishes UndoableAction&#39;s events</span>
+<span class="c">     *</span>
+<span class="c">     * @method _initEvents</span>
+<span class="c">     * @protected</span>
+<span class="c">     */</span>
+    <span class="nx">_initEvents</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        
+        <span class="c">/**</span>
+<span class="c">         * Signals the beginning of action undo.</span>
+<span class="c">         * </span>
+<span class="c">         * @event beforeUndo</span>
+<span class="c">         * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">         */</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">BEFOREUNDO</span> <span class="p">);</span>
+        
+        <span class="c">/**</span>
+<span class="c">         * Signals the end of action undo.</span>
+<span class="c">         * </span>
+<span class="c">         * @event undoFinished</span>
+<span class="c">         * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">         */</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">UNDOFINISHED</span> <span class="p">);</span>
+        
+        <span class="c">/**</span>
+<span class="c">         * Signals the beginning of action redo.</span>
+<span class="c">         * </span>
+<span class="c">         * @event beforeRedo</span>
+<span class="c">         * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">         */</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">BEFOREREDO</span> <span class="p">);</span>
+        
+        <span class="c">/**</span>
+<span class="c">         * Signals the end of action redo.</span>
+<span class="c">         * </span>
+<span class="c">         * @event redoFinished</span>
+<span class="c">         * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">         */</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">REDOFINISHED</span> <span class="p">);</span>
+    <span class="p">}</span><span class="o">,</span>
+
+    
+    <span class="c">/**</span>
+<span class="c">     * The default implemetation undoes all child actions in reverse order.</span>
+<span class="c">     *</span>
+<span class="c">     * @method undo</span>
+<span class="c">     */</span>
+    <span class="nx">undo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">childActions</span><span class="o">,</span> <span class="nx">action</span><span class="o">,</span> <span class="nx">i</span><span class="o">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFOREUNDO</span> <span class="p">);</span>
+        
+        <span class="nx">childActions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_childActions</span><span class="o">;</span>
+
+        <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">childActions</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="nx">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">){</span>
+            <span class="nx">action</span> <span class="o">=</span> <span class="nx">childActions</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+            <span class="nx">action</span><span class="p">.</span><span class="nx">undo</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">UNDOFINISHED</span> <span class="p">);</span>
+    <span class="p">}</span><span class="o">,</span>
+    
+    
+    <span class="c">/**</span>
+<span class="c">     * The default implemetation redoes all child actions.</span>
+<span class="c">     *</span>
+<span class="c">     * @method redo</span>
+<span class="c">     */</span>
+    <span class="nx">redo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">childActions</span><span class="o">,</span> <span class="nx">action</span><span class="o">,</span> <span class="nx">i</span><span class="o">,</span> <span class="nx">length</span><span class="o">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFOREREDO</span> <span class="p">);</span>
+
+        <span class="nx">childActions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_childActions</span><span class="o">;</span>
+        <span class="nx">length</span> <span class="o">=</span> <span class="nx">childActions</span><span class="p">.</span><span class="nx">length</span><span class="o">;</span>
+        
+        <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="o">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">){</span>
+            <span class="nx">action</span> <span class="o">=</span> <span class="nx">childActions</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+            <span class="nx">action</span><span class="p">.</span><span class="nx">redo</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">REDOFINISHED</span> <span class="p">);</span>
+    <span class="p">}</span><span class="o">,</span>
+        
+    
+    <span class="c">/**</span>
+<span class="c">     * Depending on the application, an UndoableAction may merge with another action. If merge was successfull, merge must return true; otherwise returns false.</span>
+<span class="c">     * The default implemetation returns false.</span>
+<span class="c">     *</span>
+<span class="c">     * @method merge</span>
+<span class="c">     * @param {Y.UndoableAction} newAction The action to merge with</span>
+<span class="c">     * @return {Boolean} false</span>
+<span class="c">     */</span>
+    <span class="nx">merge</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">newAction</span> <span class="p">){</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="p">}</span><span class="o">,</span>
+
+    
+    <span class="c">/**</span>
+<span class="c">     * UndoManager invokes &lt;code&gt;cancel&lt;/code&gt; method of action before removing it from the list.&lt;br&gt;</span>
+<span class="c">     * The default implemetation does nothing.</span>
+<span class="c">     *</span>
+<span class="c">     * @method cancel</span>
+<span class="c">     */</span>
+    <span class="nx">cancel</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="p">}</span><span class="o">,</span>
+    
+    
+    <span class="c">/**</span>
+<span class="c">     * Overrides &lt;code&gt;toString()&lt;/code&gt; method.&lt;br&gt;</span>
+<span class="c">     * The default implementation returns the value of &lt;code&gt;label&lt;/code&gt; property.</span>
+<span class="c">     * </span>
+<span class="c">     */</span>
+    <span class="nx">toString</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">LABEL</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">Y</span><span class="p">.</span><span class="nx">UndoableAction</span> <span class="o">=</span> <span class="nx">UndoableAction</span><span class="o">;</span>
+
+<span class="p">}());</span>
+</pre></div>

@@ -1,0 +1,48 @@
+.target-container {
+    position: relative;
+    width: 580px;
+    height: 488px;
+    z-index: 1;
+    background: url( 'car_model.png' );
+}
+
+.target-container-slice {
+    position : absolute;
+    border : 1px dotted #DEB887;
+}
+
+.slice {
+    position : absolute;
+    cursor: move;
+    background-repeat: no-repeat;
+}
+
+.button-shuffle, .button-undo, .button-redo {
+    width: 120px;
+    height: 40px;
+    margin-bottom: 10px;
+}
+
+.button-setlimit {
+    float: left;
+    height: 35px;
+    margin-left: 10px;
+}
+
+.text-setlimit {
+    font-size:1.5em;
+    float: left;
+    margin-left: 30px;
+    vertical-align: middle;
+    text-align:center;
+}
+
+.button-undo {
+    margin-left: 30px;
+}
+
+.action-view-container {
+    position: relative;
+    float: left;
+    width: 400px;
+}

@@ -1,0 +1,328 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html xmlns:yui="http://yuilibrary.com/rdf/1.0/yui.rdf#">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<title>API: gallery-undo   gallery-undoableaction.js  (YUI Library)</title>
+
+	<link rel="stylesheet" type="text/css" href="assets/reset-fonts-grids-min.css" />
+	<link rel="stylesheet" type="text/css" href="assets/api.css" />
+
+    <script type="text/javascript" src="assets/api-js"></script>
+    <script type="text/javascript" src="assets/ac-js"></script>
+</head>
+
+<body id="yahoo-com">
+
+<div id="doc3" class="yui-t2">
+	<div id="hd">
+        <h1><a href="http://developer.yahoo.com/yui/" title="Yahoo! UI Library">Yahoo! UI Library</a></h1>
+        <h3>gallery-undo&nbsp; <span class="subtitle">1.00</span></h3>
+        <a href="./index.html" title="Yahoo! UI Library">Yahoo! UI Library</a> 
+            &gt; <a href="./module_gallery-undo.html" title="gallery-undo">gallery-undo</a>
+                
+                 &gt; gallery-undoableaction.js (source view) 
+        <form onsubmit="return false">
+            <div id="propertysearch">
+                Search: <input autocomplete="off" id="searchinput" />
+                <div id="searchresults">
+                    &nbsp;
+                </div>
+            </div>
+        </form>
+	</div>
+
+	<div id="bd">
+		<div id="yui-main">
+			<div class="yui-b">
+            <form action="#" name="yui-classopts-form" method="get" id="yui-classopts-form">
+                <fieldset>
+                    <legend>Filters</legend>
+                <span class="classopts"><input type="checkbox" name="show_private" id="show_private" /> <label for="show_private">Show Private</label></span>
+                <span class="classopts"><input type="checkbox" name="show_protected" id="show_protected" /> <label for="show_protected">Show Protected</label></span>
+                <span class="classopts"><input type="checkbox" name="show_deprecated" id="show_deprecated" /> <label for="show_deprecated">Show Deprecated</label></span>
+                </fieldset>
+            </form>
+
+                    <div id="srcout">
+                        <style>
+                            #doc3 .classopts { display:none; }
+                        </style>
+                        <div class="highlight"><pre><span class="c">/**</span>
+<span class="c"> * Provides UndoableAction class</span>
+<span class="c"> *</span>
+<span class="c"> * @module gallery-undo</span>
+<span class="c"> */</span>
+
+<span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+
+
+<span class="c">/**</span>
+<span class="c"> * Create a UndoableAction</span>
+<span class="c"> *</span>
+<span class="c"> * @class UndoableAction</span>
+<span class="c"> * @extends Base</span>
+<span class="c"> * @param config {Object} Configuration object</span>
+<span class="c"> * @constructor</span>
+<span class="c"> */</span>
+<span class="kd">function</span> <span class="nx">UndoableAction</span><span class="p">(</span> <span class="nx">config</span> <span class="p">){</span>
+    <span class="nx">UndoableAction</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span> <span class="k">this</span><span class="o">,</span> <span class="nx">arguments</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kd">var</span> <span class="nx">Lang</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="o">,</span>
+    <span class="nx">UAName</span> <span class="o">=</span> <span class="s2">&quot;UndoableAction&quot;</span><span class="o">,</span>
+    <span class="nx">LABEL</span> <span class="o">=</span> <span class="s2">&quot;label&quot;</span><span class="o">,</span>
+    <span class="nx">BEFOREUNDO</span> <span class="o">=</span> <span class="s2">&quot;beforeUndo&quot;</span><span class="o">,</span>
+    <span class="nx">UNDOFINISHED</span> <span class="o">=</span> <span class="s2">&quot;undoFinished&quot;</span><span class="o">,</span>
+    <span class="nx">BEFOREREDO</span> <span class="o">=</span> <span class="s2">&quot;beforeRedo&quot;</span><span class="o">,</span>
+    <span class="nx">REDOFINISHED</span> <span class="o">=</span> <span class="s2">&quot;redoFinished&quot;</span><span class="o">;</span>
+
+<span class="nx">Y</span><span class="p">.</span><span class="nx">mix</span><span class="p">(</span> <span class="nx">UndoableAction</span><span class="o">,</span> <span class="p">{</span>
+    <span class="c">/**</span>
+<span class="c">     * The identity of UndoableAction.</span>
+<span class="c">     *</span>
+<span class="c">     * @property UndoableAction.NAME</span>
+<span class="c">     * @type String</span>
+<span class="c">     * @static</span>
+<span class="c">     */</span>
+    <span class="nx">NAME</span> <span class="o">:</span> <span class="nx">UAName</span><span class="o">,</span>
+
+    <span class="c">/**</span>
+<span class="c">     * Static property used to define the default attribute configuration of UndoableAction.</span>
+<span class="c">     *</span>
+<span class="c">     * @property UndoableAction.ATTRS</span>
+<span class="c">     * @type Object</span>
+<span class="c">     * @protected</span>
+<span class="c">     * @static</span>
+<span class="c">     */</span>
+    <span class="nx">ATTRS</span> <span class="o">:</span> <span class="p">{</span>
+        <span class="c">/**</span>
+<span class="c">         * The label of action</span>
+<span class="c">         *</span>
+<span class="c">         * @attribute label</span>
+<span class="c">         * @type String</span>
+<span class="c">         * @default &quot;&quot;</span>
+<span class="c">         */</span>
+        <span class="kd">label</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="s2">&quot;&quot;</span><span class="o">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isString</span>
+        <span class="p">}</span><span class="o">,</span>
+
+        
+        <span class="c">/**</span>
+<span class="c">         * Boolean, indicates if action must be processed asynchronously.</span>
+<span class="c">         * If true, &lt;code&gt;undo&lt;/code&gt; method must fire &lt;code&gt;undoFinished&lt;/code&gt; event.</span>
+<span class="c">         * Respectively, &lt;code&gt;redo&lt;/code&gt; method must fire &lt;code&gt;redoFinished&lt;/code&gt; event</span>
+<span class="c">         *</span>
+<span class="c">         * @attribute asyncProcessing</span>
+<span class="c">         * @type Boolean</span>
+<span class="c">         * @default false</span>
+<span class="c">         */</span>
+        <span class="nx">asyncProcessing</span> <span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">false</span><span class="o">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+
+<span class="nx">Y</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span> <span class="nx">UndoableAction</span><span class="o">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Base</span><span class="o">,</span> <span class="p">{</span>
+    
+    <span class="c">/**</span>
+<span class="c">     * Container for child actions of this action</span>
+<span class="c">     *</span>
+<span class="c">     * @property _childActions</span>
+<span class="c">     * @protected</span>
+<span class="c">     * @type Array</span>
+<span class="c">     */</span>
+    <span class="nx">_childActions</span> <span class="o">:</span> <span class="p">[]</span><span class="o">,</span>
+
+    <span class="c">/**</span>
+<span class="c">     * Publishes events</span>
+<span class="c">     *</span>
+<span class="c">     * @method initializer</span>
+<span class="c">     * @protected</span>
+<span class="c">     */</span>
+    <span class="nx">initializer</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">cfg</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_initEvents</span><span class="p">();</span>
+    <span class="p">}</span><span class="o">,</span>
+
+    <span class="c">/**</span>
+<span class="c">     * Destructor lifecycle implementation for UndoableAction class.</span>
+<span class="c">     *</span>
+<span class="c">     * @method destructor</span>
+<span class="c">     * @protected</span>
+<span class="c">     */</span>
+    <span class="nx">destructor</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="p">}</span><span class="o">,</span>
+
+    
+    <span class="c">/**</span>
+<span class="c">     * Publishes UndoableAction&#39;s events</span>
+<span class="c">     *</span>
+<span class="c">     * @method _initEvents</span>
+<span class="c">     * @protected</span>
+<span class="c">     */</span>
+    <span class="nx">_initEvents</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        
+        <span class="c">/**</span>
+<span class="c">         * Signals the beginning of action undo.</span>
+<span class="c">         * </span>
+<span class="c">         * @event beforeUndo</span>
+<span class="c">         * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">         */</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">BEFOREUNDO</span> <span class="p">);</span>
+        
+        <span class="c">/**</span>
+<span class="c">         * Signals the end of action undo.</span>
+<span class="c">         * </span>
+<span class="c">         * @event undoFinished</span>
+<span class="c">         * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">         */</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">UNDOFINISHED</span> <span class="p">);</span>
+        
+        <span class="c">/**</span>
+<span class="c">         * Signals the beginning of action redo.</span>
+<span class="c">         * </span>
+<span class="c">         * @event beforeRedo</span>
+<span class="c">         * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">         */</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">BEFOREREDO</span> <span class="p">);</span>
+        
+        <span class="c">/**</span>
+<span class="c">         * Signals the end of action redo.</span>
+<span class="c">         * </span>
+<span class="c">         * @event redoFinished</span>
+<span class="c">         * @param event {Event.Facade} An Event Facade object</span>
+<span class="c">         */</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">REDOFINISHED</span> <span class="p">);</span>
+    <span class="p">}</span><span class="o">,</span>
+
+    
+    <span class="c">/**</span>
+<span class="c">     * The default implemetation undoes all child actions in reverse order.</span>
+<span class="c">     *</span>
+<span class="c">     * @method undo</span>
+<span class="c">     */</span>
+    <span class="nx">undo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">childActions</span><span class="o">,</span> <span class="nx">action</span><span class="o">,</span> <span class="nx">i</span><span class="o">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFOREUNDO</span> <span class="p">);</span>
+        
+        <span class="nx">childActions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_childActions</span><span class="o">;</span>
+
+        <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">childActions</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">;</span> <span class="nx">i</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">){</span>
+            <span class="nx">action</span> <span class="o">=</span> <span class="nx">childActions</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+            <span class="nx">action</span><span class="p">.</span><span class="nx">undo</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">UNDOFINISHED</span> <span class="p">);</span>
+    <span class="p">}</span><span class="o">,</span>
+    
+    
+    <span class="c">/**</span>
+<span class="c">     * The default implemetation redoes all child actions.</span>
+<span class="c">     *</span>
+<span class="c">     * @method redo</span>
+<span class="c">     */</span>
+    <span class="nx">redo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">childActions</span><span class="o">,</span> <span class="nx">action</span><span class="o">,</span> <span class="nx">i</span><span class="o">,</span> <span class="nx">length</span><span class="o">;</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFOREREDO</span> <span class="p">);</span>
+
+        <span class="nx">childActions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_childActions</span><span class="o">;</span>
+        <span class="nx">length</span> <span class="o">=</span> <span class="nx">childActions</span><span class="p">.</span><span class="nx">length</span><span class="o">;</span>
+        
+        <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="o">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">){</span>
+            <span class="nx">action</span> <span class="o">=</span> <span class="nx">childActions</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+            <span class="nx">action</span><span class="p">.</span><span class="nx">redo</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">REDOFINISHED</span> <span class="p">);</span>
+    <span class="p">}</span><span class="o">,</span>
+        
+    
+    <span class="c">/**</span>
+<span class="c">     * Depending on the application, an UndoableAction may merge with another action. If merge was successfull, merge must return true; otherwise returns false.</span>
+<span class="c">     * The default implemetation returns false.</span>
+<span class="c">     *</span>
+<span class="c">     * @method merge</span>
+<span class="c">     * @param {Y.UndoableAction} newAction The action to merge with</span>
+<span class="c">     * @return {Boolean} false</span>
+<span class="c">     */</span>
+    <span class="nx">merge</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">newAction</span> <span class="p">){</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="p">}</span><span class="o">,</span>
+
+    
+    <span class="c">/**</span>
+<span class="c">     * UndoManager invokes &lt;code&gt;cancel&lt;/code&gt; method of action before removing it from the list.&lt;br&gt;</span>
+<span class="c">     * The default implemetation does nothing.</span>
+<span class="c">     *</span>
+<span class="c">     * @method cancel</span>
+<span class="c">     */</span>
+    <span class="nx">cancel</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+    <span class="p">}</span><span class="o">,</span>
+    
+    
+    <span class="c">/**</span>
+<span class="c">     * Overrides &lt;code&gt;toString()&lt;/code&gt; method.&lt;br&gt;</span>
+<span class="c">     * The default implementation returns the value of &lt;code&gt;label&lt;/code&gt; property.</span>
+<span class="c">     * </span>
+<span class="c">     */</span>
+    <span class="nx">toString</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">LABEL</span> <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">Y</span><span class="p">.</span><span class="nx">UndoableAction</span> <span class="o">=</span> <span class="nx">UndoableAction</span><span class="o">;</span>
+
+<span class="p">}());</span>
+</pre></div>
+
+                    </div>
+			</div>
+		</div>
+		<div class="yui-b">
+            <div class="nav">
+
+                    <div id="moduleList" class="module">
+                        <h4>Modules</h4>
+                        <ul class="content">
+                                <li class="selected"><a href="module_gallery-undo.html" title="gallery-undo">gallery-undo</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="classList" class="module">
+                        <h4>Classes</h4>
+                        <ul class="content">
+                                <li class=""><a href="UndoableAction.html" title="UndoableAction">UndoableAction</a></li>
+                                <li class=""><a href="UndoManager.html" title="UndoManager">UndoManager</a></li>
+                        </ul>
+                    </div>
+
+                    <div id="fileList" class="module">
+                        <h4>Files</h4>
+                        <ul class="content">        
+                                <li class="selected"><a href="gallery-undoableaction.js.html" title="gallery-undoableaction.js">gallery-undoableaction.js</a></li>
+                                <li class=""><a href="gallery-undomanager.js.html" title="gallery-undomanager.js">gallery-undomanager.js</a></li>
+                        </ul>
+                    </div>
+
+
+
+
+
+            </div>
+		</div>
+	</div>
+	<div id="ft">
+        <hr />
+        Copyright &copy; 2010 Yahoo! Inc. All rights reserved.
+	</div>
+</div>
+<script type="text/javascript">
+
+    var ALL_YUI_PROPS = [{"url": "UndoManager.html#event_actionAdded", "access": "", "host": "UndoManager", "type": "event", "name": "actionAdded"}, {"url": "UndoManager.html#event_actionCanceled", "access": "", "host": "UndoManager", "type": "event", "name": "actionCanceled"}, {"url": "UndoManager.html#property__actionHandle", "access": "protected", "host": "UndoManager", "type": "property", "name": "_actionHandle"}, {"url": "UndoManager.html#event_actionMerged", "access": "", "host": "UndoManager", "type": "event", "name": "actionMerged"}, {"url": "UndoManager.html#event_actionRedone", "access": "", "host": "UndoManager", "type": "event", "name": "actionRedone"}, {"url": "UndoManager.html#property__actions", "access": "protected", "host": "UndoManager", "type": "property", "name": "_actions"}, {"url": "UndoManager.html#event_actionUndone", "access": "", "host": "UndoManager", "type": "event", "name": "actionUndone"}, {"url": "UndoManager.html#method_add", "access": "", "host": "UndoManager", "type": "method", "name": "add"}, {"url": "UndoManager.html#method__afterLimit", "access": "protected", "host": "UndoManager", "type": "method", "name": "_afterLimit"}, {"url": "UndoableAction.html#config_asyncProcessing", "access": "", "host": "UndoableAction", "type": "config", "name": "asyncProcessing"}, {"url": "UndoableAction.html#event_asyncProcessingChange", "access": "", "host": "UndoableAction", "type": "event", "name": "asyncProcessingChange"}, {"url": "UndoManager.html#event_beforeCanceling", "access": "", "host": "UndoManager", "type": "event", "name": "beforeCanceling"}, {"url": "UndoManager.html#event_beforePurge", "access": "", "host": "UndoManager", "type": "event", "name": "beforePurge"}, {"url": "UndoableAction.html#event_beforeRedo", "access": "", "host": "UndoableAction", "type": "event", "name": "beforeRedo"}, {"url": "UndoManager.html#event_beforeRedo", "access": "", "host": "UndoManager", "type": "event", "name": "beforeRedo"}, {"url": "UndoableAction.html#event_beforeUndo", "access": "", "host": "UndoableAction", "type": "event", "name": "beforeUndo"}, {"url": "UndoManager.html#event_beforeUndo", "access": "", "host": "UndoManager", "type": "event", "name": "beforeUndo"}, {"url": "UndoableAction.html#method_cancel", "access": "", "host": "UndoableAction", "type": "method", "name": "cancel"}, {"url": "UndoManager.html#event_cancelingFinished", "access": "", "host": "UndoManager", "type": "event", "name": "cancelingFinished"}, {"url": "UndoManager.html#method_canRedo", "access": "", "host": "UndoManager", "type": "method", "name": "canRedo"}, {"url": "UndoManager.html#method_canUndo", "access": "", "host": "UndoManager", "type": "method", "name": "canUndo"}, {"url": "UndoableAction.html#property__childActions", "access": "protected", "host": "UndoableAction", "type": "property", "name": "_childActions"}, {"url": "UndoableAction.html#method_destructor", "access": "protected", "host": "UndoableAction", "type": "method", "name": "destructor"}, {"url": "UndoManager.html#method_destructor", "access": "protected", "host": "UndoManager", "type": "method", "name": "destructor"}, {"url": "UndoManager.html#method_getRedoLabel", "access": "", "host": "UndoManager", "type": "method", "name": "getRedoLabel"}, {"url": "UndoManager.html#method_getUndoLabel", "access": "", "host": "UndoManager", "type": "method", "name": "getUndoLabel"}, {"url": "UndoableAction.html#method__initEvents", "access": "protected", "host": "UndoableAction", "type": "method", "name": "_initEvents"}, {"url": "UndoManager.html#method__initEvents", "access": "protected", "host": "UndoManager", "type": "method", "name": "_initEvents"}, {"url": "UndoableAction.html#method_initializer", "access": "protected", "host": "UndoableAction", "type": "method", "name": "initializer"}, {"url": "UndoManager.html#method_initializer", "access": "protected", "host": "UndoManager", "type": "method", "name": "initializer"}, {"url": "UndoableAction.html#config_label", "access": "", "host": "UndoableAction", "type": "config", "name": "label"}, {"url": "UndoableAction.html#event_labelChange", "access": "", "host": "UndoableAction", "type": "event", "name": "labelChange"}, {"url": "UndoManager.html#config_limit", "access": "", "host": "UndoManager", "type": "config", "name": "limit"}, {"url": "UndoManager.html#method__limitActions", "access": "protected", "host": "UndoManager", "type": "method", "name": "_limitActions"}, {"url": "UndoManager.html#event_limitChange", "access": "", "host": "UndoManager", "type": "event", "name": "limitChange"}, {"url": "UndoableAction.html#method_merge", "access": "", "host": "UndoableAction", "type": "method", "name": "merge"}, {"url": "UndoManager.html#method__onAsyncRedoFinished", "access": "protected", "host": "UndoManager", "type": "method", "name": "_onAsyncRedoFinished"}, {"url": "UndoManager.html#method__onAsyncUndoFinished", "access": "protected", "host": "UndoManager", "type": "method", "name": "_onAsyncUndoFinished"}, {"url": "UndoManager.html#property__processing", "access": "protected", "host": "UndoManager", "type": "property", "name": "_processing"}, {"url": "UndoManager.html#method_processTo", "access": "", "host": "UndoManager", "type": "method", "name": "processTo"}, {"url": "UndoManager.html#method_purgeAll", "access": "", "host": "UndoManager", "type": "method", "name": "purgeAll"}, {"url": "UndoManager.html#event_purgeFinished", "access": "", "host": "UndoManager", "type": "event", "name": "purgeFinished"}, {"url": "UndoManager.html#method_purgeTo", "access": "", "host": "UndoManager", "type": "method", "name": "purgeTo"}, {"url": "UndoableAction.html#method_redo", "access": "", "host": "UndoableAction", "type": "method", "name": "redo"}, {"url": "UndoManager.html#method_redo", "access": "", "host": "UndoManager", "type": "method", "name": "redo"}, {"url": "UndoableAction.html#event_redoFinished", "access": "", "host": "UndoableAction", "type": "event", "name": "redoFinished"}, {"url": "UndoManager.html#event_redoFinished", "access": "", "host": "UndoManager", "type": "event", "name": "redoFinished"}, {"url": "UndoManager.html#method__redoTo", "access": "protected", "host": "UndoManager", "type": "method", "name": "_redoTo"}, {"url": "UndoableAction.html#method_toString", "access": "", "host": "UndoableAction", "type": "method", "name": "toString"}, {"url": "UndoableAction.html#method_undo", "access": "", "host": "UndoableAction", "type": "method", "name": "undo"}, {"url": "UndoManager.html#method_undo", "access": "", "host": "UndoManager", "type": "method", "name": "undo"}, {"url": "UndoableAction.html#property_UndoableAction.ATTRS", "access": "protected", "host": "UndoableAction", "type": "property", "name": "UndoableAction.ATTRS"}, {"url": "UndoableAction.html#property_UndoableAction.NAME", "access": "", "host": "UndoableAction", "type": "property", "name": "UndoableAction.NAME"}, {"url": "UndoableAction.html#event_undoFinished", "access": "", "host": "UndoableAction", "type": "event", "name": "undoFinished"}, {"url": "UndoManager.html#event_undoFinished", "access": "", "host": "UndoManager", "type": "event", "name": "undoFinished"}, {"url": "UndoManager.html#property__undoIndex", "access": "protected", "host": "UndoManager", "type": "property", "name": "_undoIndex"}, {"url": "UndoManager.html#config_undoIndex", "access": "", "host": "UndoManager", "type": "config", "name": "undoIndex"}, {"url": "UndoManager.html#event_undoIndexChange", "access": "", "host": "UndoManager", "type": "event", "name": "undoIndexChange"}, {"url": "UndoManager.html#property_UndoManager.ATTRS", "access": "protected", "host": "UndoManager", "type": "property", "name": "UndoManager.ATTRS"}, {"url": "UndoManager.html#property_UndoManager.NAME", "access": "", "host": "UndoManager", "type": "property", "name": "UndoManager.NAME"}, {"url": "UndoManager.html#method__undoTo", "access": "protected", "host": "UndoManager", "type": "method", "name": "_undoTo"}];
+</script>
+</body>
+</html>
