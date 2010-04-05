@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Add/remove items dynamically</title>
+
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.0/build/cssfonts/fonts-min.css">
+<link rel="stylesheet" type="text/css" href="http://github.com/ipeychev/yui3-gallery/raw/master/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+
+<style type="text/css">
+    html, body {
+        height:100%;
+    }
+
+    .stretch, .fixed {
+        position:relative;
+        overflow: auto;
+        height: 100%;
+    }
+    
+    .auto {
+        position:relative;
+    }
+</style>
+
+<script type="text/javascript" src="http://yui.yahooapis.com/3.1.0/build/yui/yui-min.js"></script>
+<script type="text/javascript" src="http://github.com/ipeychev/yui3-gallery/raw/master/build/gallery-accordion/gallery-accordion-min.js"></script>
+
+<script type="text/javascript">
+
+YUI().use( 'gallery-accordion', 'dd-constrain', 'dd-proxy', 'dd-drop', 'yui2-button', 'yui2-editor', function(Y) {
+     var accordion, btnAdd, btnRemove, txtLabel, editor, txtPixels,
+        expanded, alwaysVisisble, closable, contentHeight, contentHeightSettings,
+        btnStretch, btnAuto, btnFixed, YAHOO;
+
+    YAHOO = Y.YUI2;
+
+    btnAdd = new YAHOO.widget.Button( "additem" );
+    btnRemove = new YAHOO.widget.Button( "removeitems" );
+    txtLabel = Y.get( "#label" );
+    txtPixels = Y.get( "#pixels");
+
+    editor = new YAHOO.widget.SimpleEditor( 'content', {
+        height: '200px',
+        width: '422px',
+        dompath: false,
+        animate: false
+    });
+
+    editor.render();
+
+    expanded = new YAHOO.widget.Button( "expanded" );
+    alwaysVisisble = new YAHOO.widget.Button( "alwaysvisible" );
+    closable = new YAHOO.widget.Button( "closable" );
+
+    contentHeightSettings = new YAHOO.widget.ButtonGroup( "contentheight_settings" );
+
+    btnStretch = contentHeightSettings.getButton( 0 );
+    btnAuto    = contentHeightSettings.getButton( 1 );
+    btnFixed   = contentHeightSettings.getButton( 2 );
+
+    contentHeightSettings.on( "checkedButtonChange", function(e){
+        var checkedButton = e.newValue;
+
+        if( checkedButton == btnFixed ){
+            txtPixels.removeAttribute( "disabled" );
+        } else {
+            txtPixels.setAttribute( "disabled", "true" );
+        }
+
+    }, this, true );
+    
+    btnAdd.on( "click", function(e){
+        var item, html, el, contentHeight, checkedButton, className;
+
+        checkedButton = contentHeightSettings.get( "checkedButton" );
+
+        if( checkedButton === btnStretch  ){
+            contentHeight = {
+                method: "stretch"
+            };
+
+            className = "stretch";
+        } else if( checkedButton === btnAuto  ){
+            contentHeight = {
+                method: "auto"
+            };
+
+            className = "auto";
+        } else if( checkedButton === btnFixed  ){
+            contentHeight = {
+                method: "fixed",
+                height: parseInt( txtPixels.get( "value" ), 10 ) || 150
+            };
+
+            className = "fixed";
+        } else {
+            throw "Internal error. No selected button";
+        }
+
+        item = new Y.AccordionItem( {
+            label: txtLabel.get( "value" ),
+            expanded: expanded.get( "checked" ),
+            alwaysVisible: alwaysVisisble.get( "checked" ),
+            closable: closable.get( "checked" ),
+            contentHeight: contentHeight
+        } );
+
+        editor.saveHTML();
+        html = editor.get('element').value;
+
+        el = Y.Node.create( '<div>' );
+        el.addClass( className );
+        el.setContent( html );
+
+        item.setStdModContent( Y.WidgetStdMod.BODY, el, Y.WidgetStdMod.REPLACE );
+
+        accordion.addItem( item );
+    }, this, true );
+    
+    btnRemove.on( "click", function(e){
+        var item, items, i, length;
+
+        items = accordion.get( "items" );
+        
+        length = items.length;
+        
+        for( i = length; i>= 0; i-- ){
+            item = items[i];
+            accordion.removeItem( item );
+        }
+    }, this, true );
+    
+    accordion = new Y.Accordion( {
+        srcNode: "#acc1",
+        useAnimation: true,
+        collapseOthersOnExpand: true,
+        reorderItems: true
+    });
+
+    accordion.render();
+
+
+    txtPixels.on( "keypress", function(e){
+        var charCode = e.keyCode;
+
+        if( charCode > 31 && (charCode < 48 || charCode > 57) ){
+            e.preventDefault();
+        }
+
+        return true;
+    }, this );
+});
+
+</script>
+
+</head>
+
+<body class="yui3-skin-sam yui-skin-sam">
+    <div style="position: relative; top: 0px; left: 0px; width: 950px; height: 700px;">
+        <div style="position: relative; float: left; top: 20px; left: 20px; width: 450px; height: 500px;">
+            <div style="font-weight: bold;">Item label:</div>
+            <input id="label" value="Label" type="text"><br><br>
+
+            <div style="font-weight: bold;">Item content:</div>
+            <textarea id="content" rows="8" cols="30">Sample content</textarea><br/><br/>
+
+            <input id="expanded" type="checkbox" value="Expanded" checked />
+            <input id="closable" type="checkbox" value="Closable" checked />
+            <input id="alwaysvisible" type="checkbox" value="Always visible"/>
+
+            <br/><br/>
+            <span>Content height:</span>
+
+            <table>
+            <tbody>
+            <tr>
+            <td>
+            <div id="contentheight_settings" class="yui-buttongroup">
+                <input id="stretch" type="radio" name="contentheight" value="Stretch" checked>
+                <input id="auto" type="radio" name="contentheight" value="Auto">
+                <input id="fixed" type="radio" name="contentheight" value="Fixed:">
+            </div>
+            </td>
+
+            <td>
+                <input id="pixels" value="150" style="width:50px;" type="text" disabled>pixels<br>
+            </td>
+            </tr>
+            </tbody>
+            </table>
+            
+            <br/><br/>
+            <input id="additem" value="Add item"/>
+            <input id="removeitems" value="Remove items"/>
+        </div>
+
+        <div style="position: relative; float: right; left: 20px; top: 20px; width: 450px; height: 520px;">
+            <div id="acc1"> <!-- If your application runs in quirks mode, you may have to set the following styles for IE: style="position: relative; height: 520px; overflow:hidden;" -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>
