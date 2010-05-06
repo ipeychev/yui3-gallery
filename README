@@ -1,8 +1,12 @@
 Undo Framework for YUI3
 
 I. Changelog
+
+ver. 1.01
+    - Undo/Redo migrated to YUI 3.1.1. No code changes.
+
 ver. 1.0
-	Initial load
+    Initial load
 
 -------------------------------------------------------------------------------------------
 
