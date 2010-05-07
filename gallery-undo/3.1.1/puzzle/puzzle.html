@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+<head>
+    <title>YUI Undo Framework Test page</title>
+    <style type="text/css">
+        html, body {
+            background-color: #F2FBFF;
+            height: 100%;
+        }
+    </style>
+
+    <link href="assets/puzzle.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="http://yui.yahooapis.com/3.1.1/build/yui/yui-min.js"></script>
+    <script type="text/javascript" src="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-undo/gallery-undo-min.js"></script>
+    <script type="text/javascript" src="puzzle.js"></script>
+
+</head>
+
+<body>
+
+    <h4>
+        Drag and drop the slices and build YUI car! You can always undo/redo your work!<br>
+        When you are ready to start, click "Shuffle" button!<br>
+    </h4>
+
+    <div>
+        <input id="btn-shuffle" class="button-shuffle" type="button" disabled value="Shuffle">
+        <input id="btn-undo" class="button-undo" type="button" value="Undo">
+        <input id="btn-redo" class="button-redo" type="button" value="Redo">
+    </div>
+
+     <div id="target-container" class="target-container">
+    </div>
+
+    <h4>Pick undo/redo action from the list below:</h4>
+    <div class="action-view-container">
+        <select id="action-view" size="8" style="width: 100%;">
+            <option value="0">&#60;initial state&#62;</option>
+        </select>
+    </div>
+
+    <div>
+        <input id="txt-setlimit" class="text-setlimit" size="3" value="0" type="text">
+        <input id="btn-setlimit" class="button-setlimit" type="button" value="Limit undo">
+    </div>
+</body>
+    </html>

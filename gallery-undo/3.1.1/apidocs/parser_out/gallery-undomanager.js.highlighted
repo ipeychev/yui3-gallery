@@ -1,0 +1,734 @@
+<div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Provides UndoManager class</span>
+<span class="cm"> *</span>
+<span class="cm"> * @module gallery-undo</span>
+<span class="cm"> */</span>
+
+<span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Create a UndoManager to manage list of undoable actions.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @class UndoManager</span>
+<span class="cm">     * @extends Base</span>
+<span class="cm">     * @param config {Object} Configuration object</span>
+<span class="cm">     * @constructor</span>
+<span class="cm">     */</span>
+    <span class="kd">function</span> <span class="nx">UndoManager</span><span class="p">(</span> <span class="nx">config</span> <span class="p">){</span>
+        <span class="nx">UndoManager</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">constructor</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span> <span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="kd">var</span> <span class="nx">Lang</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">,</span>
+    <span class="nx">UMName</span> <span class="o">=</span> <span class="s2">&quot;UndoManager&quot;</span><span class="p">,</span>
+    <span class="nx">ACTIONADDED</span> <span class="o">=</span> <span class="s2">&quot;actionAdded&quot;</span><span class="p">,</span>
+    <span class="nx">ACTIONMERGED</span> <span class="o">=</span> <span class="s2">&quot;actionMerged&quot;</span><span class="p">,</span>
+    <span class="nx">BEFORECANCELING</span> <span class="o">=</span> <span class="s2">&quot;beforeCanceling&quot;</span><span class="p">,</span>
+    <span class="nx">ACTIONCANCELED</span> <span class="o">=</span> <span class="s2">&quot;actionCanceled&quot;</span><span class="p">,</span>
+    <span class="nx">CANCELINGFINISHED</span> <span class="o">=</span> <span class="s2">&quot;cancelingFinished&quot;</span><span class="p">,</span>
+    <span class="nx">BEFOREUNDO</span> <span class="o">=</span> <span class="s2">&quot;beforeUndo&quot;</span><span class="p">,</span>
+    <span class="nx">ACTIONUNDONE</span> <span class="o">=</span> <span class="s2">&quot;actionUndone&quot;</span><span class="p">,</span>
+    <span class="nx">UNDOFINISHED</span> <span class="o">=</span> <span class="s2">&quot;undoFinished&quot;</span><span class="p">,</span>
+    <span class="nx">BEFOREPURGE</span> <span class="o">=</span> <span class="s2">&quot;beforePurge&quot;</span><span class="p">,</span>
+    <span class="nx">PURGEFINISHED</span> <span class="o">=</span> <span class="s2">&quot;purgeFinished&quot;</span><span class="p">,</span>
+    <span class="nx">BEFOREREDO</span> <span class="o">=</span> <span class="s2">&quot;beforeRedo&quot;</span><span class="p">,</span>
+    <span class="nx">REDOFINISHED</span> <span class="o">=</span> <span class="s2">&quot;redoFinished&quot;</span><span class="p">,</span>
+    <span class="nx">ACTIONREDONE</span> <span class="o">=</span> <span class="s2">&quot;actionRedone&quot;</span><span class="p">,</span>
+    <span class="nx">ASYNCPROCESSING</span> <span class="o">=</span> <span class="s2">&quot;asyncProcessing&quot;</span><span class="p">,</span>
+    <span class="nx">UNLIMITED</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="nx">Y</span><span class="p">.</span><span class="nx">mix</span><span class="p">(</span> <span class="nx">UndoManager</span><span class="p">,</span> <span class="p">{</span>
+        <span class="cm">/**</span>
+<span class="cm">         * The identity of UndoManager.</span>
+<span class="cm">         *</span>
+<span class="cm">         * @property UndoManager.NAME</span>
+<span class="cm">         * @type String</span>
+<span class="cm">         * @static</span>
+<span class="cm">         */</span>
+        <span class="nx">NAME</span> <span class="o">:</span> <span class="nx">UMName</span><span class="p">,</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Static property used to define the default attribute configuration of UndoManager.</span>
+<span class="cm">         *</span>
+<span class="cm">         * @property UndoManager.ATTRS</span>
+<span class="cm">         * @type Object</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         * @static</span>
+<span class="cm">         */</span>
+        <span class="nx">ATTRS</span> <span class="o">:</span> <span class="p">{</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Holds the maximum number of actions in UndoManager. By default the number of actions is not limited.</span>
+<span class="cm">             *</span>
+<span class="cm">             * @attribute limit</span>
+<span class="cm">             * @type Number</span>
+<span class="cm">             * @default 0 (unlimited)</span>
+<span class="cm">             */</span>
+            <span class="nx">limit</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">value</span><span class="o">:</span> <span class="nx">UNLIMITED</span><span class="p">,</span>
+                <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+                    <span class="k">return</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nx">value</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * The index of command, that will be executed on the next call to redo().</span>
+<span class="cm">             * If undo() has been not invoked, the value is the size of the current list of actions.</span>
+<span class="cm">             * Otherwise, it is the index of the last action that was undone.</span>
+<span class="cm">             *</span>
+<span class="cm">             * @attribute undoIndex</span>
+<span class="cm">             * @type Number</span>
+<span class="cm">             * @readOnly</span>
+<span class="cm">             */</span>
+            <span class="nx">undoIndex</span> <span class="o">:</span> <span class="p">{</span>
+                <span class="nx">readOnly</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="nx">getter</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+                    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+
+    <span class="nx">Y</span><span class="p">.</span><span class="nx">extend</span><span class="p">(</span> <span class="nx">UndoManager</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Base</span><span class="p">,</span> <span class="p">{</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Collection of actions.</span>
+<span class="cm">         * @property _actions</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         * @type Array</span>
+<span class="cm">         */</span>
+        <span class="nx">_actions</span> <span class="o">:</span> <span class="p">[],</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * If undo() has been not invoked, _undoIndex is the size of the current list of actions.</span>
+<span class="cm">         * Otherwise, it is the index of the last action that was undone.</span>
+<span class="cm">         *</span>
+<span class="cm">         * @property _undoIndex</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         * @type Number</span>
+<span class="cm">         */</span>
+        <span class="nx">_undoIndex</span> <span class="o">:</span> <span class="mi">0</span><span class="p">,</span>
+
+
+        <span class="cm">/**</span>
+<span class="cm">         * The handle of the currently executed asynchronous action</span>
+<span class="cm">         *</span>
+<span class="cm">         * @property _actionHandle</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         * @type Object</span>
+<span class="cm">         */</span>
+        <span class="nx">_actionHandle</span> <span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Boolean, indicates if UndoManager is currently processing an action</span>
+<span class="cm">         *</span>
+<span class="cm">         * @property _processing</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         * @type Boolean</span>
+<span class="cm">         */</span>
+        <span class="nx">_processing</span> <span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+
+
+        <span class="cm">/**</span>
+<span class="cm">         * Publishes events and subscribes to after event for limit.</span>
+<span class="cm">         *</span>
+<span class="cm">         * @method initializer</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         */</span>
+        <span class="nx">initializer</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">cfg</span> <span class="p">)</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_initEvents</span><span class="p">();</span>
+        
+            <span class="k">this</span><span class="p">.</span><span class="nx">after</span><span class="p">(</span> <span class="s2">&quot;limitChange&quot;</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_afterLimit</span><span class="p">,</span> <span class="k">this</span> <span class="p">)</span> <span class="p">);</span>
+        <span class="p">},</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * Destructor lifecycle implementation for UndoManager class.</span>
+<span class="cm">         * Removes and cancels the added actions.</span>
+<span class="cm">         *</span>
+<span class="cm">         * @method destructor</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         */</span>
+        <span class="nx">destructor</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">purgeAll</span><span class="p">();</span>
+        <span class="p">},</span>
+
+
+        <span class="cm">/**</span>
+<span class="cm">         * Publishes UndoManager&#39;s events</span>
+<span class="cm">         *</span>
+<span class="cm">         * @method _initEvents</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         */</span>
+        <span class="nx">_initEvents</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="cm">/**</span>
+<span class="cm">             * Signals an &lt;code&gt;Y.UndoableAction&lt;/code&gt; has been added to list</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event actionAdded</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object with the following attribute specific properties added:</span>
+<span class="cm">             *  &lt;dl&gt;</span>
+<span class="cm">             *      &lt;dt&gt;action&lt;/dt&gt;</span>
+<span class="cm">             *          &lt;dd&gt;An &lt;code&gt;Y.UndoableAction&lt;/code&gt; added to the list&lt;/dd&gt;</span>
+<span class="cm">             *  &lt;/dl&gt;</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">ACTIONADDED</span> <span class="p">);</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Signals an &lt;code&gt;Y.UndoableAction&lt;/code&gt; has been merged with another one</span>
+<span class="cm">             *</span>
+<span class="cm">             * @event actionMerged</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object with the following attribute specific properties added:</span>
+<span class="cm">             *  &lt;dl&gt;</span>
+<span class="cm">             *      &lt;dt&gt;&lt;code&gt;Y.UndoableAction&lt;/code&gt; action&lt;/dt&gt;</span>
+<span class="cm">             *          &lt;dd&gt;The action, accepted merge&lt;/dd&gt;</span>
+<span class="cm">             *      &lt;dt&gt;&lt;code&gt;Y.UndoableAction&lt;/code&gt; mergedAction&lt;/dt&gt;</span>
+<span class="cm">             *          &lt;dd&gt;The merged action&lt;/dd&gt;</span>
+<span class="cm">             *  &lt;/dl&gt;</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">ACTIONMERGED</span> <span class="p">);</span>
+            
+            <span class="cm">/**</span>
+<span class="cm">             * Signals the beginning of a process in which one or more actions will be canceled.</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event beforeCanceling</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="cm">             */</span>
+             <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">BEFORECANCELING</span> <span class="p">);</span>
+            
+            <span class="cm">/**</span>
+<span class="cm">             * Signals an action has been canceled.</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event actionCanceled</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object with the following attribute specific properties added:</span>
+<span class="cm">             *  &lt;dl&gt;</span>
+<span class="cm">             *      &lt;dt&gt;action&lt;/dt&gt;</span>
+<span class="cm">             *          &lt;dd&gt;An &lt;code&gt;Y.UndoableAction&lt;/code&gt; canceled&lt;/dd&gt;</span>
+<span class="cm">             *      &lt;dt&gt;index&lt;/dt&gt;</span>
+<span class="cm">             *          &lt;dd&gt;The index of the action in the list&lt;/dd&gt;</span>
+<span class="cm">             *  &lt;/dl&gt;</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">ACTIONCANCELED</span> <span class="p">);</span>
+            
+            
+            <span class="cm">/**</span>
+<span class="cm">             * Signals a canceling actions process has been finished.</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event cancelingFinished</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">CANCELINGFINISHED</span> <span class="p">);</span>
+            
+            <span class="cm">/**</span>
+<span class="cm">             * Signals the beginning of a process in which one or more actions will be purged from the list.</span>
+<span class="cm">             *</span>
+<span class="cm">             * @event beforePurge</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">BEFOREPURGE</span> <span class="p">);</span>
+
+
+            <span class="cm">/**</span>
+<span class="cm">             * Signals the end of purge process. &lt;code&gt;UndoManager&lt;/code&gt; cancels each action before its removing.</span>
+<span class="cm">             *</span>
+<span class="cm">             * @event purgeFinished</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">PURGEFINISHED</span> <span class="p">);</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Signals the beginning of a process in which one or more actions will be undone.</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event beforeUndo</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">BEFOREUNDO</span> <span class="p">);</span>
+            
+            
+            <span class="cm">/**</span>
+<span class="cm">             * Signals an action has been undone.</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event actionUndone</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object with the following attribute specific properties added:</span>
+<span class="cm">             *  &lt;dl&gt;</span>
+<span class="cm">             *      &lt;dt&gt;action&lt;/dt&gt;</span>
+<span class="cm">             *          &lt;dd&gt;An &lt;code&gt;Y.UndoableAction&lt;/code&gt; undone&lt;/dd&gt;</span>
+<span class="cm">             *      &lt;dt&gt;index&lt;/dt&gt;</span>
+<span class="cm">             *          &lt;dd&gt;The index of the action in the list&lt;/dd&gt;</span>
+<span class="cm">             *  &lt;/dl&gt;</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">ACTIONUNDONE</span> <span class="p">);</span>
+            
+
+            <span class="cm">/**</span>
+<span class="cm">             * Signals the end of undo process.</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event undoFinished</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">UNDOFINISHED</span> <span class="p">);</span>
+
+            
+            <span class="cm">/**</span>
+<span class="cm">             * Signals the beginning of a process in which one or more actions will be redone.</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event beforeRedo</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">BEFOREREDO</span> <span class="p">);</span>
+            
+            
+            <span class="cm">/**</span>
+<span class="cm">             * Signals an action has been redone.</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event actionRedone</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object with the following attribute specific properties added:</span>
+<span class="cm">             *  &lt;dl&gt;</span>
+<span class="cm">             *      &lt;dt&gt;action&lt;/dt&gt;</span>
+<span class="cm">             *          &lt;dd&gt;An &lt;code&gt;Y.UndoableAction&lt;/code&gt; redone&lt;/dd&gt;</span>
+<span class="cm">             *      &lt;dt&gt;index&lt;/dt&gt;</span>
+<span class="cm">             *          &lt;dd&gt;The index of the action in the list&lt;/dd&gt;</span>
+<span class="cm">             *  &lt;/dl&gt;</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">ACTIONREDONE</span> <span class="p">);</span>
+            
+            
+            <span class="cm">/**</span>
+<span class="cm">             * Signals the end of redo process.</span>
+<span class="cm">             * </span>
+<span class="cm">             * @event redoFinished</span>
+<span class="cm">             * @param event {Event.Facade} An Event Facade object</span>
+<span class="cm">             */</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">publish</span><span class="p">(</span> <span class="nx">REDOFINISHED</span> <span class="p">);</span>
+        <span class="p">},</span>
+    
+
+        <span class="cm">/**</span>
+<span class="cm">         * Adds an UndoableAction to UndoManager.&lt;br&gt;</span>
+<span class="cm">         * Removes and cancels all actions from the current action index till the end of the list.</span>
+<span class="cm">         * Tries to merge the current action with the &lt;code&gt;newAction&lt;/code&gt;, passed as parameter. If &lt;code&gt;currentAction.merge(newAction)&lt;/code&gt; returns false, UndoManager places the &lt;code&gt;newAction&lt;/code&gt; at the end of the list.&lt;br&gt;</span>
+<span class="cm">         * Fires &lt;code&gt;actionAdded&lt;/code&gt; event if action has been added to the list, or &lt;code&gt;actionMerged&lt;/code&gt; if &lt;code&gt;newAction&lt;/code&gt; has been merged.</span>
+<span class="cm">         * @method add</span>
+<span class="cm">         * @param {Y.UndoableAction} newAction The action to be added</span>
+<span class="cm">         * @return {Boolean} True if action was added to the list. The result might be False if UndoManager was processing another (asynchronous) action.</span>
+<span class="cm">         */</span>
+        <span class="nx">add</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">newAction</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">curAction</span> <span class="o">=</span> <span class="kc">null</span><span class="p">,</span> <span class="nx">actions</span><span class="p">,</span> <span class="nx">undoIndex</span><span class="p">,</span> <span class="nx">tmp</span><span class="p">,</span> <span class="nx">merged</span>  <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+        
+            <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="nx">actions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">;</span>
+            <span class="nx">undoIndex</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">undoIndex</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">){</span>
+                <span class="nx">curAction</span> <span class="o">=</span> <span class="nx">actions</span><span class="p">[</span> <span class="nx">undoIndex</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">];</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">undoIndex</span> <span class="o">&lt;</span> <span class="nx">actions</span><span class="p">.</span><span class="nx">length</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFORECANCELING</span> <span class="p">);</span>
+
+                <span class="k">while</span><span class="p">(</span> <span class="nx">undoIndex</span> <span class="o">&lt;</span> <span class="nx">actions</span><span class="p">.</span><span class="nx">length</span> <span class="p">){</span>
+                    <span class="nx">tmp</span> <span class="o">=</span> <span class="nx">actions</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+
+                    <span class="nx">tmp</span><span class="p">.</span><span class="nx">cancel</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONCANCELED</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="nx">action</span><span class="o">:</span> <span class="nx">tmp</span><span class="p">,</span>
+                        <span class="nx">index</span> <span class="o">:</span> <span class="nx">actions</span><span class="p">.</span><span class="nx">length</span>
+                    <span class="p">});</span>
+                <span class="p">}</span>
+
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">CANCELINGFINISHED</span> <span class="p">);</span>
+            <span class="p">}</span>
+        
+            <span class="k">if</span><span class="p">(</span> <span class="nx">curAction</span> <span class="p">){</span>
+                <span class="nx">merged</span> <span class="o">=</span> <span class="nx">curAction</span><span class="p">.</span><span class="nx">merge</span><span class="p">(</span> <span class="nx">newAction</span> <span class="p">);</span>
+
+                <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">merged</span> <span class="p">){</span>
+                    <span class="nx">actions</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span> <span class="nx">newAction</span> <span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">actions</span><span class="p">.</span><span class="nx">push</span><span class="p">(</span> <span class="nx">newAction</span> <span class="p">);</span>
+            <span class="p">}</span>
+        
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">merged</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span><span class="o">++</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_limitActions</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONADDED</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="nx">action</span> <span class="o">:</span> <span class="nx">newAction</span>
+                <span class="p">});</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONMERGED</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s1">&#39;action&#39;</span> <span class="o">:</span> <span class="nx">curAction</span><span class="p">,</span>
+                    <span class="s1">&#39;mergedAction&#39;</span> <span class="o">:</span> <span class="nx">newAction</span>
+                <span class="p">});</span>
+            <span class="p">}</span>
+            
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">},</span>
+    
+
+        <span class="cm">/**</span>
+<span class="cm">         * Removes actions from the list if their number exceedes the &lt;code&gt;limit&lt;/code&gt;</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method _limitActions</span>
+<span class="cm">         * @param {Number} limit The max number of actions in the list</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         */</span>
+        <span class="nx">_limitActions</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">limit</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">actions</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span>
+            <span class="nx">halfLimit</span><span class="p">,</span> <span class="nx">actionsLeft</span><span class="p">,</span> <span class="nx">actionsRight</span><span class="p">,</span> <span class="nx">deleteLeft</span><span class="p">,</span> <span class="nx">deleteRight</span><span class="p">,</span>
+            <span class="nx">index</span><span class="p">,</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">j</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">limit</span> <span class="p">){</span>
+                <span class="nx">limit</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;limit&quot;</span> <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">limit</span> <span class="o">===</span> <span class="nx">UNLIMITED</span> <span class="p">){</span>
+                <span class="k">return</span><span class="p">;</span>
+            <span class="p">}</span>
+        
+            <span class="nx">actions</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">actions</span><span class="p">.</span><span class="nx">length</span> <span class="o">&lt;=</span> <span class="nx">limit</span> <span class="p">){</span>
+                <span class="k">return</span><span class="p">;</span>
+            <span class="p">}</span>
+        
+            <span class="nx">index</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span><span class="p">;</span>
+
+            <span class="nx">halfLimit</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span> <span class="nx">limit</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span> <span class="p">);</span>
+
+            <span class="nx">actionsLeft</span> <span class="o">=</span> <span class="nx">limit</span> <span class="o">-</span> <span class="nx">halfLimit</span><span class="p">;</span>
+            <span class="nx">actionsRight</span> <span class="o">=</span> <span class="nx">limit</span> <span class="o">-</span> <span class="nx">actionsLeft</span><span class="p">;</span>
+
+            <span class="nx">deleteLeft</span> <span class="o">=</span> <span class="nx">index</span> <span class="o">-</span> <span class="nx">actionsLeft</span><span class="p">;</span>
+            <span class="nx">deleteRight</span> <span class="o">=</span> <span class="nx">actions</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="nx">index</span> <span class="o">-</span> <span class="nx">actionsRight</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">deleteLeft</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">){</span>
+                <span class="nx">deleteRight</span> <span class="o">+=</span> <span class="nx">deleteLeft</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">deleteRight</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="p">){</span>
+                <span class="nx">deleteLeft</span> <span class="o">+=</span> <span class="nx">deleteRight</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">deleteLeft</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="o">||</span> <span class="nx">deleteRight</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFORECANCELING</span> <span class="p">);</span>
+
+                <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">deleteLeft</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">){</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span><span class="o">--</span><span class="p">;</span>
+
+                    <span class="nx">action</span> <span class="o">=</span> <span class="nx">actions</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+                    <span class="nx">action</span><span class="p">.</span><span class="nx">cancel</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONCANCELED</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span><span class="p">,</span>
+                        <span class="nx">index</span> <span class="o">:</span> <span class="mi">0</span>
+                    <span class="p">});</span>
+                <span class="p">}</span>
+
+                <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="nx">actions</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">j</span> <span class="o">&lt;</span> <span class="nx">deleteRight</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span><span class="p">,</span> <span class="nx">j</span><span class="o">++</span> <span class="p">){</span>
+                    <span class="nx">action</span> <span class="o">=</span> <span class="nx">actions</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span> <span class="nx">i</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+                    <span class="nx">action</span><span class="p">.</span><span class="nx">cancel</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONCANCELED</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span><span class="p">,</span>
+                        <span class="nx">index</span> <span class="o">:</span> <span class="nx">i</span>
+                    <span class="p">});</span>
+                <span class="p">}</span>
+
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">CANCELINGFINISHED</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    
+        <span class="cm">/**</span>
+<span class="cm">         * Invokes &lt;code&gt;_limitActions&lt;/code&gt; in order to keep the number of actions in the list according to the &lt;code&gt;limit&lt;/code&gt;.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method _afterLimit</span>
+<span class="cm">         * @param params {Event} limitChange custom event</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         */</span>
+        <span class="nx">_afterLimit</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_limitActions</span><span class="p">(</span> <span class="nx">params</span><span class="p">.</span><span class="nx">newVal</span> <span class="p">);</span>
+        <span class="p">},</span>
+    
+        
+        <span class="cm">/**</span>
+<span class="cm">         * Undoes the action before current index by calling its &lt;code&gt;undo&lt;/code&gt; method.</span>
+<span class="cm">         * If &lt;code&gt;asyncProcessing&lt;/code&gt; property of the action is true, UndoManager waits until action fires &lt;code&gt;undoFinished&lt;/code&gt; event.</span>
+<span class="cm">         * During this time undoing/redoing and adding new actions will be suspended.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method undo</span>
+<span class="cm">         */</span>
+        <span class="nx">undo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">canUndo</span><span class="p">()</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_undoTo</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    
+        <span class="cm">/**</span>
+<span class="cm">         * Redoes the action at current index by calling its &lt;code&gt;redo&lt;/code&gt; method.</span>
+<span class="cm">         * If &lt;code&gt;asyncProcessing&lt;/code&gt; property of the action is true, UndoManager waits until action fires &lt;code&gt;redoFinished&lt;/code&gt; event.</span>
+<span class="cm">         * During this time undoing/redoing and adding new actions will be suspended.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method redo</span>
+<span class="cm">         */</span>
+        <span class="nx">redo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">canRedo</span><span class="p">()</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_redoTo</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+    
+        
+        <span class="cm">/**</span>
+<span class="cm">         * Checks if undo can be done. The function will return false if there are no actions in the list,</span>
+<span class="cm">         * the current index is 0 or UndoManager is waiting for another asynchronous action to complete.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method canUndo</span>
+<span class="cm">         * @return {Boolean} true if undo is possible, false otherwise</span>
+<span class="cm">         */</span>
+        <span class="nx">canUndo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">},</span>
+    
+        
+        <span class="cm">/**</span>
+<span class="cm">         * Checks if redo can be done. The function will return false if there are no actions in the list,</span>
+<span class="cm">         * current index is equal to the length of the list or UndoManager is waiting for another asynchronous action to complete.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method canRedo</span>
+<span class="cm">         * @return {Boolean} true if redo is possible, false otherwise</span>
+<span class="cm">         */</span>
+        <span class="nx">canRedo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&lt;</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+        <span class="p">},</span>
+    
+        
+        <span class="cm">/**</span>
+<span class="cm">         * If undo is posible, returns the value of &lt;code&gt;label&lt;/code&gt; property of the action to be undone.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method getUndoLabel</span>
+<span class="cm">         * @return {String} The value of label property</span>
+<span class="cm">         */</span>
+        <span class="nx">getUndoLabel</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="kd">var</span> <span class="nx">action</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">canUndo</span><span class="p">()</span> <span class="p">){</span>
+                <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">[</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">-</span> <span class="mi">1</span> <span class="p">];</span>
+                <span class="k">return</span> <span class="nx">action</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;label&quot;</span> <span class="p">);</span>
+            <span class="p">}</span>
+        
+            <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">},</span>
+    
+        
+        <span class="cm">/**</span>
+<span class="cm">         * If redo is posible, returns the value of &lt;code&gt;label&lt;/code&gt; property of the action to be redone.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method getRedoLabel</span>
+<span class="cm">         * @return {String} The value of label property</span>
+<span class="cm">         */</span>
+        <span class="nx">getRedoLabel</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="kd">var</span> <span class="nx">action</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">canRedo</span><span class="p">()</span> <span class="p">){</span>
+                <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">[</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="p">];</span>
+                <span class="k">return</span> <span class="nx">action</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;label&quot;</span> <span class="p">);</span>
+            <span class="p">}</span>
+        
+            <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">},</span>
+    
+    
+        <span class="cm">/**</span>
+<span class="cm">         * Cancels and removes all actions from the list</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method purgeAll</span>
+<span class="cm">         */</span>
+        <span class="nx">purgeAll</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">purgeTo</span><span class="p">(</span> <span class="mi">0</span> <span class="p">);</span>
+        <span class="p">},</span>
+
+
+        <span class="cm">/**</span>
+<span class="cm">         * Cancels and removes actions from the end of the list (the most recent actions) to the index, passed as parameter.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method purgeTo</span>
+<span class="cm">         * @param {Number} index The index in the list to which actions should be be removed</span>
+<span class="cm">         */</span>
+        <span class="nx">purgeTo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">index</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">i</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="nx">index</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFOREPURGE</span> <span class="p">);</span>
+
+                <span class="k">for</span><span class="p">(</span> <span class="p">;</span> <span class="nx">i</span> <span class="o">&gt;=</span> <span class="nx">index</span><span class="p">;</span> <span class="nx">i</span><span class="o">--</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">.</span><span class="nx">splice</span><span class="p">(</span> <span class="nx">i</span><span class="p">,</span> <span class="mi">1</span> <span class="p">)[</span><span class="mi">0</span><span class="p">];</span>
+
+                    <span class="nx">action</span><span class="p">.</span><span class="nx">cancel</span><span class="p">();</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONCANCELED</span><span class="p">,</span> <span class="p">{</span>
+                        <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span><span class="p">,</span>
+                        <span class="nx">index</span> <span class="o">:</span> <span class="nx">i</span>
+                    <span class="p">});</span>
+                <span class="p">}</span>
+
+                <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&gt;</span> <span class="nx">index</span> <span class="p">){</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">=</span> <span class="nx">index</span><span class="p">;</span>
+                <span class="p">}</span>
+
+                <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">PURGEFINISHED</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+        
+        <span class="cm">/**</span>
+<span class="cm">         * Calls undo or redo methods of the actions registered while current index is less or greater than the &lt;code&gt;newIndex&lt;/code&gt; passed.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method processTo</span>
+<span class="cm">         * @param newIndex The new value of &lt;code&gt;undoIndex&lt;/code&gt;</span>
+<span class="cm">         */</span>
+        <span class="nx">processTo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">newIndex</span> <span class="p">){</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span><span class="nx">newIndex</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">&amp;&amp;</span>
+                <span class="nx">newIndex</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="nx">newIndex</span> <span class="o">&lt;=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">.</span><span class="nx">length</span> <span class="p">){</span>
+                <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&lt;</span> <span class="nx">newIndex</span> <span class="p">){</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">_redoTo</span><span class="p">(</span> <span class="nx">newIndex</span> <span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&gt;</span> <span class="nx">newIndex</span> <span class="p">){</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">_undoTo</span><span class="p">(</span> <span class="nx">newIndex</span> <span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        
+        
+        <span class="cm">/**</span>
+<span class="cm">         * Redoes all actions from current index to &lt;code&gt;newIndex&lt;/code&gt;. In case of asynchronous action, waits until action fires &lt;code&gt;redoFinished&lt;/code&gt; event.</span>
+<span class="cm">         *</span>
+<span class="cm">         * @method _redoTo</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         * @param newIndex The new value of &lt;code&gt;undoIndex&lt;/code&gt;</span>
+<span class="cm">         */</span>
+        <span class="nx">_redoTo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">newIndex</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">[</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span><span class="o">++</span> <span class="p">];</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFOREREDO</span> <span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">action</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ASYNCPROCESSING</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">action</span><span class="p">.</span><span class="nx">redo</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONREDONE</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s1">&#39;action&#39;</span> <span class="o">:</span> <span class="nx">action</span><span class="p">,</span>
+                    <span class="nx">index</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">-</span> <span class="mi">1</span>
+                <span class="p">}</span> <span class="p">);</span>
+
+                <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&lt;</span> <span class="nx">newIndex</span> <span class="p">){</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">_redoTo</span><span class="p">(</span> <span class="nx">newIndex</span> <span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">REDOFINISHED</span> <span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_actionHandle</span> <span class="o">=</span> <span class="nx">action</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="nx">REDOFINISHED</span><span class="p">,</span>
+                      <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_onAsyncRedoFinished</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">newIndex</span> <span class="p">)</span> <span class="p">);</span>
+
+                <span class="nx">action</span><span class="p">.</span><span class="nx">redo</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        
+        
+        <span class="cm">/**</span>
+<span class="cm">         * Undoes all actions from current index to &lt;code&gt;newIndex&lt;/code&gt;. In case of asynchronous action, waits until action fires &lt;code&gt;undoFinished&lt;/code&gt; event.</span>
+<span class="cm">         *</span>
+<span class="cm">         * @method _undoTo</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         * @param newIndex The new value of &lt;code&gt;undoIndex&lt;/code&gt;</span>
+<span class="cm">         */</span>
+        <span class="nx">_undoTo</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">newIndex</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">action</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_actions</span><span class="p">[</span> <span class="o">--</span><span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="p">];</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">BEFOREUNDO</span> <span class="p">);</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">action</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ASYNCPROCESSING</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">action</span><span class="p">.</span><span class="nx">undo</span><span class="p">();</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONUNDONE</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span><span class="p">,</span>
+                    <span class="nx">index</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span>
+                <span class="p">});</span>
+
+                <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&gt;</span> <span class="nx">newIndex</span> <span class="p">){</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">_undoTo</span><span class="p">(</span> <span class="nx">newIndex</span> <span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+                    <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">UNDOFINISHED</span> <span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_actionHandle</span> <span class="o">=</span> <span class="nx">action</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span> <span class="nx">UNDOFINISHED</span><span class="p">,</span>
+                    <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_onAsyncUndoFinished</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">newIndex</span> <span class="p">)</span> <span class="p">);</span>
+
+                <span class="nx">action</span><span class="p">.</span><span class="nx">undo</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+        
+        
+        <span class="cm">/**</span>
+<span class="cm">         * Handles the completion of undo method of asynchronous action.</span>
+<span class="cm">         * Fires &lt;code&gt;actionUndone&lt;/code&gt; event. Checks if &lt;code&gt;newIndex&lt;/code&gt; is less than current index. If true, invokes _undoTo again, or fires &lt;code&gt;undoFinished&lt;/code&gt; event otherwise.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method _onAsyncUndoFinished</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         * @param {Y.UndoableAction} action The asynchronous action which undo method has been completed.</span>
+<span class="cm">         * @param {Number} newIndex The new value of &lt;code&gt;undoIndex&lt;/code&gt;</span>
+<span class="cm">         */</span>
+        <span class="nx">_onAsyncUndoFinished</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">newIndex</span> <span class="p">){</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_actionHandle</span><span class="p">.</span><span class="nx">detach</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_actionHandle</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONUNDONE</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span><span class="p">,</span>
+                <span class="nx">index</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span>
+            <span class="p">});</span>
+            
+            <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&gt;</span> <span class="nx">newIndex</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_undoTo</span><span class="p">(</span> <span class="nx">newIndex</span> <span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">UNDOFINISHED</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span>
+                <span class="p">});</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+
+        <span class="cm">/**</span>
+<span class="cm">         * Handles the completion of redo method of asynchronous action. </span>
+<span class="cm">         * Fires &lt;code&gt;actionRedone&lt;/code&gt; event. Checks if &lt;code&gt;newIndex&lt;/code&gt; is bigger than current index. If true, invokes _redoTo again, or fires &lt;code&gt;redoFinished&lt;/code&gt; event otherwise.</span>
+<span class="cm">         * </span>
+<span class="cm">         * @method _onAsyncRedoFinished</span>
+<span class="cm">         * @protected</span>
+<span class="cm">         * @param {Y.UndoableAction} action The asynchronous action which redo method has been completed.</span>
+<span class="cm">         * @param {Number} newIndex The new value of &lt;code&gt;undoIndex&lt;/code&gt;</span>
+<span class="cm">         */</span>
+        <span class="nx">_onAsyncRedoFinished</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">action</span><span class="p">,</span> <span class="nx">newIndex</span> <span class="p">){</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_actionHandle</span><span class="p">.</span><span class="nx">detach</span><span class="p">();</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_actionHandle</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+            
+            <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">ACTIONREDONE</span><span class="p">,</span> <span class="p">{</span>
+                <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span><span class="p">,</span>
+                <span class="nx">index</span> <span class="o">:</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="p">});</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_undoIndex</span> <span class="o">&lt;</span> <span class="nx">newIndex</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_redoTo</span><span class="p">(</span> <span class="nx">newIndex</span> <span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_processing</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="nx">REDOFINISHED</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="s1">&#39;action&#39;</span><span class="o">:</span> <span class="nx">action</span>
+                <span class="p">});</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">});</span>
+
+    <span class="nx">Y</span><span class="p">.</span><span class="nx">UndoManager</span> <span class="o">=</span> <span class="nx">UndoManager</span><span class="p">;</span>
+
+<span class="p">}());</span>
+</pre></div>

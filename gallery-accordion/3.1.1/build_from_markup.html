@@ -1,0 +1,510 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>YUI3 Accordion widget - build from markup</title>
+
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.1/build/cssreset/reset-min.css">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.1/build/cssfonts/fonts-min.css">
+
+        <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCore.css">
+        <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shThemeDefault.css">
+
+        <style type="text/css">
+            html, body {
+                height:100%;
+            }
+
+            .step {
+                position: relative;
+                border: 2px solid #E5ECF9;
+                background-color: #F2FBFF;
+                margin:0 0 0 0px;
+                padding: 1em 1em 2em 1em;
+            }
+
+            h1 {
+                font-size: 170%;
+                line-height: 130%;
+                margin:0 0 0 0px;
+                padding: 1em 0.5em 1em;
+            }
+
+            h2 {
+                font-size:150%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            h3 {
+                font-size:130%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            h4 {
+                font-size:110%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            li {
+                list-style-type:disc;
+                margin:0 0 0 30px;
+                padding:0;
+                line-height: 1.4em;
+            }
+
+            p {
+                line-height: 1.6em;
+            }
+            
+        </style>
+
+
+
+        <script type="text/javascript" src="http://yui.yahooapis.com/3.1.1/build/yui/yui-min.js"></script>
+
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushCss.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.js"></script>
+
+        <script type="text/javascript">
+            SyntaxHighlighter.config.clipboardSwf = 'syntaxhighlighter/scripts/clipboard.swf';
+            SyntaxHighlighter.all();
+        </script>
+    </head>
+    <body class="yui3-skin-sam">
+
+        <div class="step">
+
+            <div style="float:right; position:relative;">
+                <h3>
+                    <a href="build_from_markup_window.html" target="_blank">See this example in new window.</a>
+                </h3>
+            </div>
+
+            <h1>Step one: add Accordion to your YUI instance</h1>
+
+            <p>
+                In order to use Accordion widget, you have to add it as external module in your YUI instance or include the JavaScript and CSS files manually in the page:
+            </p>
+
+            <pre class="brush: html;">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+
+<script type="text/javascript" src="http://yui.yahooapis.com/3.1.1/build/yui/yui-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/gallery-accordion-min.js"></script>
+
+<script type="text/javascript">
+    YUI().use( 'gallery-accordion', function(Y) {
+        // Your code here
+    });
+</script>
+            </pre>
+    </div>
+
+    <div class="step">
+        <h1>Step two: define the markup of the accordion and (optionally) its items</h1>
+
+        <p>
+	In this example, we will create markup for accordion itself and three items.
+        </p>
+
+        <h3>1. Create Accordion container:</h3>
+        <p>
+            Since YUI 3.1, there is no need to define contentBox and boundingBox. You have to define only Widget's <a href="http://developer.yahoo.com/yui/3/api/Widget.html#config_srcNode">srcNode</a>:
+        </p>
+        <pre class="brush: html">
+            <div id="acc1" class="yui3-accordion">
+            </div>
+        </pre>
+
+        If your appication runs in quirks mode, you may have to set position, height and "overflow:hidden" for IE.
+        <br>
+        <br>
+	
+        For each item, we have to create standard markup as required by WidgetStdMod, with some additional settings:
+        <h3>2. Set class <code>"yui3-accordion-item"</code> in the main item's div:</h3>
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item">
+	........
+	</div>
+        </pre>
+
+        <h3>3. Set item header markup</h3>
+        <p>
+        When building Accordion items from markup, it is preferable to add the required markup for the header. In this way, if JavaScript is disabled, the headers will look in the same way, as if it would be enabled.<br>
+        To do that, place inside standard Widget's header definition the following HTML elements with their classes.
+        </p>
+        <h4>Note:</h4>
+        <p>
+        This is optional, you can omit all the HTML in header definition (even the whole header) and AccordionItem will create it. Also, you can set only some of these HTML elements. What is missing, will be created when AccordionItem renders.
+        </p>
+        <p>
+            In the example below we set the label of the item - "Label 1" also.
+        </p>
+        
+        <pre class="brush: html;">
+        <div class="yui3-widget-hd">
+            <a class="yui3-accordion-item-icon"></a>
+            <a class="yui3-accordion-item-label">Label 1</a>
+            <div class="yui3-accordion-item-icons">
+                <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                <a class="yui3-accordion-item-iconexpanded"></a>
+                <a class="yui3-accordion-item-iconclose"></a>
+            </div>
+        </div>
+        </pre>
+
+        
+        <h3>4. Set AccordionItem properties</h3>
+        <p>
+        There are three ways to set properties to AccordionItem from markup:<br>
+        </p>
+
+        <ul>
+            <li>use predefined fake class names</li>
+            <li>store properties as JSON string in <code>"yuiConfig"</code> custom attribute</li>
+                <li>use HTML5 <code>"data"</code> attribute. In this case you must prefix Accordion's config attributes with "data-".</li>
+        </ul>
+        <br>
+        <p>
+            If you are using <code>yuiConfig</code> attribute, you can set every property, which AccordionItem supports. If you are using fake class names, you can set the following properties:<br>
+        </p>
+        <ul>
+            <li><code>expanded</code></li>
+            <li><code>alwaysVisible</code></li>
+            <li><code>contentHeight</code></li>
+            <li><code>closable</code></li>
+        </ul>
+        <br>
+        <p>
+            If you are using "data" attribute, you can set the following properties:
+        </p>
+        <ul>
+            <li><code>label</code></li>
+            <li><code>expanded</code></li>
+            <li><code>alwaysVisible</code></li>
+            <li><code>contentHeight</code></li>
+            <li><code>closable</code></li>
+        </ul>
+
+        <br>
+        <p>
+            Note: <code>expanded</code>, <code>alwaysVisible</code> and <code>closable</code> are boolean properties. If you are setting the values to <code>true</code> by using <code>data</code> attribute, you may do this in three ways:
+            <ul>
+                <li>"true"</li>
+                <li>"yes"</li>
+                <li>"1"</li>
+            </ul>
+        </p>
+
+        <br>
+        Examples:
+
+        <h4>4.1 Set <code>"expanded"</code> property</h4>
+        <p>
+            In order to set <code>"expanded"</code> property to <code>true</code> (it is false by default), you may set fake class "yui3-accordion-item-expanded" in the main item's div:
+        </p>
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item yui3-accordion-item-expanded">
+	........
+	</div>
+        </pre>
+
+        <p>
+            or you may set "expanded" to true in <code>yuiConfig</code> attribute:
+        </p>
+        <pre class="brush: html;">
+        <div id="item1" class="yui3-accordion-item" yuiConfig='{"expanded": true}'>
+             ........
+        </div>
+        </pre>
+
+        <p>
+            or set "expanded" to true via <code>data</code> attribute:
+        </p>
+        <pre class="brush: html;">
+        <div id="item1" class="yui3-accordion-item" data-expanded='true'> <!-- data-expanded='yes' and data-expanded='1' are also valid -->
+             ........
+        </div>
+        </pre>
+
+        <h4>4.2 Set <code>"alwaysVisible"</code> property</h4>
+        <p>
+        Use "yui3-accordion-item-alwaysvisible" class name to make this item always visible:
+        </p>
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item yui3-accordion-item-alwaysvisible">
+	........
+	</div>
+        </pre>
+
+        <p>
+        or set <code>{"alwaysVisible": true}</code> in <code>yuiConfig</code> attribute:
+        </p>
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item" yuiConfig='{"alwaysVisible": true}'>
+	........
+	</div>
+        </pre>
+
+        <p>
+        or set <code>alwaysVisible</code> to true via <code>data</code> attribute:
+        </p>
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item" data-alwaysvisible="true"> <!-- data-alwaysvisible='yes' and data-alwaysvisible='1' are also valid -->
+	........
+	</div>
+        </pre>
+
+        <h4>4.3 Set <code>"closable"</code> property</h4>
+        <p>
+        Use "yui3-accordion-item-closable" class name in order to make the item closable:
+        </p>
+        
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item yui3-accordion-item-closable">
+	........
+	</div>
+        </pre>
+
+        <p>
+        or set <code>"closable"</code> to true in <code>yuiConfig</code> attribute:
+        </p>
+
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item" yuiConfig='{"closable": true}'>
+	........
+	</div>
+        </pre>
+
+        <p>
+        or set <code>"closable"</code> via <code>data</code> attribute:
+        </p>
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item" data-closable="true"> <!-- data-closable='yes' and data-closable='1' are also valid -->
+	........
+	</div>
+        </pre>
+
+        <h4>4.4 Define content height policy</h4>
+        <h4>You can set content height of given item in three ways:</h4>
+        <ul>
+            <li>auto - the browser will calculate content height</li>
+            <li>fixed - content height will be exactly X pixels</li>
+            <li>stretch - content height will be calculated, based on the height of the other items in the Accordion. For example, lets assume there is Accordion with total height 600px and it has three items added. The content height of the first item is fixed, 200px and the second one is also fixed, 100px. Content height policy of the third item is stretch and it will get the remaining space, which is:<br>
+            600 - 25 - 200 - 25 - 100 - 25 = 225px, if we assume 25 is header height in pixels for each item.</li>
+        </ul>
+        <h4>In order to set content height policy, you can use fake class names, <code>yuiConfig</code> attribute, or <code>data</code> attribute:</h4>
+        <p>Using fake class names:</p>
+        <ul>
+            <li><code>"yui3-accordion-item-contentheight-auto"</code></li>
+            <li><code>"yui3-accordion-item-contentheight-fixed-[pixels]"</code>, where "[pixels]" is number, for example 150</li>
+            <li><code>"yui3-accordion-item-contentheight-stretch"</code></li>
+        </ul>
+        <br>
+        <p>Using <code>"yuiConfig"</code> custom attribute:</p>
+        <ul>
+            <li><code>yuiConfig='{"contentHeight": {"method":"auto"}}'</code></li>
+            <li><code>yuiConfig='{"contentHeight": {"method":"fixed", "height":[pixels]}}'</code>, where "[pixels]" is number, for example 150</li>
+            <li><code>yuiConfig='{"contentHeight": {"method":"stretch"}}'</code></li>
+        </ul>
+        <br>
+        <p>Using <code>"data"</code> attribute:</p>
+        <ul>
+            <li><code>data-contentheight='auto'</code></li>
+            <li><code>data-contentheight='fixed-[pixels]'</code>, where "[pixels]" is number, for example 150</li>
+            <li><code>data-contentheight='stretch'</code></li>
+        </ul>
+
+        <h4>Example - markup for expanded item with content height set as fixed, 200px by using fake class names:</h4>
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item yui3-accordion-item-expanded yui3-accordion-item-contentheight-fixed-200">
+	........
+	</div>
+        </pre>
+
+        <h4>Example - markup for always visible item with content height set as stretch by using <code>yuiConfig</code> attribute:</h4>
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item" yuiConfig='{"contentHeight": {"method":"stretch"}, "alwaysVisible":true}'>
+	........
+	</div>
+        </pre>
+
+        <h4>Example - markup for always visible item with content height set as stretch by using <code>data</code> attribute:</h4>
+        <pre class="brush: html;">
+	<div id="item1" class="yui3-accordion-item" data-alwaysvisible='true' data-contentHeight='stretch'>
+	........
+	</div>
+        </pre>
+
+        <h3>4.5 Set item's label (optionally)</h3>
+        <p>
+        You can define it in header's markup:
+        </p>
+
+        <pre class="brush: html;">
+        <div id="item1" class="yui3-accordion-item">
+             <div class="yui3-widget-hd">
+                <a class="yui3-accordion-item-label">Label 1</a>
+            </div>
+        </div>
+        </pre>
+
+        <p>
+        or set it in <code>"yuiConfig"</code> attribute:<br>
+        </p>
+
+        <pre class="brush: html;">
+        <div id="item1" class="yui3-accordion-item" yuiConfig='{"label": "Label 1"}'>
+        </div>
+        </pre>
+
+
+        <p>
+        or set it via <code>"data"</code> attribute:<br>
+        </p>
+
+        <pre class="brush: html;">
+        <div id="item1" class="yui3-accordion-item" data-label='Label 1'>
+        </div>
+        </pre>
+
+	<h3>Here is example markup of Accordion with three items:</h3>
+        <pre class="brush: html;">
+        <div style="position: absolute; left: 50px; top: 50px; width: 350px; height: 420px;">
+            <div id="acc1" class="yui3-accordion"> <!-- If you are running in quirks mode, you may have to set the following styles for IE - style="position: relative; height: 420px; overflow: hidden;" -->
+                <div id="item1" class="yui3-accordion-item yui3-accordion-item-alwaysvisible" data-contentheight="fixed-150" yuiConfig='{"closable": true}'>
+                    <div class="yui3-widget-hd">
+                        <a class="yui3-accordion-item-icon"></a>
+                        <a class="yui3-accordion-item-label">Label 1</a>
+                        <div class="yui3-accordion-item-icons">
+                            <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                            <a class="yui3-accordion-item-iconexpanded"></a>
+                            <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                        </div>
+                    </div>
+                    <div class="yui3-widget-bd">
+                        <div id="pm1" style="position: relative;">
+                            Item1 content - Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="item2" class="yui3-accordion-item" data-contentheight="stretch" yuiConfig='{"expanded": true}'>
+                    <div class="yui3-widget-hd">
+                        <a class="yui3-accordion-item-icon"></a>
+                        <a class="yui3-accordion-item-label">Label 2</a>
+                        <div class="yui3-accordion-item-icons">
+                            <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                            <a class="yui3-accordion-item-iconexpanded"></a>
+                            <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                        </div>
+                    </div>
+                    <div id="bodyid2" class="yui3-widget-bd">
+                        <div id="pm2" style="position:relative">
+                            Item2 content - Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+                </div>
+
+                <div id="item3" class="yui3-accordion-item" yuiConfig='{"contentHeight": {"method": "auto"}, "expanded":true}'>
+                    <div class="yui3-widget-hd">
+                        <a class="yui3-accordion-item-icon"></a>
+                        <a class="yui3-accordion-item-label">Label 3 from markup</a>
+                        <div class="yui3-accordion-item-icons">
+                            <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                            <a class="yui3-accordion-item-iconexpanded"></a>
+                            <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                        </div>
+                    </div>
+                    <div id="bodyid3" class="yui3-widget-bd">
+                        <div id="pm3" style="position:relative;">
+                            Item3 content - Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                        </div>
+                    </div>
+                </div>
+           </div>
+        </pre>
+    </div>
+
+    <div class="step">
+        <h1>Step three: instantiate the Accordion</h1>
+        <p>
+	When YUI3 finishes loading all scripts, it will execute a function, passed as last argument of YUI "use" function. This is the right place you have to start creating instances, including those of the Accordion.
+	You can instantiate Accordion as any other widget in YUI3:
+        </p>
+
+        <pre class="brush: js;">
+        var accordion = new Y.Accordion({
+            srcNode: "#acc1",
+            useAnimation: true,
+            collapseOthersOnExpand: true
+        });
+        </pre>
+    </div>
+
+    <div class="step">
+        <h1>Step four (optional): add/modify item params right before adding them to Accordion</h1>
+
+        <h4>If you subscribe to "beforeItemAdd" event, you will be able to overwrite all parameters, added from markup or to add new parameters:</h4>
+
+        <pre class="brush: js;">
+accordion.on( "beforeItemAdd", function( attrs ){
+    var item, id;
+
+    item = attrs.item;
+    id = item.get( "id" );
+
+    if( id === "item1" ){
+        item.set( "contentHeight",  {
+            method: "fixed",
+            height: 150 <!-- In pixels -->
+        });
+
+        item.set( "alwaysVisible", true );
+
+        item.set( "closable", true );
+    } else if( id === "item2" ){
+        item.set( "label", "Label2" );
+
+        item.set( "contentHeight",  {
+            method: "stretch"
+        });
+
+       item.set( "expanded", true );
+    } else if( id === "item3" ){
+        item.set( "label", "Label3, overwritten" );
+
+        item.set( "contentHeight",  {
+            method: "auto"
+        });
+
+        item.set( "expanded", true );
+    }
+}, this );
+        </pre>
+    </div>
+
+    <div class="step">
+        <h1>Step five: render the Accordion</h1>
+
+        <p>
+	The last step is to render the accordion. Render process will look for some items and if found, they will be created authomatically. In this example, there will be created three items.
+        </p>
+        <pre class="brush: js;">
+	 accordion.render();
+        </pre>
+    </div>
+
+
+<h3><a href="build_from_markup_window.html" target="_blank">See this example in new window.</a></h3>
+
+</body>
+
+</html>
