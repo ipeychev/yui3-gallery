@@ -4,9 +4,7 @@
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>YUI3 Accordion widget - overwrite default properties</title>
 
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.1/build/cssreset/reset-min.css">
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.1/build/cssfonts/fonts-min.css">
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.1.1/build/cssreset/reset-min.css&3.1.1/build/cssfonts/fonts-min.css&gallery-2010.05.19-19-08/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
 
 <style type="text/css">
     html, body {
@@ -15,16 +13,18 @@
 </style>
 
 <script type="text/javascript" src="http://yui.yahooapis.com/3.1.1/build/yui/yui-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/gallery-accordion-min.js"></script>
+<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2010.05.19-19-08/build/gallery-accordion/gallery-accordion-min.js"></script>
 
 <script type="text/javascript"> 
 
-YUI().use( 'gallery-accordion', 'dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
+YUI({
+    gallery : 'gallery-2010.05.19-19-08'
+}).use( 'gallery-accordion', 'dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
     var accordion, item1;
 
     accordion = new Y.Accordion({
         srcNode: "#acc1",
-        useAnimation: false,
+        useAnimation: true,
         animation: {
             duration: 1.5,
             easing: Y.Easing.backIn
@@ -41,13 +41,13 @@ YUI().use( 'gallery-accordion', 'dd-constrain', 'dd-proxy', 'dd-drop', function(
         expanded: true,
         id: "dynamicItem1",
         contentHeight: {
-            method: "stretch"
+            method: "auto"
         },
         alwaysVisible: true,
         closable: true
     });
 
-    item1.set( "bodyContent", "This is the body of the item, added dynamically to accordion.<br>Content height has been set as \"stretch\"." );
+    item1.set( "bodyContent", "<div>This is the body of the item, added dynamically to accordion.<br>Content height has been set as \"auto\".</div>" );
 
     accordion.addItem( item1 );
 

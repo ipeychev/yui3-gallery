@@ -4,9 +4,7 @@
 
 <meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>YUI3 Accordion widget - build from markup</title>
 
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.1/build/cssreset/reset-min.css">
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.1/build/cssfonts/fonts-min.css">
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.1.1/build/cssreset/reset-min.css&3.1.1/build/cssfonts/fonts-min.css&gallery-2010.05.19-19-08/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
 
 <style type="text/css">
 	html, body {
@@ -15,18 +13,19 @@
 </style>
 
 <script type="text/javascript" src="http://yui.yahooapis.com/3.1.1/build/yui/yui-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/gallery-accordion-min.js"></script>
 
 <script type="text/javascript">	
 
-YUI().use( 'gallery-accordion', function(Y) {
-	var accordion = new Y.Accordion({
-            srcNode: "#acc1",
-            useAnimation: true,
-            collapseOthersOnExpand: true
-        });
+YUI({
+    gallery : 'gallery-2010.05.19-19-08'
+}).use( 'gallery-accordion', function(Y) {
+    var accordion = new Y.Accordion({
+        srcNode: "#acc1",
+        useAnimation: true,
+        collapseOthersOnExpand: true
+    });
 
-        accordion.render();
+    accordion.render();
 });
 
 </script>

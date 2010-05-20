@@ -5,8 +5,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <title>Add/remove items dynamically</title>
 
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.1/build/cssfonts/fonts-min.css">
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.1.1/build/cssfonts/fonts-min.css&gallery-2010.05.19-19-08/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
 
 <style type="text/css">
     html, body {
@@ -25,11 +24,12 @@
 </style>
 
 <script type="text/javascript" src="http://yui.yahooapis.com/3.1.1/build/yui/yui-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/gallery-accordion-min.js"></script>
 
 <script type="text/javascript">
 
-YUI().use( 'gallery-accordion', 'dd-constrain', 'dd-proxy', 'dd-drop', 'yui2-button', 'yui2-editor', function(Y) {
+YUI({
+    gallery : 'gallery-2010.05.19-19-08'
+}).use( 'gallery-accordion', 'dd-constrain', 'dd-proxy', 'dd-drop', 'yui2-button', 'yui2-editor', function(Y) {
      var accordion, btnAdd, btnRemove, txtLabel, editor, txtPixels,
         expanded, alwaysVisisble, closable, contentHeight, contentHeightSettings,
         btnStretch, btnAuto, btnFixed, YAHOO;

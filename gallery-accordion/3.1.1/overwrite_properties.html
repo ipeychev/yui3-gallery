@@ -3,8 +3,7 @@
     <head>
         <meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>YUI3 Accordion widget - overwrite default properties</title>
 
-        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.1/build/cssreset/reset-min.css">
-        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/3.1.1/build/cssfonts/fonts-min.css">
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.1.1/build/cssreset/reset-min.css&3.1.1/build/cssfonts/fonts-min.css">
 
         <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCore.css">
         <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shThemeDefault.css">
@@ -89,17 +88,18 @@
             <h1>Step one: add Accordion to your YUI instance</h1>
 
             <p>
-                In order to use Accordion widget, you have to add it as external module in your YUI instance or include the JavaScript and CSS files manually on the page.
+                In order to load Accordion widget to your YUI instance, the easiest way is to let the Loader do it:
             </p>
 
 <pre class="brush: html;">
-<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.1.1/build/cssreset/reset-min.css&3.1.1/build/cssfonts/fonts-min.css&gallery-2010.05.19-19-08/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
 
 <script type="text/javascript" src="http://yui.yahooapis.com/3.1.1/build/yui/yui-min.js"></script>
-<script type="text/javascript" src="http://yui.yahooapis.com/gallery-2010.05.12-19-08/build/gallery-accordion/gallery-accordion-min.js"></script>
 
 <script type="text/javascript">
-    YUI().use( 'gallery-accordion', 'dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
+    YUI({
+        gallery : 'gallery-2010.05.19-19-08'
+    }).use( 'gallery-accordion', 'dd-constrain', 'dd-proxy', 'dd-drop', function(Y) {
         // Your code here
     });
 </script>
@@ -119,7 +119,7 @@ var accordion;
 
 accordion = new Y.Accordion({
     srcNode: "#acc1",
-    useAnimation: false,
+    useAnimation: true,
     animation: {
         duration: 1.5,
         easing: Y.Easing.backIn
