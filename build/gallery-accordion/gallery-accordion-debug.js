@@ -519,9 +519,10 @@ Y.Accordion = Y.Base.create( AccName, Y.Widget, [], {
      * @return {Number} The calculated height per strech item
      */
     _adjustStretchItems: function(){
-        var items = this.get( ITEMS ), heightPerStretchItem;
+        var items = this.get( ITEMS ), heightPerStretchItem, forExpanding;
 
         heightPerStretchItem = this._getHeightPerStretchItem();
+        forExpanding = this._forExpanding;
 
         Y.Array.each( items, function( item, index, items ){
             var body, bodyHeight, anim, heightSettings, expanded;
@@ -529,7 +530,7 @@ Y.Accordion = Y.Base.create( AccName, Y.Widget, [], {
             heightSettings = item.get( CONTENT_HEIGHT );
             expanded      = item.get( EXPANDED );
 
-            if( heightSettings.method === STRETCH && expanded ){
+            if( !forExpanding[ item ] && heightSettings.method === STRETCH && expanded ){
                 anim = this._animations[ item ];
 
                 // stop waiting animation
