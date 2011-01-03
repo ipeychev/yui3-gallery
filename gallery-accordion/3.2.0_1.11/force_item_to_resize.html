@@ -1,0 +1,170 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+
+<html>
+  <head>
+    <title>Accordion - force an "auto" item to resize</title>
+
+    <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.2.0/build/cssreset/reset-min.css&3.2.0/build/cssfonts/fonts-min.css&gallery-2011.01.03-18-30/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+
+    <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCore.css">
+    <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shThemeDefault.css">
+
+    <style type="text/css">
+            html, body {
+                height:100%;
+                background-color: #F2FBFF;
+            }
+
+            h2 {
+                font-size:150%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            p {
+                line-height: 1.6em;
+            }
+
+            .main_cont {
+                width: 1024px;
+                height: 700px;
+            }
+
+            .descr {
+                margin-left: 50px;
+            }
+
+            .example {
+                width: 900px;
+            }
+
+            .acc_container1 {
+                position: relative;
+                width: 450px;
+                height: 600px;
+                float: left;
+                margin-right: 50px;
+                margin-left: 50px;
+            }
+        </style>
+
+     <script type="text/javascript" src="http://yui.yahooapis.com/3.2.0/build/yui/yui-min.js"></script>
+  </head>
+  <body class="yui3-skin-sam">
+      <div class="descr">
+          <h2>Force an "auto" item to resize</h2>
+          <p>If you are updating the content of AccordionItem directly (via "innerHTML") and its 'contentHeight' property has been set to "auto", you may have to force the item to update its height.</p>
+          <p>In order to do that, you should invoke <a href="apidocs/AccordionItem.html#method_resize">resize</a> function. It will recalculate and update (if needed) the height of this item and all other expanded and stretched items.</p>
+      </div>
+
+      <div class="example">
+          <pre class="brush: html;">
+            accordion1.on( "beforeItemExpand", function( attrs ){
+                var item = attrs.item;
+
+                if( item.get('id') === "item1" &&
+                    item.getStdModNode('body').get('children').size() === 0 ){
+
+                    item.set( "bodyContent", '<div id="db_container">Loading, please wait...</div>' );
+
+                    Y.later(1500, this, function(){
+                        var dbCont = Y.get( "#db_container" );
+                        dbCont.set( "innerHTML",
+                            ['<div id="content_loaded_from_db">',
+                                'This is content, inserted via "innerHTML".<br>In this case, you have to invoke the <a href="apidocs/AccordionItem.html#method_resize">resize</a> function.',
+                            '</div>'].join('') );
+                        item.resize();
+                   });
+                }
+            }, this );
+
+
+            accordion1.render();
+        });
+    </pre>
+     </div>
+
+      <div class="main_cont">
+          <div class="example" style="margin-left: 50px;margin-bottom: 20px;">
+              <p>Click on the first item in order to load content dynamically:</p>
+          </div>
+
+          <div id="acc_container" class="acc_container1">
+              <div id="acc1" class="yui3-accordion">
+                    <div id="item1" class="yui3-accordion-item">
+                        <div class="yui3-widget-hd">
+                            <a class="yui3-accordion-item-label">Label 1 from markup</a>
+                        </div>
+                    </div>
+                    <div id="item2" class="yui3-accordion-item" data-contentheight="stretch" data-alwaysvisible="true">
+                        <div class="yui3-widget-hd">
+                            <a class="yui3-accordion-item-label">Label 2 from markup</a>
+                        </div>
+                        <div class="yui3-widget-bd">
+                            <div style="position: relative; height: 100%; overflow:auto;">
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut rhoncus libero a ipsum iaculis euismod. Quisque ac enim a ipsum ornare bibendum condimentum nec quam. Quisque viverra gravida velit vel interdum. Pellentesque id quam non odio dictum mattis ut ut erat. Mauris convallis sodales risus, at placerat purus vestibulum nec. Phasellus ac lectus dui. Nunc quam eros, suscipit et venenatis sit amet, hendrerit at sapien. Vivamus non odio arcu. Vestibulum id neque sapien, vel sollicitudin augue. Proin vel velit nulla.<br>
+                                In hac habitasse platea dictumst. Sed velit ante, semper eget accumsan sed, posuere ut turpis. Duis lacinia massa fringilla urna venenatis non feugiat lectus faucibus. Cras quis dui vel turpis commodo rutrum vel et neque. Nulla vestibulum pharetra ante, nec mollis libero ultricies eget. Quisque tempor urna sed justo lacinia eleifend. Duis eget nisl augue, quis lacinia lorem. Maecenas sed mi quis lacus euismod adipiscing eget non ante. Praesent sagittis rhoncus enim, at pretium purus placerat sit amet. Nunc porta turpis id turpis tristique ac facilisis felis gravida. Vivamus neque ante, fermentum fringilla bibendum dapibus, cursus sit amet est. Proin porta hendrerit aliquam. In hac habitasse platea dictumst. In nec diam in libero mollis sollicitudin sit amet non dolor. In sed adipiscing elit. Duis aliquam sapien et ligula dictum pharetra. Vivamus posuere odio gravida sapien vehicula scelerisque. Donec nunc neque, faucibus vel volutpat a, pulvinar ac odio.
+                            </div>
+                        </div>
+                   </div>
+                   <div id="item3" class="yui3-accordion-item" data-contentheight="stretch" data-alwaysvisible="1">
+                       <div class="yui3-widget-hd">
+                           <a class="yui3-accordion-item-label">Label 3 from markup</a>
+                       </div>
+                       <div class="yui3-widget-bd">
+                           <div style="position: relative; height: 100%; overflow:auto;">
+                               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut rhoncus libero a ipsum iaculis euismod. Quisque ac enim a ipsum ornare bibendum condimentum nec quam. Quisque viverra gravida velit vel interdum. Pellentesque id quam non odio dictum mattis ut ut erat. Mauris convallis sodales risus, at placerat purus vestibulum nec. Phasellus ac lectus dui. Nunc quam eros, suscipit et venenatis sit amet, hendrerit at sapien. Vivamus non odio arcu. Vestibulum id neque sapien, vel sollicitudin augue. Proin vel velit nulla.<br>
+                               In hac habitasse platea dictumst. Sed velit ante, semper eget accumsan sed, posuere ut turpis. Duis lacinia massa fringilla urna venenatis non feugiat lectus faucibus. Cras quis dui vel turpis commodo rutrum vel et neque. Nulla vestibulum pharetra ante, nec mollis libero ultricies eget. Quisque tempor urna sed justo lacinia eleifend. Duis eget nisl augue, quis lacinia lorem. Maecenas sed mi quis lacus euismod adipiscing eget non ante. Praesent sagittis rhoncus enim, at pretium purus placerat sit amet. Nunc porta turpis id turpis tristique ac facilisis felis gravida. Vivamus neque ante, fermentum fringilla bibendum dapibus, cursus sit amet est. Proin porta hendrerit aliquam. In hac habitasse platea dictumst. In nec diam in libero mollis sollicitudin sit amet non dolor. In sed adipiscing elit. Duis aliquam sapien et ligula dictum pharetra. Vivamus posuere odio gravida sapien vehicula scelerisque. Donec nunc neque, faucibus vel volutpat a, pulvinar ac odio.
+                           </div>
+                       </div>
+                   </div>
+              </div>
+           </div>
+      </div>
+          
+      <script type="text/javascript">
+          YUI({
+            gallery : 'gallery-2011.01.03-18-30'
+          }).use( 'dd-constrain', 'dd-proxy', 'dd-drop', 'gallery-accordion', function(Y) {
+            var accordion1 = new Y.Accordion( {
+                srcNode: "#acc1",
+                reorderItems: true
+            });
+
+            accordion1.on( "beforeItemExpand", function( attrs ){
+                var item = attrs.item;
+
+                if( item.get('id') === "item1" &&
+                    item.getStdModNode('body').get('children').size() === 0 ){
+
+                    item.set( "bodyContent", '<div id="db_container">Loading, please wait...</div>' );
+                    
+                    Y.later(1500, this, function(){
+                        var dbCont = Y.get( "#db_container" );
+                        dbCont.set( "innerHTML",
+                            ['<div id="content_loaded_from_db">',
+                                'This is content, inserted via "innerHTML".<br>In this case, you have to invoke the <a href="apidocs/AccordionItem.html#method_resize">resize</a> function.',
+                            '</div>'].join('') );
+                        item.resize();
+                   });
+                }
+            }, this );
+
+
+            accordion1.render();
+        });
+      </script>
+
+
+      <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+      <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushCss.js"></script>
+      <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.js"></script>
+      <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.js"></script>
+
+      <script type="text/javascript">
+          SyntaxHighlighter.config.clipboardSwf = 'syntaxhighlighter/scripts/clipboard.swf';
+          SyntaxHighlighter.all();
+      </script>
+  </body>
+</html>

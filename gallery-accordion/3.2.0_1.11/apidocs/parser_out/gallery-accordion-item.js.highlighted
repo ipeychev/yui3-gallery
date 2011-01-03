@@ -1,0 +1,1110 @@
+<div class="highlight"><pre><span class="cm">/**</span>
+<span class="cm"> * Provides AccordionItem class</span>
+<span class="cm"> *</span>
+<span class="cm"> * @module gallery-accordion</span>
+<span class="cm"> */</span>
+
+<span class="p">(</span><span class="kd">function</span><span class="p">(){</span>
+
+<span class="c1">// Local constants</span>
+<span class="kd">var</span> <span class="nx">Lang</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Lang</span><span class="p">,</span>
+    <span class="nx">Node</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Node</span><span class="p">,</span>
+    <span class="nx">JSON</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">JSON</span><span class="p">,</span>
+    <span class="nx">WidgetStdMod</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">WidgetStdMod</span><span class="p">,</span>
+    <span class="nx">AccItemName</span> <span class="o">=</span> <span class="s2">&quot;accordion-item&quot;</span><span class="p">,</span>
+    <span class="nx">getCN</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">ClassNameManager</span><span class="p">.</span><span class="nx">getClassName</span><span class="p">,</span>
+    
+    <span class="nx">C_ICONEXPANDED_EXPANDING</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconexpanded&quot;</span><span class="p">,</span> <span class="s2">&quot;expanding&quot;</span> <span class="p">),</span>
+    <span class="nx">C_ICONEXPANDED_COLLAPSING</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconexpanded&quot;</span><span class="p">,</span> <span class="s2">&quot;collapsing&quot;</span> <span class="p">),</span>
+
+    <span class="nx">C_ICON</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;icon&quot;</span> <span class="p">),</span>
+    <span class="nx">C_LABEL</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;label&quot;</span> <span class="p">),</span>
+    <span class="nx">C_ICONALWAYSVISIBLE</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconalwaysvisible&quot;</span> <span class="p">),</span>
+    <span class="nx">C_ICONSCONTAINER</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;icons&quot;</span> <span class="p">),</span>
+    <span class="nx">C_ICONEXPANDED</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconexpanded&quot;</span> <span class="p">),</span>
+    <span class="nx">C_ICONCLOSE</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconclose&quot;</span> <span class="p">),</span>
+    <span class="nx">C_ICONCLOSE_HIDDEN</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconclose&quot;</span><span class="p">,</span> <span class="s2">&quot;hidden&quot;</span> <span class="p">),</span>
+
+    <span class="nx">C_ICONEXPANDED_ON</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconexpanded&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span> <span class="p">),</span>
+    <span class="nx">C_ICONEXPANDED_OFF</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconexpanded&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span> <span class="p">),</span>
+
+    <span class="nx">C_ICONALWAYSVISIBLE_ON</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconalwaysvisible&quot;</span><span class="p">,</span> <span class="s2">&quot;on&quot;</span> <span class="p">),</span>
+    <span class="nx">C_ICONALWAYSVISIBLE_OFF</span> <span class="o">=</span> <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;iconalwaysvisible&quot;</span><span class="p">,</span> <span class="s2">&quot;off&quot;</span> <span class="p">),</span>
+
+    <span class="nx">C_EXPANDED</span> <span class="o">=</span>  <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;expanded&quot;</span> <span class="p">),</span>
+    <span class="nx">C_CLOSABLE</span> <span class="o">=</span>  <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;closable&quot;</span> <span class="p">),</span>
+    <span class="nx">C_ALWAYSVISIBLE</span> <span class="o">=</span>  <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;alwaysvisible&quot;</span> <span class="p">),</span>
+    <span class="nx">C_CONTENTHEIGHT</span> <span class="o">=</span>  <span class="nx">getCN</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="s2">&quot;contentheight&quot;</span> <span class="p">),</span>
+
+    <span class="nx">TITLE</span> <span class="o">=</span> <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+    <span class="nx">STRINGS</span> <span class="o">=</span> <span class="s2">&quot;strings&quot;</span><span class="p">,</span>
+    <span class="nx">RENDERED</span> <span class="o">=</span> <span class="s2">&quot;rendered&quot;</span><span class="p">,</span>
+    <span class="nx">CLASS_NAME</span> <span class="o">=</span> <span class="s2">&quot;className&quot;</span><span class="p">,</span>
+    <span class="nx">AUTO</span> <span class="o">=</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="nx">STRETCH</span> <span class="o">=</span> <span class="s2">&quot;stretch&quot;</span><span class="p">,</span>
+    <span class="nx">FIXED</span> <span class="o">=</span> <span class="s2">&quot;fixed&quot;</span><span class="p">,</span>
+    <span class="nx">HEADER_SELECTOR</span> <span class="o">=</span> <span class="s2">&quot;.yui3-widget-hd&quot;</span><span class="p">,</span>
+    <span class="nx">DOT</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span>
+    <span class="nx">HEADER_SELECTOR_SUB</span> <span class="o">=</span> <span class="s2">&quot;.yui3-widget-hd &quot;</span> <span class="o">+</span> <span class="nx">DOT</span><span class="p">,</span>
+    <span class="nx">INNER_HTML</span> <span class="o">=</span> <span class="s2">&quot;innerHTML&quot;</span><span class="p">,</span>
+    <span class="nx">ICONS_CONTAINER</span> <span class="o">=</span> <span class="s2">&quot;iconsContainer&quot;</span><span class="p">,</span>
+    <span class="nx">ICON</span> <span class="o">=</span> <span class="s2">&quot;icon&quot;</span><span class="p">,</span>
+    <span class="nx">NODE_LABEL</span> <span class="o">=</span> <span class="s2">&quot;nodeLabel&quot;</span><span class="p">,</span>
+    <span class="nx">ICON_ALWAYSVISIBLE</span> <span class="o">=</span> <span class="s2">&quot;iconAlwaysVisible&quot;</span><span class="p">,</span>
+    <span class="nx">ICON_EXPANDED</span> <span class="o">=</span> <span class="s2">&quot;iconExpanded&quot;</span><span class="p">,</span>
+    <span class="nx">ICON_CLOSE</span> <span class="o">=</span> <span class="s2">&quot;iconClose&quot;</span><span class="p">,</span>
+    <span class="nx">HREF</span> <span class="o">=</span> <span class="s2">&quot;href&quot;</span><span class="p">,</span>
+    <span class="nx">HREF_VALUE</span> <span class="o">=</span> <span class="s2">&quot;#&quot;</span><span class="p">,</span>
+    <span class="nx">YUICONFIG</span> <span class="o">=</span> <span class="s2">&quot;yuiConfig&quot;</span><span class="p">,</span>
+
+    <span class="nx">REGEX_TRUE</span> <span class="o">=</span> <span class="sr">/^(?:true|yes|1)$/</span><span class="p">,</span>
+    <span class="nx">REGEX_AUTO</span> <span class="o">=</span> <span class="sr">/^auto\s*/</span><span class="p">,</span>
+    <span class="nx">REGEX_STRETCH</span> <span class="o">=</span> <span class="sr">/^stretch\s*/</span><span class="p">,</span>
+    <span class="nx">REGEX_FIXED</span> <span class="o">=</span> <span class="sr">/^fixed-\d+/</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Create an AccordionItem widget.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @class AccordionItem</span>
+<span class="cm"> * @extends Widget</span>
+<span class="cm"> */</span>
+
+<span class="nx">Y</span><span class="p">.</span><span class="nx">AccordionItem</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Base</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span> <span class="nx">AccItemName</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">Widget</span><span class="p">,</span> <span class="p">[</span><span class="nx">Y</span><span class="p">.</span><span class="nx">WidgetStdMod</span><span class="p">],</span> <span class="p">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Creates the header content</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _createHeader</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_createHeader</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">closable</span><span class="p">,</span> <span class="nx">templates</span><span class="p">,</span> <span class="nx">strings</span><span class="p">,</span>  <span class="nx">iconsContainer</span><span class="p">,</span>
+            <span class="nx">icon</span><span class="p">,</span> <span class="nx">nodeLabel</span><span class="p">,</span> <span class="nx">iconExpanded</span><span class="p">,</span> <span class="nx">iconAlwaysVisible</span><span class="p">,</span> <span class="nx">iconClose</span><span class="p">;</span>
+
+        <span class="nx">icon</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON</span> <span class="p">);</span>
+        <span class="nx">nodeLabel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">NODE_LABEL</span> <span class="p">);</span>
+        <span class="nx">iconExpanded</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_EXPANDED</span> <span class="p">);</span>
+        <span class="nx">iconAlwaysVisible</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_ALWAYSVISIBLE</span> <span class="p">);</span>
+        <span class="nx">iconClose</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_CLOSE</span> <span class="p">);</span>
+        <span class="nx">iconsContainer</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICONS_CONTAINER</span> <span class="p">);</span>
+
+        <span class="nx">strings</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">STRINGS</span> <span class="p">);</span>
+        <span class="nx">closable</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;closable&quot;</span> <span class="p">);</span>
+        <span class="nx">templates</span> <span class="o">=</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">AccordionItem</span><span class="p">.</span><span class="nx">TEMPLATES</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">icon</span> <span class="p">){</span>
+            <span class="nx">icon</span> <span class="o">=</span> <span class="nx">Node</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span> <span class="nx">templates</span><span class="p">.</span><span class="nx">icon</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">ICON</span><span class="p">,</span> <span class="nx">icon</span> <span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">nodeLabel</span> <span class="p">){</span>
+            <span class="nx">nodeLabel</span> <span class="o">=</span> <span class="nx">Node</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span> <span class="nx">templates</span><span class="p">.</span><span class="nx">label</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">NODE_LABEL</span><span class="p">,</span> <span class="nx">nodeLabel</span> <span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">nodeLabel</span><span class="p">.</span><span class="nx">hasAttribute</span><span class="p">(</span> <span class="nx">HREF</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="nx">nodeLabel</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span> <span class="nx">HREF</span><span class="p">,</span> <span class="nx">HREF_VALUE</span> <span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nx">nodeLabel</span><span class="p">.</span><span class="nx">setContent</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;label&quot;</span> <span class="p">)</span> <span class="p">);</span>
+
+
+        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconsContainer</span> <span class="p">){</span>
+            <span class="nx">iconsContainer</span> <span class="o">=</span> <span class="nx">Node</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span> <span class="nx">templates</span><span class="p">.</span><span class="nx">iconsContainer</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">ICONS_CONTAINER</span><span class="p">,</span> <span class="nx">iconsContainer</span> <span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconAlwaysVisible</span> <span class="p">){</span>
+            <span class="nx">iconAlwaysVisible</span> <span class="o">=</span> <span class="nx">Node</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span> <span class="nx">templates</span><span class="p">.</span><span class="nx">iconAlwaysVisible</span> <span class="p">);</span>
+            <span class="nx">iconAlwaysVisible</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span> <span class="nx">TITLE</span><span class="p">,</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">title_always_visible_off</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">ICON_ALWAYSVISIBLE</span><span class="p">,</span> <span class="nx">iconAlwaysVisible</span> <span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconAlwaysVisible</span><span class="p">.</span><span class="nx">hasAttribute</span><span class="p">(</span> <span class="nx">HREF</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="nx">iconAlwaysVisible</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span> <span class="nx">HREF</span><span class="p">,</span> <span class="nx">HREF_VALUE</span> <span class="p">);</span>
+        <span class="p">}</span>
+
+
+        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconExpanded</span> <span class="p">){</span>
+            <span class="nx">iconExpanded</span> <span class="o">=</span> <span class="nx">Node</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span> <span class="nx">templates</span><span class="p">.</span><span class="nx">iconExpanded</span> <span class="p">);</span>
+            <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span> <span class="nx">TITLE</span><span class="p">,</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">title_iconexpanded_off</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">ICON_EXPANDED</span><span class="p">,</span> <span class="nx">iconExpanded</span> <span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">hasAttribute</span><span class="p">(</span> <span class="nx">HREF</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span> <span class="nx">HREF</span><span class="p">,</span> <span class="nx">HREF_VALUE</span> <span class="p">);</span>
+        <span class="p">}</span>
+
+
+        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconClose</span> <span class="p">){</span>
+            <span class="nx">iconClose</span> <span class="o">=</span> <span class="nx">Node</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span> <span class="nx">templates</span><span class="p">.</span><span class="nx">iconClose</span> <span class="p">);</span>
+            <span class="nx">iconClose</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span> <span class="nx">TITLE</span><span class="p">,</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">title_iconclose</span> <span class="p">);</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">ICON_CLOSE</span><span class="p">,</span> <span class="nx">iconClose</span> <span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconClose</span><span class="p">.</span><span class="nx">hasAttribute</span><span class="p">(</span> <span class="nx">HREF</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="nx">iconClose</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span> <span class="nx">HREF</span><span class="p">,</span> <span class="nx">HREF_VALUE</span> <span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">closable</span> <span class="p">){</span>
+            <span class="nx">iconClose</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span> <span class="nx">C_ICONCLOSE_HIDDEN</span> <span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nx">iconClose</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span> <span class="nx">C_ICONCLOSE_HIDDEN</span> <span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">this</span><span class="p">.</span><span class="nx">_addHeaderComponents</span><span class="p">();</span>
+    <span class="p">},</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Add label and icons in the header. Also, it creates header in if not set from markup</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _addHeaderComponents</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_addHeaderComponents</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">header</span><span class="p">,</span> <span class="nx">icon</span><span class="p">,</span> <span class="nx">nodeLabel</span><span class="p">,</span> <span class="nx">iconsContainer</span><span class="p">,</span> <span class="nx">iconExpanded</span><span class="p">,</span>
+            <span class="nx">iconAlwaysVisible</span><span class="p">,</span> <span class="nx">iconClose</span><span class="p">;</span>
+
+        <span class="nx">icon</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON</span> <span class="p">);</span>
+        <span class="nx">nodeLabel</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">NODE_LABEL</span> <span class="p">);</span>
+        <span class="nx">iconExpanded</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_EXPANDED</span> <span class="p">);</span>
+        <span class="nx">iconAlwaysVisible</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_ALWAYSVISIBLE</span> <span class="p">);</span>
+        <span class="nx">iconClose</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_CLOSE</span> <span class="p">);</span>
+        <span class="nx">iconsContainer</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICONS_CONTAINER</span> <span class="p">);</span>
+
+        <span class="nx">header</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">getStdModNode</span><span class="p">(</span> <span class="nx">WidgetStdMod</span><span class="p">.</span><span class="nx">HEADER</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">header</span> <span class="p">){</span>
+            <span class="nx">header</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Node</span><span class="p">(</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createDocumentFragment</span><span class="p">()</span> <span class="p">);</span>
+            <span class="nx">header</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">icon</span> <span class="p">);</span>
+            <span class="nx">header</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">nodeLabel</span> <span class="p">);</span>
+            <span class="nx">header</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">iconsContainer</span> <span class="p">);</span>
+            <span class="nx">iconsContainer</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">iconAlwaysVisible</span> <span class="p">);</span>
+            <span class="nx">iconsContainer</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">iconExpanded</span> <span class="p">);</span>
+            <span class="nx">iconsContainer</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">iconClose</span> <span class="p">);</span>
+
+            <span class="k">this</span><span class="p">.</span><span class="nx">setStdModContent</span><span class="p">(</span> <span class="nx">WidgetStdMod</span><span class="p">.</span><span class="nx">HEADER</span><span class="p">,</span> <span class="nx">header</span><span class="p">,</span> <span class="nx">WidgetStdMod</span><span class="p">.</span><span class="nx">REPLACE</span> <span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">header</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span> <span class="nx">icon</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="k">if</span><span class="p">(</span> <span class="nx">header</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span> <span class="nx">nodeLabel</span> <span class="p">)</span> <span class="p">){</span>
+                    <span class="nx">header</span><span class="p">.</span><span class="nx">insertBefore</span><span class="p">(</span> <span class="nx">icon</span><span class="p">,</span> <span class="nx">nodeLabel</span> <span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nx">header</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">icon</span> <span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">header</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span> <span class="nx">nodeLabel</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">header</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">nodeLabel</span> <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">header</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span> <span class="nx">iconsContainer</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">header</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">iconsContainer</span> <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconsContainer</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span> <span class="nx">iconAlwaysVisible</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconsContainer</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">iconAlwaysVisible</span> <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconsContainer</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span> <span class="nx">iconExpanded</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconsContainer</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">iconExpanded</span> <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconsContainer</span><span class="p">.</span><span class="nx">contains</span><span class="p">(</span> <span class="nx">iconClose</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconsContainer</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span> <span class="nx">iconClose</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Handles the change of &quot;labelChanged&quot; property. Updates item&#39;s UI with the label provided</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _labelChanged</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     * @param params {EventFacade} The event facade for the attribute change</span>
+<span class="cm">     */</span>
+    <span class="nx">_labelChanged</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">label</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">RENDERED</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="nx">label</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">NODE_LABEL</span> <span class="p">);</span>
+            <span class="nx">label</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">INNER_HTML</span><span class="p">,</span> <span class="nx">params</span><span class="p">.</span><span class="nx">newVal</span> <span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Handles the change of &quot;closableChanged&quot; property. Hides or shows close icon</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _closableChanged</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     * @param params {EventFacade} The event facade for the attribute change</span>
+<span class="cm">     */</span>
+    <span class="nx">_closableChanged</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">params</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">iconClose</span><span class="p">;</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">RENDERED</span> <span class="p">)</span> <span class="p">){</span>
+            <span class="nx">iconClose</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_CLOSE</span> <span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">params</span><span class="p">.</span><span class="nx">newVal</span> <span class="p">){</span>
+                <span class="nx">iconClose</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span> <span class="nx">C_ICONCLOSE_HIDDEN</span> <span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">iconClose</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span> <span class="nx">C_ICONCLOSE_HIDDEN</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Initializer lifecycle implementation for the AccordionItem class.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method initializer</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     * @param  config {Object} Configuration object literal for the AccordionItem</span>
+<span class="cm">     */</span>
+    <span class="nx">initializer</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">config</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">after</span><span class="p">(</span> <span class="s2">&quot;labelChange&quot;</span><span class="p">,</span>  <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_labelChanged</span><span class="p">,</span> <span class="k">this</span> <span class="p">)</span> <span class="p">);</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">after</span><span class="p">(</span> <span class="s2">&quot;closableChange&quot;</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_closableChanged</span><span class="p">,</span> <span class="k">this</span> <span class="p">)</span> <span class="p">);</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Destructor lifecycle implementation for the AccordionItem class.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method destructor</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">destructor</span> <span class="o">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="c1">// EMPTY</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Creates AccordionItem&#39;s header.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method renderUI</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">renderUI</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">_createHeader</span><span class="p">();</span>
+    <span class="p">},</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Configures/Sets up listeners to bind Widget State to UI/DOM</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method bindUI</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">bindUI</span><span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="kd">var</span> <span class="nx">contentBox</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;contentBox&quot;</span> <span class="p">);</span>
+
+        <span class="nx">contentBox</span><span class="p">.</span><span class="nx">delegate</span><span class="p">(</span> <span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">bind</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_onLinkClick</span><span class="p">,</span> <span class="k">this</span> <span class="p">),</span> <span class="nx">HEADER_SELECTOR</span> <span class="o">+</span> <span class="s1">&#39; a&#39;</span> <span class="p">);</span>
+    <span class="p">},</span>
+
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Prevent default action on clicking the link in the label</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _onLinkClick</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     *</span>
+<span class="cm">     * @param e {Event} The click event</span>
+<span class="cm">     */</span>
+    <span class="nx">_onLinkClick</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">e</span> <span class="p">){</span>
+        <span class="nx">e</span><span class="p">.</span><span class="nx">preventDefault</span><span class="p">();</span>
+    <span class="p">},</span>
+
+   <span class="cm">/**</span>
+<span class="cm">    * Marks the item as always visible by adding class to always visible icon.</span>
+<span class="cm">    * The icon will be updated only if needed.</span>
+<span class="cm">    *</span>
+<span class="cm">    * @method markAsAlwaysVisible</span>
+<span class="cm">    * @param alwaysVisible {Boolean} If true, the item should be marked as always visible.</span>
+<span class="cm">    * @return {Boolean} Return true if the icon has been updated, false if there was no need to update</span>
+<span class="cm">    */</span>
+    <span class="nx">markAsAlwaysVisible</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">iconAlwaysVisisble</span><span class="p">,</span> <span class="nx">strings</span><span class="p">;</span>
+
+        <span class="nx">iconAlwaysVisisble</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_ALWAYSVISIBLE</span> <span class="p">);</span>
+        <span class="nx">strings</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">STRINGS</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconAlwaysVisisble</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ICONALWAYSVISIBLE_ON</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconAlwaysVisisble</span><span class="p">.</span><span class="nx">replaceClass</span><span class="p">(</span> <span class="nx">C_ICONALWAYSVISIBLE_OFF</span><span class="p">,</span> <span class="nx">C_ICONALWAYSVISIBLE_ON</span> <span class="p">);</span>
+                <span class="nx">iconAlwaysVisisble</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">TITLE</span><span class="p">,</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">title_always_visible_on</span> <span class="p">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nx">iconAlwaysVisisble</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ICONALWAYSVISIBLE_ON</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconAlwaysVisisble</span><span class="p">.</span><span class="nx">replaceClass</span><span class="p">(</span> <span class="nx">C_ICONALWAYSVISIBLE_ON</span><span class="p">,</span> <span class="nx">C_ICONALWAYSVISIBLE_OFF</span> <span class="p">);</span>
+                <span class="nx">iconAlwaysVisisble</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">TITLE</span><span class="p">,</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">title_always_visible_off</span> <span class="p">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">    * Marks the item as expanded by adding class to expand icon.</span>
+<span class="cm">    * The icon will be updated only if needed.</span>
+<span class="cm">    *</span>
+<span class="cm">    * @method markAsExpanded</span>
+<span class="cm">    * @param expanded {Boolean} Boolean indicating that item should be marked as expanded.</span>
+<span class="cm">    * @return {Boolean} Return true if the icon has been updated, false if there was no need to update</span>
+<span class="cm">    */</span>
+    <span class="nx">markAsExpanded</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">expanded</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">strings</span><span class="p">,</span> <span class="nx">iconExpanded</span><span class="p">;</span>
+
+        <span class="nx">iconExpanded</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_EXPANDED</span> <span class="p">);</span>
+        <span class="nx">strings</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">STRINGS</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">expanded</span> <span class="p">){</span>
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_ON</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">replaceClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_OFF</span><span class="p">,</span> <span class="nx">C_ICONEXPANDED_ON</span> <span class="p">);</span>
+                <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">TITLE</span> <span class="p">,</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">title_iconexpanded_on</span> <span class="p">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_ON</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">replaceClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_ON</span><span class="p">,</span> <span class="nx">C_ICONEXPANDED_OFF</span> <span class="p">);</span>
+                <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="nx">TITLE</span> <span class="p">,</span> <span class="nx">strings</span><span class="p">.</span><span class="nx">title_iconexpanded_off</span> <span class="p">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+   <span class="cm">/**</span>
+<span class="cm">    * Marks the item as expanding by adding class to expand icon.</span>
+<span class="cm">    * The method will update icon only if needed.</span>
+<span class="cm">    *</span>
+<span class="cm">    * @method markAsExpanding</span>
+<span class="cm">    * @param expanding {Boolean} Boolean indicating that the item should be marked as expanding.</span>
+<span class="cm">    * @return {Boolean} Return true if the icon has been updated, false if there was no need to update</span>
+<span class="cm">    */</span>
+    <span class="nx">markAsExpanding</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">expanding</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">iconExpanded</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_EXPANDED</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">expanding</span> <span class="p">){</span>
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_EXPANDING</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_EXPANDING</span> <span class="p">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_EXPANDING</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_EXPANDING</span> <span class="p">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+   <span class="cm">/**</span>
+<span class="cm">    * Marks the item as collapsing by adding class to expand icon.</span>
+<span class="cm">    * The method will update icon only if needed.</span>
+<span class="cm">    *</span>
+<span class="cm">    * @method markAsCollapsing</span>
+<span class="cm">    * @param collapsing {Boolean} Boolean indicating that the item should be marked as collapsing.</span>
+<span class="cm">    * @return {Boolean} Return true if the icon has been updated, false if there was no need to update</span>
+<span class="cm">    */</span>
+    <span class="nx">markAsCollapsing</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">collapsing</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">iconExpanded</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">ICON_EXPANDED</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">collapsing</span> <span class="p">){</span>
+            <span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_COLLAPSING</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">addClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_COLLAPSING</span> <span class="p">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span> <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_COLLAPSING</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">iconExpanded</span><span class="p">.</span><span class="nx">removeClass</span><span class="p">(</span> <span class="nx">C_ICONEXPANDED_COLLAPSING</span> <span class="p">);</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Forces the item to resize as result of direct content manipulation (via &#39;innerHTML&#39;).</span>
+<span class="cm">     * This method should be invoked if &#39;contentHeight&#39; property has been set to &#39;auto&#39;.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method resize</span>
+<span class="cm">     */</span>
+    <span class="nx">resize</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(){</span>
+        <span class="k">this</span><span class="p">.</span><span class="nx">fire</span><span class="p">(</span> <span class="s2">&quot;contentUpdate&quot;</span> <span class="p">);</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Parses and returns the value of contentHeight property, if set method &quot;fixed&quot;.</span>
+<span class="cm">     * The value must be in this format: fixed-X, where X is integer</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _extractFixedMethodValue</span>
+<span class="cm">     * @param value {String} The value to be parsed</span>
+<span class="cm">     * @return {Number} The parsed value or null</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_extractFixedMethodValue</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="kd">var</span> <span class="nx">i</span><span class="p">,</span> <span class="nx">length</span><span class="p">,</span> <span class="nx">chr</span><span class="p">,</span> <span class="nx">height</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+        <span class="k">for</span><span class="p">(</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">6</span><span class="p">,</span> <span class="nx">length</span> <span class="o">=</span> <span class="nx">value</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span> <span class="p">){</span> <span class="c1">// 6 = &quot;fixed-&quot;.length</span>
+            <span class="nx">chr</span> <span class="o">=</span> <span class="nx">value</span><span class="p">.</span><span class="nx">charAt</span><span class="p">(</span><span class="nx">i</span><span class="p">);</span>
+            <span class="nx">chr</span> <span class="o">=</span> <span class="nb">parseInt</span><span class="p">(</span> <span class="nx">chr</span><span class="p">,</span> <span class="mi">10</span> <span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span> <span class="nx">chr</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">height</span> <span class="o">=</span> <span class="p">(</span><span class="nx">height</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="nx">chr</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nx">height</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Validator applied to the icon attribute. Setting new value is not allowed if Accordion has been rendered.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _validateIcon</span>
+<span class="cm">     * @param value {MIXED} the value for the icon attribute</span>
+<span class="cm">     * @return {Boolean}</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_validateIcon</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">RENDERED</span><span class="p">)</span> <span class="o">||</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Validator applied to the nodeLabel attribute. Setting new value is not allowed if Accordion has been rendered.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _validateNodeLabel</span>
+<span class="cm">     * @param value {MIXED} the value for the nodeLabel attribute</span>
+<span class="cm">     * @return {Boolean}</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_validateNodeLabel</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">RENDERED</span><span class="p">)</span> <span class="o">||</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Validator applied to the iconsContainer attribute. Setting new value is not allowed if Accordion has been rendered.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _validateIconsContainer</span>
+<span class="cm">     * @param value {MIXED} the value for the iconsContainer attribute</span>
+<span class="cm">     * @return {Boolean}</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_validateIconsContainer</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">RENDERED</span><span class="p">)</span> <span class="o">||</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Validator applied to the iconExpanded attribute. Setting new value is not allowed if Accordion has been rendered.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _validateIconExpanded</span>
+<span class="cm">     * @param value {MIXED} the value for the iconExpanded attribute</span>
+<span class="cm">     * @return {Boolean}</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_validateIconExpanded</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">RENDERED</span><span class="p">)</span> <span class="o">||</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Validator applied to the iconAlwaysVisible attribute. Setting new value is not allowed if Accordion has been rendered.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _validateIconAlwaysVisible</span>
+<span class="cm">     * @param value {MIXED} the value for the iconAlwaysVisible attribute</span>
+<span class="cm">     * @return {Boolean}</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_validateIconAlwaysVisible</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">RENDERED</span><span class="p">)</span> <span class="o">||</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Validator applied to the iconClose attribute. Setting new value is not allowed if Accordion has been rendered.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _validateIconClose</span>
+<span class="cm">     * @param value {MIXED} the value for the iconClose attribute</span>
+<span class="cm">     * @return {Boolean}</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_validateIconClose</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="o">!</span><span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">RENDERED</span><span class="p">)</span> <span class="o">||</span> <span class="nx">value</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Setter applied to the input when updating the icon attribute.  Input can</span>
+<span class="cm">     * be a Node, raw HTMLElement, or a selector string to locate it.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _setIcon</span>
+<span class="cm">     * @param value {Node|HTMLElement|String} The icon element Node or selector</span>
+<span class="cm">     * @return {Node} The Node if found, null otherwise.</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_setIcon</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="k">return</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Setter applied to the input when updating the nodeLabel attribute.  Input can</span>
+<span class="cm">     * be a Node, raw HTMLElement, or a selector string to locate it.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _setNodeLabel</span>
+<span class="cm">     * @param value {Node|HTMLElement|String} The nodeLabel element Node or selector</span>
+<span class="cm">     * @return {Node} The Node if found, null otherwise.</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_setNodeLabel</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="k">return</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Setter applied to the input when updating the iconsContainer attribute.  Input can</span>
+<span class="cm">     * be a Node, raw HTMLElement, or a selector string to locate it.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _setIconsContainer</span>
+<span class="cm">     * @param value {Node|HTMLElement|String} The iconsContainer element Node or selector</span>
+<span class="cm">     * @return {Node} The Node if found, null otherwise.</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_setIconsContainer</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="k">return</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Setter applied to the input when updating the iconExpanded attribute.  Input can</span>
+<span class="cm">     * be a Node, raw HTMLElement, or a selector string to locate it.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _setIconExpanded</span>
+<span class="cm">     * @param value {Node|HTMLElement|String} The iconExpanded element Node or selector</span>
+<span class="cm">     * @return {Node} The Node if found, null otherwise.</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_setIconExpanded</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="k">return</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Setter applied to the input when updating the iconAlwaysVisible attribute.  Input can</span>
+<span class="cm">     * be a Node, raw HTMLElement, or a selector string to locate it.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _setIconAlwaysVisible</span>
+<span class="cm">     * @param value {Node|HTMLElement|String} The iconAlwaysVisible element Node or selector</span>
+<span class="cm">     * @return {Node} The Node if found, null otherwise.</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_setIconAlwaysVisible</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="k">return</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Setter applied to the input when updating the iconClose attribute.  Input can</span>
+<span class="cm">     * be a Node, raw HTMLElement, or a selector string to locate it.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _setIconClose</span>
+<span class="cm">     * @param value {Node|HTMLElement|String} The iconClose element Node or selector</span>
+<span class="cm">     * @return {Node} The Node if found, null otherwise.</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     */</span>
+    <span class="nx">_setIconClose</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+        <span class="k">return</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="o">||</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Overwrites Widget&#39;s _applyParser method in order to parse yuiConfig attribute before entering in HTML_PARSER attributes</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _applyParser</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     * @param config {Object} User configuration object (will be populated with values from Node)</span>
+<span class="cm">    */</span>
+    <span class="nx">_applyParser</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">config</span><span class="p">)</span> <span class="p">{</span>
+        <span class="kd">var</span> <span class="nx">srcNode</span><span class="p">;</span>
+
+        <span class="nx">srcNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="s2">&quot;srcNode&quot;</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span> <span class="nx">srcNode</span> <span class="p">){</span>
+            <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span> <span class="o">=</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="nx">YUICONFIG</span> <span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span> <span class="o">=</span> <span class="nx">JSON</span><span class="p">.</span><span class="nx">parse</span><span class="p">(</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="nx">Y</span><span class="p">.</span><span class="nx">AccordionItem</span><span class="p">.</span><span class="nx">superclass</span><span class="p">.</span><span class="nx">_applyParser</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span> <span class="p">);</span>
+
+        <span class="k">delete</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span><span class="p">;</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Overwrites Y.WidgetStdMod fuction in order to resolve Widget 3.1 issue:&lt;br&gt;</span>
+<span class="cm">     * If CONTENT_TEMPLATE is null, in renderUI the result of the following code:</span>
+<span class="cm">     * &lt;code&gt;this.getStdModNode( Y.WidgetStdMod.HEADER );&lt;/code&gt; is null.</span>
+<span class="cm">     * The same is with &lt;code&gt;this.getStdModNode( Y.WidgetStdMod.BODY );&lt;/code&gt;.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @method _findStdModSection</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     * @param {String} section The section for which the render Node is to be found. Either WidgetStdMod.HEADER, WidgetStdMod.BODY or WidgetStdMod.FOOTER.</span>
+<span class="cm">     * @return {Node} The rendered node for the given section, or null if not found.</span>
+<span class="cm">     */</span>
+    <span class="nx">_findStdModSection</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">section</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s2">&quot;srcNode&quot;</span><span class="p">).</span><span class="nx">one</span><span class="p">(</span><span class="s2">&quot;&gt; .&quot;</span> <span class="o">+</span> <span class="nx">Y</span><span class="p">.</span><span class="nx">WidgetStdMod</span><span class="p">.</span><span class="nx">SECTION_CLASS_NAMES</span><span class="p">[</span><span class="nx">section</span><span class="p">]);</span>
+    <span class="p">},</span>
+
+    <span class="nx">CONTENT_TEMPLATE</span> <span class="o">:</span> <span class="kc">null</span>
+<span class="p">},</span> <span class="p">{</span>
+    <span class="cm">/**</span>
+<span class="cm">     *  Static property provides a string to identify the class.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @property NAME</span>
+<span class="cm">     * @type String</span>
+<span class="cm">     * @static</span>
+<span class="cm">     */</span>
+    <span class="nx">NAME</span> <span class="o">:</span> <span class="nx">AccItemName</span><span class="p">,</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Static property used to define the default attribute</span>
+<span class="cm">     * configuration for the Accordion.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @property Accordion.ATTRS</span>
+<span class="cm">     * @type Object</span>
+<span class="cm">     * @static</span>
+<span class="cm">     */</span>
+    <span class="nx">ATTRS</span> <span class="o">:</span> <span class="p">{</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description The Node, representing item&#39;s icon</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute icon</span>
+<span class="cm">         * @default null</span>
+<span class="cm">         * @type Node</span>
+<span class="cm">         */</span>
+        <span class="nx">icon</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_validateIcon</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">},</span>
+            <span class="nx">setter</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_setIcon</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description The label of item</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute label</span>
+<span class="cm">         * @default &quot;&amp;#160;&quot;</span>
+<span class="cm">         * @type String</span>
+<span class="cm">         */</span>
+        <span class="nx">label</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="s2">&quot;&amp;#160;&quot;</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isString</span>
+        <span class="p">},</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description The node, which contains item&#39;s label</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute nodeLabel</span>
+<span class="cm">         * @default null</span>
+<span class="cm">         * @type Node</span>
+<span class="cm">         */</span>
+        <span class="nx">nodeLabel</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_validateNodeLabel</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">},</span>
+            <span class="nx">setter</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_setNodeLabel</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description The container of iconAlwaysVisible, iconExpanded and iconClose</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute iconsContainer</span>
+<span class="cm">         * @default null</span>
+<span class="cm">         * @type Node</span>
+<span class="cm">         */</span>
+        <span class="nx">iconsContainer</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_validateIconsContainer</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">},</span>
+            <span class="nx">setter</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_setIconsContainer</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description The Node, representing icon expanded</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute iconExpanded</span>
+<span class="cm">         * @default null</span>
+<span class="cm">         * @type Node</span>
+<span class="cm">         */</span>
+        <span class="nx">iconExpanded</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_validateIconExpanded</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">},</span>
+            <span class="nx">setter</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_setIconExpanded</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description The Node, representing icon always visible</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute iconAlwaysVisible</span>
+<span class="cm">         * @default null</span>
+<span class="cm">         * @type Node</span>
+<span class="cm">         */</span>
+        <span class="nx">iconAlwaysVisible</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_validateIconAlwaysVisible</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">},</span>
+            <span class="nx">setter</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_setIconAlwaysVisible</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description The Node, representing icon close, or null if the item is not closable</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute iconClose</span>
+<span class="cm">         * @default null</span>
+<span class="cm">         * @type Node</span>
+<span class="cm">         */</span>
+        <span class="nx">iconClose</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_validateIconClose</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">},</span>
+            <span class="nx">setter</span> <span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">_setIconClose</span><span class="p">(</span> <span class="nx">value</span> <span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description Get/Set expanded status of the item</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute expanded</span>
+<span class="cm">         * @default false</span>
+<span class="cm">         * @type Boolean</span>
+<span class="cm">         */</span>
+        <span class="nx">expanded</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span>
+        <span class="p">},</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description Describe the method, which will be used when expanding/collapsing</span>
+<span class="cm">         * the item. The value should be an object with at least one property (&quot;method&quot;):</span>
+<span class="cm">         *  &lt;dl&gt;</span>
+<span class="cm">         *      &lt;dt&gt;method&lt;/dt&gt;</span>
+<span class="cm">         *          &lt;dd&gt;The method can be one of these: &quot;auto&quot;, &quot;fixed&quot; and &quot;stretch&quot;&lt;/dd&gt;</span>
+<span class="cm">         *      &lt;dt&gt;height&lt;/dt&gt;</span>
+<span class="cm">         *          &lt;dd&gt;Must be set only if method&#39;s value is &quot;fixed&quot;&lt;/dd&gt;</span>
+<span class="cm">         *  &lt;/dl&gt;</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute contentHeight</span>
+<span class="cm">         * @default auto</span>
+<span class="cm">         * @type Object</span>
+<span class="cm">         */</span>
+        <span class="nx">contentHeight</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">method</span><span class="o">:</span> <span class="nx">AUTO</span>
+            <span class="p">},</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">value</span> <span class="p">){</span>
+                <span class="k">if</span><span class="p">(</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span><span class="p">(</span> <span class="nx">value</span> <span class="p">)</span> <span class="p">){</span>
+                    <span class="k">if</span><span class="p">(</span> <span class="nx">value</span><span class="p">.</span><span class="nx">method</span> <span class="o">===</span> <span class="nx">AUTO</span> <span class="p">){</span>
+                        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">value</span><span class="p">.</span><span class="nx">method</span> <span class="o">===</span> <span class="nx">STRETCH</span> <span class="p">){</span>
+                        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+                    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">value</span><span class="p">.</span><span class="nx">method</span> <span class="o">===</span> <span class="nx">FIXED</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isNumber</span><span class="p">(</span> <span class="nx">value</span><span class="p">.</span><span class="nx">height</span> <span class="p">)</span> <span class="o">&amp;&amp;</span>
+                        <span class="nx">value</span><span class="p">.</span><span class="nx">height</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">){</span>
+                        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+
+                <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description Get/Set always visible status of the item</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute alwaysVisible</span>
+<span class="cm">         * @default false</span>
+<span class="cm">         * @type Boolean</span>
+<span class="cm">         */</span>
+        <span class="nx">alwaysVisible</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span>
+        <span class="p">},</span>
+
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description Get/Set the animaton specific settings. By default there are no any settings.</span>
+<span class="cm">         * If set, they will overwrite Accordion&#39;s animation settings</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute animation</span>
+<span class="cm">         * @default {}</span>
+<span class="cm">         * @type Object</span>
+<span class="cm">         */</span>
+        <span class="nx">animation</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="p">{},</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isObject</span>
+        <span class="p">},</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description Provides client side string localization support.</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute strings</span>
+<span class="cm">         * @default Object English messages</span>
+<span class="cm">         * @type Object</span>
+<span class="cm">         */</span>
+        <span class="nx">strings</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">title_always_visible_off</span><span class="o">:</span> <span class="s2">&quot;Click to set always visible on&quot;</span><span class="p">,</span>
+                <span class="nx">title_always_visible_on</span><span class="o">:</span> <span class="s2">&quot;Click to set always visible off&quot;</span><span class="p">,</span>
+                <span class="nx">title_iconexpanded_off</span><span class="o">:</span> <span class="s2">&quot;Click to expand&quot;</span><span class="p">,</span>
+                <span class="nx">title_iconexpanded_on</span><span class="o">:</span> <span class="s2">&quot;Click to collapse&quot;</span><span class="p">,</span>
+                <span class="nx">title_iconclose</span><span class="o">:</span> <span class="s2">&quot;Click to close&quot;</span>
+            <span class="p">}</span>
+        <span class="p">},</span>
+
+        <span class="cm">/**</span>
+<span class="cm">         * @description Boolean indicating that the item can be closed by user.</span>
+<span class="cm">         * If true, there will be placed close icon, otherwise not</span>
+<span class="cm">         *</span>
+<span class="cm">         * @attribute closable</span>
+<span class="cm">         * @default false</span>
+<span class="cm">         * @type Boolean</span>
+<span class="cm">         */</span>
+        <span class="nx">closable</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">value</span><span class="o">:</span> <span class="kc">false</span><span class="p">,</span>
+            <span class="nx">validator</span><span class="o">:</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+
+
+    <span class="cm">/**</span>
+<span class="cm">     * Static Object hash used to capture existing markup for progressive</span>
+<span class="cm">     * enhancement.  Keys correspond to config attribute names and values</span>
+<span class="cm">     * are selectors used to inspect the srcNode for an existing node</span>
+<span class="cm">     * structure.</span>
+<span class="cm">     *</span>
+<span class="cm">     * @property HTML_PARSER</span>
+<span class="cm">     * @type Object</span>
+<span class="cm">     * @protected</span>
+<span class="cm">     * @static</span>
+<span class="cm">     */</span>
+    <span class="nx">HTML_PARSER</span> <span class="o">:</span> <span class="p">{</span>
+
+        <span class="nx">icon</span><span class="o">:</span> <span class="nx">HEADER_SELECTOR_SUB</span> <span class="o">+</span> <span class="nx">C_ICON</span><span class="p">,</span>
+
+        <span class="nx">label</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">srcNode</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">node</span><span class="p">,</span> <span class="nx">labelSelector</span><span class="p">,</span> <span class="nx">yuiConfig</span><span class="p">,</span> <span class="nx">label</span><span class="p">;</span>
+
+            <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isValue</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">label</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">label</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="nx">label</span> <span class="o">=</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-label&quot;</span> <span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">label</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="nx">label</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="nx">labelSelector</span> <span class="o">=</span> <span class="nx">HEADER_SELECTOR_SUB</span> <span class="o">+</span> <span class="nx">C_LABEL</span><span class="p">;</span>
+            <span class="nx">node</span> <span class="o">=</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">one</span><span class="p">(</span> <span class="nx">labelSelector</span> <span class="p">);</span>
+
+            <span class="k">return</span> <span class="p">(</span><span class="nx">node</span><span class="p">)</span> <span class="o">?</span> <span class="nx">node</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">INNER_HTML</span> <span class="p">)</span> <span class="o">:</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">},</span>
+
+        <span class="nx">nodeLabel</span><span class="o">:</span> <span class="nx">HEADER_SELECTOR_SUB</span> <span class="o">+</span> <span class="nx">C_LABEL</span><span class="p">,</span>
+
+        <span class="nx">iconsContainer</span><span class="o">:</span> <span class="nx">HEADER_SELECTOR_SUB</span> <span class="o">+</span> <span class="nx">C_ICONSCONTAINER</span><span class="p">,</span>
+
+        <span class="nx">iconAlwaysVisible</span><span class="o">:</span> <span class="nx">HEADER_SELECTOR_SUB</span> <span class="o">+</span> <span class="nx">C_ICONALWAYSVISIBLE</span><span class="p">,</span>
+
+        <span class="nx">iconExpanded</span><span class="o">:</span> <span class="nx">HEADER_SELECTOR_SUB</span> <span class="o">+</span> <span class="nx">C_ICONEXPANDED</span><span class="p">,</span>
+
+        <span class="nx">iconClose</span><span class="o">:</span> <span class="nx">HEADER_SELECTOR_SUB</span> <span class="o">+</span> <span class="nx">C_ICONCLOSE</span><span class="p">,</span>
+
+        <span class="nx">expanded</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">srcNode</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">yuiConfig</span><span class="p">,</span> <span class="nx">expanded</span><span class="p">;</span>
+
+            <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">expanded</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">expanded</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="nx">expanded</span> <span class="o">=</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-expanded&quot;</span> <span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">expanded</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">REGEX_TRUE</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">expanded</span> <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_EXPANDED</span> <span class="p">);</span>
+        <span class="p">},</span>
+
+        <span class="nx">alwaysVisible</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">srcNode</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">yuiConfig</span><span class="p">,</span> <span class="nx">alwaysVisible</span><span class="p">;</span>
+
+            <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">alwaysVisible</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">alwaysVisible</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-alwaysvisible&quot;</span> <span class="p">);</span>
+
+                <span class="k">if</span><span class="p">(</span> <span class="nx">alwaysVisible</span> <span class="p">)</span> <span class="p">{</span>
+                    <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">REGEX_TRUE</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">alwaysVisible</span> <span class="p">);</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                    <span class="nx">alwaysVisible</span> <span class="o">=</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_ALWAYSVISIBLE</span> <span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">alwaysVisible</span> <span class="p">){</span>
+                <span class="k">this</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span> <span class="s2">&quot;expanded&quot;</span><span class="p">,</span> <span class="kc">true</span><span class="p">,</span> <span class="p">{</span>
+                    <span class="nx">internalCall</span><span class="o">:</span> <span class="kc">true</span>
+                <span class="p">}</span> <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="nx">alwaysVisible</span><span class="p">;</span>
+        <span class="p">},</span>
+
+        <span class="nx">closable</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">srcNode</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">yuiConfig</span><span class="p">,</span> <span class="nx">closable</span><span class="p">;</span>
+
+            <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">Lang</span><span class="p">.</span><span class="nx">isBoolean</span><span class="p">(</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">closable</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">closable</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="nx">closable</span> <span class="o">=</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-closable&quot;</span> <span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">closable</span> <span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">REGEX_TRUE</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">closable</span> <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">hasClass</span><span class="p">(</span> <span class="nx">C_CLOSABLE</span> <span class="p">);</span>
+        <span class="p">},</span>
+
+        <span class="nx">contentHeight</span><span class="o">:</span> <span class="kd">function</span><span class="p">(</span> <span class="nx">srcNode</span> <span class="p">){</span>
+            <span class="kd">var</span> <span class="nx">contentHeightClass</span><span class="p">,</span> <span class="nx">classValue</span><span class="p">,</span> <span class="nx">height</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">index</span><span class="p">,</span> <span class="nx">yuiConfig</span><span class="p">,</span>
+                <span class="nx">contentHeight</span><span class="p">;</span>
+
+            <span class="nx">yuiConfig</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_parsedYUIConfig</span><span class="p">;</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">yuiConfig</span> <span class="o">&amp;&amp;</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">contentHeight</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="nx">yuiConfig</span><span class="p">.</span><span class="nx">contentHeight</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="nx">contentHeight</span> <span class="o">=</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">getAttribute</span><span class="p">(</span> <span class="s2">&quot;data-contentheight&quot;</span> <span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_AUTO</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">contentHeight</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="nx">method</span><span class="o">:</span> <span class="nx">AUTO</span>
+                <span class="p">};</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_STRETCH</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">contentHeight</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="nx">method</span><span class="o">:</span> <span class="nx">STRETCH</span>
+                <span class="p">};</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_FIXED</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">contentHeight</span> <span class="p">)</span> <span class="p">){</span>
+                <span class="nx">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFixedMethodValue</span><span class="p">(</span> <span class="nx">contentHeight</span> <span class="p">);</span>
+
+                <span class="k">return</span> <span class="p">{</span>
+                    <span class="nx">method</span><span class="o">:</span> <span class="nx">FIXED</span><span class="p">,</span>
+                    <span class="nx">height</span><span class="o">:</span> <span class="nx">height</span>
+                <span class="p">};</span>
+            <span class="p">}</span>
+
+
+            <span class="nx">classValue</span> <span class="o">=</span> <span class="nx">srcNode</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span> <span class="nx">CLASS_NAME</span> <span class="p">);</span>
+
+            <span class="nx">contentHeightClass</span> <span class="o">=</span> <span class="nx">C_CONTENTHEIGHT</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="p">;</span>
+
+            <span class="nx">index</span> <span class="o">=</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">indexOf</span><span class="p">(</span> <span class="nx">contentHeightClass</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+            <span class="k">if</span><span class="p">(</span> <span class="nx">index</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="p">){</span>
+                <span class="nx">index</span> <span class="o">+=</span> <span class="nx">contentHeightClass</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span>
+
+                <span class="nx">classValue</span> <span class="o">=</span> <span class="nx">classValue</span><span class="p">.</span><span class="nx">substring</span><span class="p">(</span> <span class="nx">index</span> <span class="p">);</span>
+
+                <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_AUTO</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">classValue</span> <span class="p">)</span> <span class="p">){</span>
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="nx">method</span><span class="o">:</span> <span class="nx">AUTO</span>
+                    <span class="p">};</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_STRETCH</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">classValue</span> <span class="p">)</span> <span class="p">){</span>
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="nx">method</span><span class="o">:</span> <span class="nx">STRETCH</span>
+                    <span class="p">};</span>
+                <span class="p">}</span> <span class="k">else</span> <span class="k">if</span><span class="p">(</span> <span class="nx">REGEX_FIXED</span><span class="p">.</span><span class="nx">test</span><span class="p">(</span> <span class="nx">classValue</span> <span class="p">)</span>  <span class="p">){</span>
+                    <span class="nx">height</span> <span class="o">=</span> <span class="k">this</span><span class="p">.</span><span class="nx">_extractFixedMethodValue</span><span class="p">(</span> <span class="nx">classValue</span> <span class="p">);</span>
+
+                    <span class="k">return</span> <span class="p">{</span>
+                        <span class="nx">method</span><span class="o">:</span> <span class="nx">FIXED</span><span class="p">,</span>
+                        <span class="nx">height</span><span class="o">:</span> <span class="nx">height</span>
+                    <span class="p">};</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">},</span>
+
+
+     <span class="cm">/**</span>
+<span class="cm">      * The template HTML strings for each of header components.</span>
+<span class="cm">      * e.g.</span>
+<span class="cm">      * &lt;pre&gt;</span>
+<span class="cm">      *    {</span>
+<span class="cm">      *       icon : &#39;&amp;lt;a class=&quot;yui3-accordion-item-icon&quot;&amp;gt;&amp;lt;/a&amp;gt;&#39;,</span>
+<span class="cm">      *       label: &#39;&amp;lt;a href=&quot;#&quot; class=&quot;yui3-accordion-item-label&quot;&amp;gt;&amp;lt;/a&amp;gt;&#39;,</span>
+<span class="cm">      *       iconsContainer: &#39;&amp;lt;div class=&quot;yui3-accordion-item-icons&quot;&amp;gt;&amp;lt;/div&amp;gt;&#39;,</span>
+<span class="cm">      *       iconAlwaysVisible: &#39;&amp;lt;a href=&quot;#&quot; class=&quot;yui3-accordion-item-iconalwaysvisible&quot;&amp;gt;&amp;lt;/a&amp;gt;&#39;,</span>
+<span class="cm">      *       iconExpanded: &#39;&amp;lt;a href=&quot;#&quot; class=&quot;yui3-accordion-item-iconexpanded&quot;&amp;gt;&amp;lt;/a&amp;gt;&#39;,</span>
+<span class="cm">      *       iconClose: &#39;&amp;lt;a href=&quot;#&quot; class=&quot;yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden&quot;&amp;gt;&amp;lt;/a&amp;gt;&#39;</span>
+<span class="cm">      *    }</span>
+<span class="cm">      * &lt;/pre&gt;</span>
+<span class="cm">      * @property WidgetStdMod.TEMPLATES</span>
+<span class="cm">      * @type Object</span>
+<span class="cm">      */</span>
+    <span class="nx">TEMPLATES</span> <span class="o">:</span> <span class="p">{</span>
+         <span class="nx">icon</span> <span class="o">:</span> <span class="s1">&#39;&lt;a class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">C_ICON</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&lt;/a&gt;&#39;</span><span class="p">,</span>
+         <span class="nx">label</span><span class="o">:</span> <span class="s1">&#39;&lt;a href=&quot;#&quot; class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">C_LABEL</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&lt;/a&gt;&#39;</span><span class="p">,</span>
+         <span class="nx">iconsContainer</span><span class="o">:</span> <span class="s1">&#39;&lt;div class=&quot;&#39;</span> <span class="o">+</span> <span class="nx">C_ICONSCONTAINER</span> <span class="o">+</span> <span class="s1">&#39;&quot;&gt;&lt;/div&gt;&#39;</span><span class="p">,</span>
+         <span class="nx">iconExpanded</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;&lt;a href=&quot;#&quot; class=&quot;&#39;</span><span class="p">,</span> <span class="nx">C_ICONEXPANDED</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="nx">C_ICONEXPANDED_OFF</span><span class="p">,</span> <span class="s1">&#39;&quot;&gt;&lt;/a&gt;&#39;</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+         <span class="nx">iconAlwaysVisible</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;&lt;a href=&quot;#&quot; class=&quot;&#39;</span><span class="p">,</span> <span class="nx">C_ICONALWAYSVISIBLE</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span>  <span class="nx">C_ICONALWAYSVISIBLE_OFF</span><span class="p">,</span> <span class="s1">&#39;&quot;&gt;&lt;/a&gt;&#39;</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">),</span>
+         <span class="nx">iconClose</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;&lt;a href=&quot;#&quot; class=&quot;&#39;</span><span class="p">,</span> <span class="nx">C_ICONCLOSE</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="nx">C_ICONCLOSE_HIDDEN</span><span class="p">,</span> <span class="s1">&#39;&quot;&gt;&lt;/a&gt;&#39;</span><span class="p">].</span><span class="nx">join</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="p">}</span>
+
+<span class="p">});</span>
+
+<span class="p">}());</span>
+</pre></div>

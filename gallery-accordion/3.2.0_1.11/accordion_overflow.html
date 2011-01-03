@@ -1,0 +1,252 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>YUI3 Accordion widget - overflow example page</title>
+
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.2.0/build/cssreset/reset-min.css&3.2.0/build/cssbase/base-min.css&3.2.0/build/cssfonts/fonts-min.css&gallery-2011.01.03-18-30/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+
+        <style type="text/css">
+            html, body {
+                height:100%;
+                background-color: #F2FBFF;
+            }
+
+            h2 {
+                font-size:150%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+            
+            p {
+                line-height: 1.6em;
+            }
+
+            .main_cont {
+                width: 1024px;
+                height: 700px;
+            }
+            
+            .descr {
+                margin-left: 50px;
+            }
+
+            .example {
+                width: 800px;
+            }
+
+            .acc_container1 {
+                top: 50px;
+                position: relative;
+                width: 450px;
+                height: 600px;
+                float: left;
+                margin-right: 50px;
+                margin-left: 50px;
+            }
+
+            .acc_container2 {
+                height: 500px;
+                overflow: auto;
+                top: 50px;
+                position: relative;
+                width: 450px;
+            }
+
+            .acc_container2 .yui3-accordion {
+                height: 600px;
+                width: 600px;
+            }
+        </style>
+
+        <script type="text/javascript" src="http://yui.yahooapis.com/3.2.0/build/yui/yui-min.js"></script>
+
+        <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCore.css">
+        <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shThemeDefault.css">
+
+        <script type="text/javascript">
+
+        YUI({
+            gallery : 'gallery-2011.01.03-18-30'
+        }).use( 'dd-constrain', 'dd-proxy', 'dd-drop', 'gallery-accordion', function(Y) {
+            var accordion1, accordion2;
+
+            accordion1 = new Y.Accordion( {
+                srcNode: "#acc1",
+                reorderItems: true
+            });
+
+            accordion1.render();
+
+
+            accordion2 = new Y.Accordion( {
+                srcNode: "#acc2",
+                reorderItems: true
+            });
+
+            accordion2.render();
+        });
+        </script>
+    </head>
+    <body class="yui3-skin-sam">
+        <div class="descr">
+
+        <h2>Items with overflow</h2>
+        <p>In order to make an item scrollable, place the content in separate <code>div</code> with the following styles:</p>
+
+        <div class="example">
+        <pre class="brush: html;">
+<div id="item1content" style="position:relative; overflow:auto; height:100%;">
+    <p>
+    Lorem ipsum dolor sit amet...
+    </p>
+</div>
+        </pre>
+        </div>
+
+        <p>
+            As seen in the examples below, this will work for both item with fixed and stretched content height.
+        </p>
+
+        <h2>Accordion with overflow</h2>
+
+        <p>
+            You may also make the whole accordion scrollable, by modifying <code>yui3-accordion</code> class:
+        </p>
+        <div class="example">
+            <pre class="brush: css;">
+     .acc_container2 {
+        height: 500px;
+        overflow: auto;
+        position: relative;
+        width: 450px;
+    }
+
+    .acc_container2 .yui3-accordion {
+        height: 600px;
+        width: 600px;
+    }
+        </pre>
+        </div>
+
+        </div>
+
+        <div class="main_cont">
+            <div id="acc_container" class="acc_container1">
+                <div id="acc1" class="yui3-accordion">
+                    <div id="item1" class="yui3-accordion-item" data-alwaysvisible="true" data-contentheight="fixed-150">
+                        <div class="yui3-widget-hd">
+                            <a class="yui3-accordion-item-icon"></a>
+                            <a class="yui3-accordion-item-label">Item with fixed height (150px) and overflow</a>
+                            <div class="yui3-accordion-item-icons">
+                                <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                                <a class="yui3-accordion-item-iconexpanded"></a>
+                                <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                            </div>
+                        </div>
+                        <div class="yui3-widget-bd">
+                            <div id="item1content" style="position:relative; overflow:auto; height:100%;">
+                                <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean scelerisque felis et risus vestibulum egestas. Mauris at lorem erat. Phasellus vehicula ipsum ac lorem condimentum id rutrum justo cursus. Morbi mattis justo in felis viverra dictum. Aenean egestas nibh eget nunc pharetra eu blandit nisl auctor. Quisque convallis cursus quam, vitae fermentum ligula scelerisque eget. In sed pretium augue. Quisque tellus tellus, fermentum at commodo id, ultricies commodo metus. Duis ullamcorper egestas tempus. In hac habitasse platea dictumst. Aenean vehicula dolor quis ante rhoncus vitae vulputate dui iaculis. Duis semper facilisis ipsum quis egestas. Morbi hendrerit dolor id nisi sagittis vel mattis eros porta. Nullam ut sapien augue, id sagittis justo. Nullam lacinia eleifend sem, vitae pellentesque metus gravida a. Aliquam turpis enim, bibendum mattis pulvinar vitae, suscipit fermentum augue. Suspendisse luctus tellus vitae nibh interdum aliquet. Donec elementum rutrum felis, ac bibendum nibh sodales eu.
+                                <p>
+<p>
+Praesent congue diam sit amet orci laoreet elementum. Nam odio magna, tincidunt at interdum non, placerat vitae felis. Pellentesque vel ipsum feugiat arcu rhoncus consectetur. Sed non lorem nulla, pretium semper lectus. Mauris turpis eros, hendrerit ac suscipit eu, blandit ut eros. In hac habitasse platea dictumst. Praesent ultrices nulla eget nisl malesuada accumsan. Donec viverra aliquam metus vel sagittis. Aenean gravida eleifend felis eleifend sodales. Quisque ac nisi nulla. Donec vel mi non erat eleifend ornare at quis erat. Ut leo sapien, ullamcorper vel faucibus vel, auctor ut massa. In hac habitasse platea dictumst. Nunc vulputate condimentum sem sit amet euismod. Maecenas pellentesque ornare rutrum. Ut et suscipit elit. Aliquam varius consequat enim, vel pulvinar dui viverra tempor. In hac habitasse platea dictumst. Ut in mauris ut nibh cursus venenatis in id elit.
+</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="item2" class="yui3-accordion-item" data-alwaysvisible="true" data-contentheight="stretch">
+                        <div class="yui3-widget-hd">
+                            <a class="yui3-accordion-item-icon"></a>
+                            <a class="yui3-accordion-item-label">Stretched item with overflow</a>
+                            <div class="yui3-accordion-item-icons">
+                                <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                                <a class="yui3-accordion-item-iconexpanded"></a>
+                                <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                            </div>
+                        </div>
+                        <div class="yui3-widget-bd">
+                            <div id="item2content" style="position:relative; overflow:auto; height:100%;">
+<p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean scelerisque felis et risus vestibulum egestas. Mauris at lorem erat. Phasellus vehicula ipsum ac lorem condimentum id rutrum justo cursus. Morbi mattis justo in felis viverra dictum. Aenean egestas nibh eget nunc pharetra eu blandit nisl auctor. Quisque convallis cursus quam, vitae fermentum ligula scelerisque eget. In sed pretium augue. Quisque tellus tellus, fermentum at commodo id, ultricies commodo metus. Duis ullamcorper egestas tempus. In hac habitasse platea dictumst. Aenean vehicula dolor quis ante rhoncus vitae vulputate dui iaculis. Duis semper facilisis ipsum quis egestas. Morbi hendrerit dolor id nisi sagittis vel mattis eros porta. Nullam ut sapien augue, id sagittis justo. Nullam lacinia eleifend sem, vitae pellentesque metus gravida a. Aliquam turpis enim, bibendum mattis pulvinar vitae, suscipit fermentum augue. Suspendisse luctus tellus vitae nibh interdum aliquet. Donec elementum rutrum felis, ac bibendum nibh sodales eu.
+                                <p>
+<p>
+Praesent congue diam sit amet orci laoreet elementum. Nam odio magna, tincidunt at interdum non, placerat vitae felis. Pellentesque vel ipsum feugiat arcu rhoncus consectetur. Sed non lorem nulla, pretium semper lectus. Mauris turpis eros, hendrerit ac suscipit eu, blandit ut eros. In hac habitasse platea dictumst. Praesent ultrices nulla eget nisl malesuada accumsan. Donec viverra aliquam metus vel sagittis. Aenean gravida eleifend felis eleifend sodales. Quisque ac nisi nulla. Donec vel mi non erat eleifend ornare at quis erat. Ut leo sapien, ullamcorper vel faucibus vel, auctor ut massa. In hac habitasse platea dictumst. Nunc vulputate condimentum sem sit amet euismod. Maecenas pellentesque ornare rutrum. Ut et suscipit elit. Aliquam varius consequat enim, vel pulvinar dui viverra tempor. In hac habitasse platea dictumst. Ut in mauris ut nibh cursus venenatis in id elit.
+</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="acc_container2" class="acc_container2">
+                <div id="acc2" class="yui3-accordion">
+                    <div id="item3" class="yui3-accordion-item" data-alwaysvisible="true" data-contentheight="fixed-150">
+                        <div class="yui3-widget-hd">
+                            <a class="yui3-accordion-item-icon"></a>
+                            <a class="yui3-accordion-item-label">Item with fixed height (150px) and overflow</a>
+                            <div class="yui3-accordion-item-icons">
+                                <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                                <a class="yui3-accordion-item-iconexpanded"></a>
+                                <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                            </div>
+                        </div>
+                        <div class="yui3-widget-bd">
+                            <div id="item1content" style="position:relative; overflow:auto; height:100%;">
+                                <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean scelerisque felis et risus vestibulum egestas. Mauris at lorem erat. Phasellus vehicula ipsum ac lorem condimentum id rutrum justo cursus. Morbi mattis justo in felis viverra dictum. Aenean egestas nibh eget nunc pharetra eu blandit nisl auctor. Quisque convallis cursus quam, vitae fermentum ligula scelerisque eget. In sed pretium augue. Quisque tellus tellus, fermentum at commodo id, ultricies commodo metus. Duis ullamcorper egestas tempus. In hac habitasse platea dictumst. Aenean vehicula dolor quis ante rhoncus vitae vulputate dui iaculis. Duis semper facilisis ipsum quis egestas. Morbi hendrerit dolor id nisi sagittis vel mattis eros porta. Nullam ut sapien augue, id sagittis justo. Nullam lacinia eleifend sem, vitae pellentesque metus gravida a. Aliquam turpis enim, bibendum mattis pulvinar vitae, suscipit fermentum augue. Suspendisse luctus tellus vitae nibh interdum aliquet. Donec elementum rutrum felis, ac bibendum nibh sodales eu.
+                                <p>
+<p>
+Praesent congue diam sit amet orci laoreet elementum. Nam odio magna, tincidunt at interdum non, placerat vitae felis. Pellentesque vel ipsum feugiat arcu rhoncus consectetur. Sed non lorem nulla, pretium semper lectus. Mauris turpis eros, hendrerit ac suscipit eu, blandit ut eros. In hac habitasse platea dictumst. Praesent ultrices nulla eget nisl malesuada accumsan. Donec viverra aliquam metus vel sagittis. Aenean gravida eleifend felis eleifend sodales. Quisque ac nisi nulla. Donec vel mi non erat eleifend ornare at quis erat. Ut leo sapien, ullamcorper vel faucibus vel, auctor ut massa. In hac habitasse platea dictumst. Nunc vulputate condimentum sem sit amet euismod. Maecenas pellentesque ornare rutrum. Ut et suscipit elit. Aliquam varius consequat enim, vel pulvinar dui viverra tempor. In hac habitasse platea dictumst. Ut in mauris ut nibh cursus venenatis in id elit.
+</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="item4" class="yui3-accordion-item" data-alwaysvisible="true" data-contentheight="stretch">
+                        <div class="yui3-widget-hd">
+                            <a class="yui3-accordion-item-icon"></a>
+                            <a class="yui3-accordion-item-label">Stretched item with overflow</a>
+                            <div class="yui3-accordion-item-icons">
+                                <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                                <a class="yui3-accordion-item-iconexpanded"></a>
+                                <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                            </div>
+                        </div>
+                        <div class="yui3-widget-bd">
+                            <div id="item2content" style="position:relative; overflow:auto; height:100%;">
+<p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean scelerisque felis et risus vestibulum egestas. Mauris at lorem erat. Phasellus vehicula ipsum ac lorem condimentum id rutrum justo cursus. Morbi mattis justo in felis viverra dictum. Aenean egestas nibh eget nunc pharetra eu blandit nisl auctor. Quisque convallis cursus quam, vitae fermentum ligula scelerisque eget. In sed pretium augue. Quisque tellus tellus, fermentum at commodo id, ultricies commodo metus. Duis ullamcorper egestas tempus. In hac habitasse platea dictumst. Aenean vehicula dolor quis ante rhoncus vitae vulputate dui iaculis. Duis semper facilisis ipsum quis egestas. Morbi hendrerit dolor id nisi sagittis vel mattis eros porta. Nullam ut sapien augue, id sagittis justo. Nullam lacinia eleifend sem, vitae pellentesque metus gravida a. Aliquam turpis enim, bibendum mattis pulvinar vitae, suscipit fermentum augue. Suspendisse luctus tellus vitae nibh interdum aliquet. Donec elementum rutrum felis, ac bibendum nibh sodales eu.
+                                <p>
+<p>
+Praesent congue diam sit amet orci laoreet elementum. Nam odio magna, tincidunt at interdum non, placerat vitae felis. Pellentesque vel ipsum feugiat arcu rhoncus consectetur. Sed non lorem nulla, pretium semper lectus. Mauris turpis eros, hendrerit ac suscipit eu, blandit ut eros. In hac habitasse platea dictumst. Praesent ultrices nulla eget nisl malesuada accumsan. Donec viverra aliquam metus vel sagittis. Aenean gravida eleifend felis eleifend sodales. Quisque ac nisi nulla. Donec vel mi non erat eleifend ornare at quis erat. Ut leo sapien, ullamcorper vel faucibus vel, auctor ut massa. In hac habitasse platea dictumst. Nunc vulputate condimentum sem sit amet euismod. Maecenas pellentesque ornare rutrum. Ut et suscipit elit. Aliquam varius consequat enim, vel pulvinar dui viverra tempor. In hac habitasse platea dictumst. Ut in mauris ut nibh cursus venenatis in id elit.
+</p>
+<p>
+    Ut venenatis urna nec ligula dignissim quis ullamcorper dui lacinia. Pellentesque posuere tellus a sem molestie a sollicitudin nulla condimentum. In dignissim ante ut eros varius iaculis. Mauris dui nulla, eleifend ac tincidunt id, semper ac ipsum. Curabitur sagittis ultricies rutrum. Duis vehicula, neque a faucibus feugiat, purus dui convallis eros, eu imperdiet tellus quam in metus. Mauris sodales ornare sapien. Curabitur at tortor neque, euismod adipiscing sapien. Vivamus pulvinar vulputate urna vitae viverra. Proin vitae aliquam tellus. Vestibulum blandit, dolor eget fringilla elementum, sapien neque tincidunt tellus, eu tincidunt mi ipsum sed neque.
+</p>
+
+<p>
+Aenean dignissim nibh ac neque gravida ac pulvinar diam accumsan. Nulla non orci eu nisi ultrices sodales. Cras odio est, blandit vitae volutpat ac, pellentesque non purus. Suspendisse mi dolor, consequat quis dapibus facilisis, ornare at mi. Mauris mollis euismod risus quis molestie. Nunc hendrerit mi a magna tristique a scelerisque sem mollis. Morbi tristique urna ut nisi auctor pellentesque. In hac habitasse platea dictumst. Maecenas at neque ut risus dictum ullamcorper. In tortor augue, pharetra sit amet hendrerit sit amet, elementum a nunc. Duis id justo arcu. Nulla condimentum tempus orci sed imperdiet. Maecenas vel sapien massa, eget convallis erat. Aliquam erat volutpat.
+</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushCss.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.js"></script>
+
+        <script type="text/javascript">
+            SyntaxHighlighter.config.clipboardSwf = 'syntaxhighlighter/scripts/clipboard.swf';
+            SyntaxHighlighter.all();
+        </script>
+</body>
+</html>
