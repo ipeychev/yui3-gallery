@@ -1,0 +1,319 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <title>YUI3 Accordion widget - example pages</title>
+
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.3.0/build/cssreset/reset-min.css&3.3.0/build/cssfonts/fonts-min.css&gallery-2011.02.23-19-01/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+
+        <style type="text/css">
+            html, body {
+                height:100%;
+                background-color: #F2FBFF;
+            }
+            
+            h1 {
+                font-size: 170%;
+                font-weight:bold;
+                line-height: 130%;
+                margin:0 0 0 0px;
+                padding: 1em 0.5em 1em;
+            }
+
+            h2 {
+                font-size:150%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            h3 {
+                font-size:130%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            h4 {
+                font-size:110%;
+                font-weight:bold;
+                margin:0.6em 0 0;
+                top:0;
+            }
+            
+            li {
+                list-style-type:disc;
+                margin:0 0 0 30px;
+                padding:0;
+                line-height: 1.4em;
+            }
+
+            p {
+                line-height: 1.6em;
+            }
+
+            a {
+                text-decoration:none;
+            }
+
+            a:link, a:visited {
+                color: #0065B5;
+            }
+
+            a:hover {
+                color: #FF6600;
+            }
+
+
+            .main {
+                position: relative;
+                margin: auto;
+                padding: 1em 1em 2em 1em;
+                height: 100%;
+                width: 500px;
+            }
+
+            .acc_container {
+                top: 50px;
+                position: relative; 
+                width: 450px;
+                height: 660px;
+            }
+        </style>
+        
+        <script type="text/javascript" src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js"></script>
+        
+        <script type="text/javascript"> 
+
+        YUI({
+            gallery : 'gallery-2011.02.23-19-01'
+        }).use( 'dd-constrain', 'dd-proxy', 'dd-drop', 'gallery-accordion', function(Y) {
+            var accordion;
+            
+            accordion = new Y.Accordion( {
+                srcNode: "#acc1",
+                useAnimation: true,
+                reorderItems: true
+            });
+
+            accordion.render();
+        });
+        </script>
+    </head>
+    <body class="yui3-skin-sam">
+        <div class="main">
+            <div id="acc_container" class="acc_container">
+                    <div id="acc1" class="yui3-accordion">
+                        <div id="item1" class="yui3-accordion-item" data-expanded="true">
+                            <div class="yui3-widget-hd">
+                                <a class="yui3-accordion-item-icon"></a>
+                                <a class="yui3-accordion-item-label">What is Accordion widget?</a>
+                                <div class="yui3-accordion-item-icons">
+                                    <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                                    <a class="yui3-accordion-item-iconexpanded"></a>
+                                    <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                                </div>
+                            </div>
+                            <div class="yui3-widget-bd">
+                                <div id="pm1" style="position: relative;">
+                                    <h1>Accordion widget, ver. 1.12</h1>
+                                    <p>
+                                        Accordion is a visual widget that allows the expansion/collapse of grouped items containing arbitrary data. Accordion items can be added or removed dynamically, reordered via drag-and-drop, closed and set as always visible.<br>
+                                        The height of the content inside each item can be set in three different ways:<br>
+                                    </p>
+                                    <ul>
+                                        <li>auto - the browser will calculate content height</li>
+                                        <li>fixed - content height will be exactly X pixels</li>
+                                        <li>stretch - content height will be calculated, based on the height of the other items in the Accordion</li>
+                                    </ul>
+                                    <p>
+                                        The current version of Accordion is using YUI 3.3.0. If you are looking for an older version of Accordion, take a look at Changelog section.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="item2" class="yui3-accordion-item" data-expanded="true" yuiConfig='{"contentHeight": {"method": "stretch"}, "label": "Can I see some examples?"}'>
+                            <div class="yui3-widget-hd">
+                                <a class="yui3-accordion-item-icon"></a>
+                                <a class="yui3-accordion-item-label"></a>
+                                <div class="yui3-accordion-item-icons">
+                                    <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                                    <a class="yui3-accordion-item-iconexpanded"></a>
+                                    <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                                </div>
+                            </div>
+                            <div id="bodyid2" class="yui3-widget-bd">
+                                <div id="pm2" style="position:relative; overflow: auto; height: 100%;">
+                                    <h4>
+                                        Examples:
+                                    </h4>
+                                    <ul>
+                                        <li>
+                                            <h4>
+                                                <a href="build_from_markup.html">Building Accordion widget from markup</a>
+                                            </h4>
+                                        </li>
+                                        <li>
+                                            <h4>
+                                                <a href="build_from_script.html">Building Accordion widget from script</a>
+                                            </h4>
+                                        </li>
+                                        <li>
+                                            <h4>
+                                                <a href="add_remove_items.html">Dynamically adding and removing items</a>
+                                            </h4>
+                                        </li>
+                                        <li>
+                                            <h4>
+                                                <a href="overwrite_properties.html">Overwriting the default properties</a>
+                                            </h4>
+                                        </li>
+                                        <li>
+                                            <h4>
+                                                <a href="accordion_overflow.html">Scrollable items</a>
+                                            </h4>
+                                        </li>
+                                        <li>
+                                            <h4>
+                                                <a href="force_item_to_resize.html">Force an "auto" item to resize</a>
+                                            </h4>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                         <div id="item3" class="yui3-accordion-item yui3-accordion-item-expanded yui3-accordion-item-contentheight-fixed-70">
+                            <div class="yui3-widget-hd">
+                                <a class="yui3-accordion-item-icon"></a>
+                                <a class="yui3-accordion-item-label">Where are the sources?</a>
+                                <div class="yui3-accordion-item-icons">
+                                    <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                                    <a class="yui3-accordion-item-iconexpanded"></a>
+                                    <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                                </div>
+                            </div>
+                            <div id="bodyid3" class="yui3-widget-bd">
+                                <div id="pm3">
+                                    <ul>
+                                        <li>
+                                            <h4>
+                                                <a href="http://github.com/ipeychev/yui3-gallery/tree/master/src/gallery-accordion" target="_blank">Source code<br></a>
+                                            </h4>
+                                        </li>
+                                        <li>
+                                            <h4>
+                                                <a href="apidocs/index.html" target="_blank">API Documentation<br></a>
+                                            </h4>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="item4" class="yui3-accordion-item" data-contentheight="stretch">
+                            <div class="yui3-widget-hd">
+                                <a class="yui3-accordion-item-icon"></a>
+                                <a class="yui3-accordion-item-label">Changelog</a>
+                                <div class="yui3-accordion-item-icons">
+                                    <a class="yui3-accordion-item-iconalwaysvisible"></a>
+                                    <a class="yui3-accordion-item-iconexpanded"></a>
+                                    <a class="yui3-accordion-item-iconclose yui3-accordion-item-iconclose-hidden"></a>
+                                </div>
+                            </div>
+                            <div id="bodyid3" class="yui3-widget-bd">
+                                <div id="pm3" style="position:relative; overflow:auto; height:100%;">
+									<p>
+                                        <a href="../3.3.0_1.12/index.html">03.01.2011 - ver. 1.12</a><br>
+                                          - Closing an item can be prevented.<br>
+										  - 'itemChosen' property supports multiple events - for example ['mouseenter', 'click'].
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        <a href="../3.2.0_1.11/index.html">03.01.2011 - ver. 1.11</a><br>
+                                         - Deprecated/removed YUI API functions (like "Node.query", "Node.queryAll" and "Y.get") have been replaced with their alternatives.
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        <a href="../3.1.1_1.10/index.html">09.06.2010 - ver. 1.10</a><br>
+                                         - Fixed bug which caused firing itemExpanded event twice.<br>
+                                         - Events will be not published in Accordion explicitly, but they will be created only if needed.
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        <a href="../3.1.1/index.html">06.05.2010 - ver. 1.091</a><br>
+                                         - Accordion migrated to YUI 3.1.1. No code changes.
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        <a href="../3.1/index.html">01.04.2010 - ver. 1.09</a><br>
+                                         - Accordion migrated to YUI 3.1. A lot of internal changes and improvements, but should work with the existing configurations. The main difference is when instantiating - there is no need to pass contentBox/boundingBox as configuration parameters. Instead, you should set "srcNode" only.
+                                           All Accordion classes has been renamed to start with yui3.
+                                           Accordion is has been created by using Base.create instead Y.extend and Base.build
+                                           The method _getConfigDOMAttribute has been removed and Widget's _applyParser has been overwritten in order to parse and prepare yuiConfig attribiute for HTML_PARSER.
+                                   </p>
+                                   <hr>
+                                   <p>
+                                        <a href="../3.0/index.html">25.02.2010 - ver 1.08</a><br>
+                                         - AccordionItem has a new function - resize(). It should be invoked if the content has been updated directly (by using
+                                         innerHTML).
+                                           This is neeed only if "contentHeight" property has been set to "auto". The function also causes resizing of all other
+                                           expanded and stretched items.
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        22.11.2009 - ver. 1.07<br>
+                                         - Parsing data from markup improved for icon, nodeLabel, iconsContainer, iconAlwaysVisible, iconExpanded and iconClose configuration properties.<br>
+                                           Valid input is not only Node, but raw HTMLElement and a selector string also.<br>
+                                        - Item reordering is false by default, instead true. As result, drag modules are now optional, not required.
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        06.11.2009 - ver. 1.06<br>
+                                        Accordion supports setting config attributes via HTML5 "data-". These are:
+                                    </p>
+                                    <ul>
+                                      <li>data-label - string<br>
+                                      <li>data-expanded - "true", "yes" or "1"<br>
+                                      <li>data-alwaysvisible - "true", "yes" or "1"<br>
+                                      <li>data-closable - "true", "yes" or "1"<br>
+                                      <li>data-contentheight - "auto", "stretch" or "fixed-X", where X is a number<br><br>
+                                    </ul>
+                                    <hr>
+                                    <p>
+                                        02.11.2009 - ver 1.05:<br>
+                                        - Setting item label bugfix <br>
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        12.10.2009 - ver 1.04:<br>
+                                        - AccordionItem - header rewritten<br>
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        06.10.2009 - ver 1.03:<br>
+                                        - Local constants created instead string literals<br>
+                                        - Event listeners unbundled<br>
+                                        - Removed unnecessary underscores.
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        30.09.2009:<br>
+                                         - Switched to YUI3 GA
+                                    </p>
+                                    <hr>
+                                    <p>
+                                        29.09.2009:<br>
+                                        - Added new example - Overwrite the default properties
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>
