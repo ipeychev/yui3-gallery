@@ -14,6 +14,10 @@ Accordion widget for YUI 3
 
 I. Changelog
 
+ver. 1.12
+ - Closing an item can be prevented.
+ - 'itemChosen' property supports multiple events - for example ['mouseenter', 'click'] 
+
 ver. 1.11
  - Replace deprecated/removed API functions with their alternatives
 
