@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8"><title>YUI3 Accordion widget - build from script</title>
+
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.3.0/build/cssreset/reset-min.css&3.3.0/build/cssfonts/fonts-min.css">
+        
+        <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shCore.css">
+        <link type="text/css" rel="stylesheet" href="syntaxhighlighter/styles/shThemeDefault.css">
+
+        <style type="text/css">
+            html, body {
+                height:100%;
+            }
+
+            .step {
+                position: relative;
+                border: 2px solid #E5ECF9;
+                background-color: #F2FBFF;
+                margin:0 0 0 0px;
+                padding: 1em 1em 2em 1em;
+            }
+
+            h1 {
+                font-size: 170%;
+                line-height: 130%;
+                margin:0 0 0 0px;
+                padding: 1em 0.5em 1em;
+            }
+
+            h2 {
+                font-size:150%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            h3 {
+                font-size:130%;
+                font-weight:bold;
+                margin:1.5em 0 0;
+                top:0;
+            }
+
+            p {
+                line-height: 1.6em;
+            }
+        </style>
+
+
+
+        <script type="text/javascript" src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js"></script>
+        
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushCss.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushXml.js"></script>
+
+        <script type="text/javascript">
+            SyntaxHighlighter.config.clipboardSwf = 'syntaxhighlighter/scripts/clipboard.swf';
+            SyntaxHighlighter.all();
+        </script>
+    </head>
+    <body class="yui3-skin-sam">
+
+        <div class="step">
+
+            <div style="float:right; position:relative;">
+                <h3>
+                    <a href="build_from_script_window.html" target="_blank">See this example in new window.</a>
+                </h3>
+            </div>
+
+            <h1>Step one: add Accordion to your YUI instance</h1>
+
+            <p>
+                In order to load Accordion widget to your YUI instance, the easiest way is to let the Loader do it:
+            </p>
+
+<pre class="brush: html;">
+<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.3.0/build/cssreset/reset-min.css&3.3.0/build/cssfonts/fonts-min.css&gallery-2011.03.23-22-20/build/gallery-accordion/assets/skins/sam/gallery-accordion.css">
+
+<script type="text/javascript" src="http://yui.yahooapis.com/3.3.0/build/yui/yui-min.js"></script>
+
+<script type="text/javascript">
+    YUI({
+        gallery : 'gallery-2011.03.23-22-20'
+    }).use( 'gallery-accordion', function(Y) {
+        // Your code here
+    });
+</script>
+</pre>
+
+    </div>
+
+    
+    <div class="step">
+        <h1>Step two: instantiate and render the Accordion</h1>
+        <p>
+    When YUI3 finishes loading all scripts, it will execute a function, passed as last argument of YUI "use" function. This is the right place you have to start creating instances, including those of the Accordion.
+    You can instantiate Accordion as any other widget in YUI3:
+        </p>
+
+        <pre class="brush: js;">
+        var accordion = new Y.Accordion({
+            srcNode: "#acc1",
+            useAnimation: true,
+            collapseOthersOnExpand: true
+        });
+        
+        accordion.render();
+        </pre>
+    </div>
+
+    <div class="step">
+        <h1>Step three: create one or more items</h1>
+
+        <p>
+            You have to instantiate the following class: Y.AccordionItem<br>
+            The accordion item is a regular widget with a few confguation options in addition to those, provided by Widget.<br>
+            In this example we will create three items.
+        </p>
+
+        <pre class="brush: js;">
+        var item1, item2, item3;
+            
+        item1 = new Y.AccordionItem( {
+            label: "Item1, added from script",
+            expanded: true,
+            id: "dynamicItem1",
+            contentHeight: {
+                method: "fixed",
+                height: 80
+            },
+            closable: true
+        } );
+
+        item1.set( "bodyContent", "This is the body of the item, added dynamically to accordion.<br>Content height has been set as \"fixed, 80px\"." );
+
+        accordion.addItem( item1 );
+
+        item2 = new Y.AccordionItem( {
+            label: "Item2, added from script",
+            expanded: true,
+            id: "dynamicItem2",
+            contentHeight: {
+                method: "stretch"
+            }
+        } );
+
+        item2.set( "bodyContent", "This is the body of the item, added dynamically to accordion, before item1.<br>Content height has been set as \"stretch\"." );
+
+        accordion.addItem( item2, item1 );
+
+        item3 = new Y.AccordionItem( {
+            label: "Item3, added from script",
+            expanded: true,
+            alwaysVisible: true,
+            id: "dynamicItem3",
+            contentHeight: {
+                method: "auto"
+            }
+        } );
+
+        item3.set( "bodyContent", "<div style='position:relative;'>This is the body of the item, added dynamically to accordion.<br>Content height has been set as \"auto\".</div>" );
+
+        accordion.addItem( item3 );
+        </pre>
+    </div>
+
+
+<h3><a href="build_from_script_window.html" target="_blank">See this example in new window.</a></h3>
+
+</body>
+
+</html>
